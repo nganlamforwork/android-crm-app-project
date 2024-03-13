@@ -11,4 +11,12 @@
     <string name="confirm_password">Confirm Password</string>
     <string name="sign_up">Sign Up</string>
     <string name="already_have_an_account">Already have an account?</string>
+    <string name="home">Home</string>
+    <string name="work">Work</string>
+    <string name="contacts">Contacts</string>
+    <string name="communications">Communications</string>
+    <string name="sales_forecast">Sales Forecast</string>
+    <string name="reports">Reports</string>
+    <string name="open">Open Navigation Drawer</string>
+    <string name="close">Close Navigation Drawer</string>
 </resources>
