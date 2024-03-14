@@ -11,12 +11,17 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ScrollView;
 import android.widget.Toast;
 
 import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.auth.FirebaseAuth;
 
 import hcmus.android.crm.activities.SignInActivity;
 import hcmus.android.crm.activities.SignUpActivity;
+import hcmus.android.crm.databinding.ActivityMainBinding;
+import hcmus.android.crm.utilities.Constants;
+import hcmus.android.crm.utilities.PreferenceManager;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     DrawerLayout drawerLayout;
@@ -45,6 +50,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         auth = FirebaseAuth.getInstance();
         loadCredentials();
         setListeners();
+
+        drawerLayout=findViewById(R.id.drawer_layout);
+        navigationView=findViewById(R.id.nav_view);
+        drawerToggle=new
+                ActionBarDrawerToggle(this,drawerLayout,R.string.open,R.string.close);
+        drawerLayout.addDrawerListener(drawerToggle);
+        drawerToggle.syncState();
+        navigationView.setNavigationItemSelectedListener(this);
     }
 
     private void setListeners() {
@@ -72,7 +85,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         finish();
         setContentView(R.layout.activity_main);
 
-        drawerLayout = findViewById(R.id.drawerLayout);
+        drawerLayout = findViewById(R.id.drawer_layout);
         navigationView = findViewById(R.id.nav_view);
 
 
@@ -91,6 +104,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        Toast.makeText(MainActivity.this, "This is a message", Toast.LENGTH_LONG).show();
 
         int id = item.getItemId();
 
