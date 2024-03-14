@@ -8,9 +8,7 @@
     android:orientation="vertical"
     tools:context=".MainActivity">
 
-    <androidx.drawerlayout.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
+    <androidx.drawerlayout.widget.DrawerLayout
         android:id="@+id/drawer_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -27,100 +25,6 @@
             app:menu="@menu/main_menu" />
 
     </androidx.drawerlayout.widget.DrawerLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/_50sdp"
-        android:background="@drawable/header"
-        android:gravity="center_vertical"
-        android:orientation="horizontal"
-        android:paddingStart="@dimen/_16sdp"
-        android:paddingEnd="@dimen/_16sdp">
-
-        <com.makeramen.roundedimageview.RoundedImageView
-            android:id="@+id/imageProfile"
-            android:layout_width="@dimen/_30sdp"
-            android:layout_height="@dimen/_30sdp"
-            android:scaleType="centerCrop"
-            android:src="@drawable/avatar"
-            app:riv_corner_radius="@dimen/_8sdp" />
-
-        <TextView
-            android:id="@+id/textName"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/_16sdp"
-            android:layout_weight="1"
-            android:textColor="@color/white"
-            android:textSize="@dimen/_14sdp"
-            android:textStyle="bold"
-            tools:text="John Doe" />
-
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/imageSignOut"
-            android:layout_width="@dimen/_30sdp"
-            android:layout_height="@dimen/_30sdp"
-            android:src="@drawable/ic_logout"
-            android:tint="@color/white" />
-    </LinearLayout>
-
-
-    <ScrollView
-        android:id="@+id/scrollView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="@dimen/_40sdp">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <TextView
-                android:id="@+id/test"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginStart="@dimen/_16sdp"
-                android:layout_weight="1"
-                android:textColor="@color/primary_dark"
-                android:textSize="@dimen/_14sdp"
-                android:textStyle="bold"
-                tools:text="John Doe" />
-
-            <TextView
-                android:id="@+id/test2"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginStart="@dimen/_16sdp"
-                android:layout_weight="1"
-                android:textColor="@color/primary_dark"
-                android:textSize="@dimen/_14sdp"
-                android:textStyle="bold"
-                tools:text="John Doe" />
-
-            <TextView
-                android:id="@+id/test3"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginStart="@dimen/_16sdp"
-                android:layout_weight="1"
-                android:textColor="@color/primary_dark"
-                android:textSize="@dimen/_14sdp"
-                android:textStyle="bold"
-                tools:text="John Doe" />
-
-            <TextView
-                android:id="@+id/test4"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginStart="@dimen/_16sdp"
-                android:layout_weight="1"
-                android:textColor="@color/primary_dark"
-                android:textSize="@dimen/_14sdp"
-                android:textStyle="bold"
-                tools:text="John Doe" />
-        </LinearLayout>
-    </ScrollView>
 </LinearLayout>
 
 

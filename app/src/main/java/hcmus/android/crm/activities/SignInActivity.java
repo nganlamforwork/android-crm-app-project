@@ -94,6 +94,7 @@ public class SignInActivity extends AppCompatActivity {
                                         preferenceManager.putBoolean(Constants.KEY_IS_SIGNED_IN, true);
                                         preferenceManager.putString(Constants.KEY_USER_ID, firebaseUser.getUid());
                                         preferenceManager.putString(Constants.KEY_NAME, docSnap.getString(Constants.KEY_NAME));
+                                        preferenceManager.putString(Constants.KEY_EMAIL, docSnap.getString(Constants.KEY_EMAIL));
                                         preferenceManager.putString(Constants.KEY_PHONE_NUMBER, docSnap.getString(Constants.KEY_PHONE_NUMBER));
                                         showToast("Login successfully");
                                         Intent intent = new Intent(getApplicationContext(), MainActivity.class);

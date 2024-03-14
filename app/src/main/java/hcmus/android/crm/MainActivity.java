@@ -4,14 +4,14 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.Menu;
+import android.util.Log;
 import android.view.MenuItem;
-import android.widget.ScrollView;
+import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.navigation.NavigationView;
@@ -24,10 +24,11 @@ import hcmus.android.crm.utilities.Constants;
 import hcmus.android.crm.utilities.PreferenceManager;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
-    DrawerLayout drawerLayout;
-    NavigationView navigationView;
-    ActionBarDrawerToggle drawerToggle;
-    Toolbar toolbar;
+    private DrawerLayout drawerLayout;
+    private NavigationView navigationView;
+    private ActionBarDrawerToggle drawerToggle;
+    private Toolbar toolbar;
+    private TextView userName, userEmail;
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
@@ -48,26 +49,26 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         setContentView(binding.getRoot());
         preferenceManager = new PreferenceManager(getApplicationContext());
         auth = FirebaseAuth.getInstance();
-        loadCredentials();
-        setListeners();
 
-        drawerLayout=findViewById(R.id.drawer_layout);
-        navigationView=findViewById(R.id.nav_view);
-        drawerToggle=new
-                ActionBarDrawerToggle(this,drawerLayout,R.string.open,R.string.close);
+        drawerLayout = findViewById(R.id.drawer_layout);
+        navigationView = findViewById(R.id.nav_view);
+
+        loadCredentials();
+        drawerToggle = new
+                ActionBarDrawerToggle(this, drawerLayout, R.string.open, R.string.close);
         drawerLayout.addDrawerListener(drawerToggle);
         drawerToggle.syncState();
         navigationView.setNavigationItemSelectedListener(this);
     }
 
-    private void setListeners() {
-        binding.imageSignOut.setOnClickListener(v -> {
-            signOut();
-        });
-    }
 
     private void loadCredentials() {
-        binding.textName.setText(preferenceManager.getString(Constants.KEY_NAME));
+        View headerView = navigationView.getHeaderView(0);
+        userName = headerView.findViewById(R.id.textUserName);
+        userEmail = headerView.findViewById(R.id.textUserEmail);
+
+        userName.setText(preferenceManager.getString(Constants.KEY_NAME));
+        userEmail.setText(preferenceManager.getString(Constants.KEY_EMAIL));
      /*   byte[] bytes = Base64.decode(preferenceManager.getString(Constants.KEY_IMAGE), Base64.DEFAULT);
         Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
         binding.imageProfile.setImageBitmap(bitmap);*/
@@ -89,7 +90,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         navigationView = findViewById(R.id.nav_view);
 
 
-        drawerToggle = new ActionBarDrawerToggle(this, drawerLayout , R.string.open, R.string.close);
+        drawerToggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.open, R.string.close);
         drawerLayout.addDrawerListener(drawerToggle);
         drawerToggle.syncState();
         if (getSupportActionBar() != null) {
@@ -98,18 +99,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             getSupportActionBar().setDisplayUseLogoEnabled(true);
         }
         navigationView.setNavigationItemSelectedListener(this);
-        Toast.makeText(MainActivity.this, "This is a message", Toast.LENGTH_LONG).show();
-
+        showToast("This is a message");
     }
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        Toast.makeText(MainActivity.this, "This is a message", Toast.LENGTH_LONG).show();
+        showToast("This is a message");
 
         int id = item.getItemId();
 
         if (id == R.id.nav_home) {
-            Toast.makeText(MainActivity.this, "This is a message", Toast.LENGTH_LONG).show();
+            showToast("This is a message");
             Intent intent = new Intent(MainActivity.this, SignUpActivity.class);
             startActivity(intent);
         } else if (id == R.id.nav_leads) {
@@ -142,6 +142,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         } else if (id == R.id.nav_reports) {
             Intent intent = new Intent(MainActivity.this, SignInActivity.class);
             startActivity(intent);
+        } else if (id == R.id.nav_logout) {
+            signOut();
         }
 
 //        drawerLayout.closeDrawer(GravityCompat.START);
