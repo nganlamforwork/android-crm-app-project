@@ -1,5 +1,14 @@
 package hcmus.android.crm;
 
+import android.content.Intent;
+import android.graphics.Color;
+import android.os.Bundle;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.ListView;
+import android.widget.TextView;
+import android.widget.Toast;
+
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -8,17 +17,15 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
-import android.content.Intent;
-import android.os.Bundle;
-import android.util.Log;
-import android.view.Gravity;
-import android.view.MenuItem;
-import android.view.View;
-import android.widget.TextView;
-import android.widget.Toast;
-
+import com.github.mikephil.charting.charts.BarChart;
+import com.github.mikephil.charting.components.Legend;
+import com.github.mikephil.charting.data.BarData;
+import com.github.mikephil.charting.data.BarDataSet;
+import com.github.mikephil.charting.data.BarEntry;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
+
+import java.util.ArrayList;
 
 import hcmus.android.crm.activities.SignInActivity;
 import hcmus.android.crm.activities.SignUpActivity;
@@ -45,6 +52,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private PreferenceManager preferenceManager;
     private FirebaseAuth auth;
 
+    BarChart barChart;
+    TextView chartLabel;
+    TextView chartDateLabel;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,6 +73,61 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         drawerLayout.addDrawerListener(drawerToggle);
         drawerToggle.syncState();
         navigationView.setNavigationItemSelectedListener(this);
+
+        ListView listView = findViewById(R.id.customListView);
+        String[] customerList = {"Francis Holzworth", "Kaylyn Yokel", "Kimberly Muro", "Jack Sause", "Rebekkah Lafantano"};
+        String[] customerListId = {"00220", "00221", "00222", "00223", "00224"};
+        int[] customerImgs = {R.drawable.ava1, R.drawable.ava2, R.drawable.ava3, R.drawable.ava4, R.drawable.ava5};
+
+        CustomBaseAdapter customBaseAdapter = new CustomBaseAdapter(getApplicationContext(), customerList, customerListId, customerImgs);
+        listView.setAdapter(customBaseAdapter);
+
+        // Initialize the bar chart
+        barChart = findViewById(R.id.barChart);
+        chartLabel = findViewById(R.id.chartLabel);
+        chartDateLabel = findViewById(R.id.chartDateLabel);
+
+        // Data for the bar chart
+        ArrayList<BarEntry> entries = new ArrayList<>();
+        entries.add(new BarEntry(0f, new float[]{50f, 30f}));
+        entries.add(new BarEntry(1f, new float[]{60f, 40f}));
+        entries.add(new BarEntry(2f, new float[]{70f, 50f}));
+        entries.add(new BarEntry(3f, new float[]{80f, 60f}));
+        entries.add(new BarEntry(4f, new float[]{90f, 70f}));
+        entries.add(new BarEntry(5f, new float[]{100f, 80f}));
+        entries.add(new BarEntry(6f, new float[]{110f, 90f}));
+
+        // Labels for the bars
+        ArrayList<String> labels = new ArrayList<>();
+        labels.add("Mon");
+        labels.add("Tue");
+        labels.add("Wed");
+        labels.add("Thu");
+        labels.add("Fri");
+        labels.add("Sat");
+        labels.add("Sun");
+
+        BarDataSet dataSet = new BarDataSet(entries, "Legend");
+        dataSet.setColors(new int[]{Color.parseColor("#8E97A3"), Color.parseColor("#1C2E46")});
+        BarData barData = new BarData(dataSet);
+        barData.setBarWidth(0.4f); // Set the width of the bars
+
+        barChart.setData(barData);
+        barChart.setFitBars(true); // Make the x-axis fit exactly all bars
+        barChart.invalidate(); // Refresh the chart
+
+        // Customize the legend
+        Legend legend = barChart.getLegend();
+        legend.setForm(Legend.LegendForm.CIRCLE);
+        legend.setHorizontalAlignment(Legend.LegendHorizontalAlignment.CENTER);
+        legend.setVerticalAlignment(Legend.LegendVerticalAlignment.BOTTOM);
+        legend.setOrientation(Legend.LegendOrientation.HORIZONTAL);
+        legend.setDrawInside(false);
+        legend.setWordWrapEnabled(true);
+
+        // Update chart labels
+        chartLabel.setText("Week in Review");
+        chartDateLabel.setText("Apr 10th - Apr 17th");
         getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
@@ -81,6 +147,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         userName.setText(preferenceManager.getString(Constants.KEY_NAME));
         userEmail.setText(preferenceManager.getString(Constants.KEY_EMAIL));
+        binding.textName.setText("Welcome back, " + preferenceManager.getString(Constants.KEY_NAME));
      /*   byte[] bytes = Base64.decode(preferenceManager.getString(Constants.KEY_IMAGE), Base64.DEFAULT);
         Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
         binding.imageProfile.setImageBitmap(bitmap);*/
