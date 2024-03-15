@@ -7,18 +7,20 @@
     android:orientation="vertical"
     android:gravity="bottom">
     <TextView
+        android:id="@+id/textUserName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Your Name"
         android:textColor="#fff"
-        android:textSize="30dp"
+        android:textSize="30sp"
         android:textStyle="bold"
         />
     <TextView
+        android:id="@+id/textUserEmail"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="your_email@gmail.com"
-        android:textSize="18dp"
+        android:textSize="18sp"
         android:textColor="#fff"
         />
 

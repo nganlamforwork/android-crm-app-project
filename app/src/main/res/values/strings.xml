@@ -11,6 +11,10 @@
     <string name="confirm_password">Confirm Password</string>
     <string name="sign_up">Sign Up</string>
     <string name="already_have_an_account">Already have an account?</string>
+    <string name="forgot_password">Forgot password?</string>
+    <string name="welcome_to_hypercrm">Welcome to HyperCRM</string>
+    <string name="create_new_account_to_explore_our_amazing_features">Create new account to explore our amazing features</string>
+    <string name="phone_number">Phone Number</string>
     <string name="home">Home</string>
     <string name="work">Work</string>
     <string name="contacts">Contacts</string>
