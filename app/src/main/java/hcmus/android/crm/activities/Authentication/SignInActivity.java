@@ -1,4 +1,4 @@
-package hcmus.android.crm.activities;
+package hcmus.android.crm.activities.Authentication;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
@@ -25,7 +25,7 @@ import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.Objects;
 
-import hcmus.android.crm.MainActivity;
+import hcmus.android.crm.activities.Main.MainActivity;
 import hcmus.android.crm.databinding.ActivitySignInBinding;
 import hcmus.android.crm.utilities.Constants;
 import hcmus.android.crm.utilities.HashHelper;
@@ -107,7 +107,6 @@ public class SignInActivity extends AppCompatActivity {
                         auth.signOut();
                         showAlertDialog("You must verify your email to login");
                     }
-
                 } else {
                     loading(false);
                     try {
