@@ -2,6 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -13,14 +15,11 @@
         android:theme="@style/Theme.CRM"
         tools:targetApi="31">
         <activity
-            android:name=".activities.Leads.LeadActivity"
+            android:name=".activities.SignUpActivity"
             android:exported="false"
-            android:label="@string/title_activity_lead"
-            android:theme="@style/Theme.CRM" />
-        <activity android:name=".activities.Authentication.SignInActivity" />
-        <activity android:name=".activities.Authentication.SignUpActivity" />
+            android:windowSoftInputMode="adjustResize"/>
         <activity
-            android:name=".activities.Main.MainActivity"
+            android:name=".activities.SignInActivity"
             android:exported="true"
             android:windowSoftInputMode="adjustResize">
             <intent-filter>
@@ -29,6 +28,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".MainActivity"
+            android:exported="false" />
+
     </application>
 
 </manifest>
