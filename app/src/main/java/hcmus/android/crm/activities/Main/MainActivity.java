@@ -3,6 +3,7 @@ package hcmus.android.crm.activities.Main;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -40,6 +41,7 @@ import hcmus.android.crm.R;
 import hcmus.android.crm.activities.Authentication.SignInActivity;
 import hcmus.android.crm.activities.Authentication.SignUpActivity;
 import hcmus.android.crm.activities.Leads.LeadActivity;
+import hcmus.android.crm.activities.Settings.SettingsActivity;
 import hcmus.android.crm.databinding.ActivityMainBinding;
 import hcmus.android.crm.utilities.Constants;
 import hcmus.android.crm.utilities.PreferenceManager;
@@ -275,6 +277,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             startActivity(intent);
         } else if (id == R.id.nav_reports) {
             Intent intent = new Intent(MainActivity.this, SignInActivity.class);
+            startActivity(intent);
+        } else if (id == R.id.nav_personal) {
+            Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
             startActivity(intent);
         } else if (id == R.id.nav_logout) {
             signOut();

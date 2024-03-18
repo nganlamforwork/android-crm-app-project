@@ -15,9 +15,12 @@
         android:theme="@style/Theme.CRM"
         tools:targetApi="31">
         <activity
+            android:name=".activities.Settings.SettingsActivity"
+            android:exported="false" />
+        <activity
             android:name=".activities.Authentication.SignUpActivity"
             android:exported="false"
-            android:windowSoftInputMode="adjustResize"/>
+            android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".activities.Authentication.SignInActivity"
             android:exported="true"
