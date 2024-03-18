@@ -32,8 +32,14 @@
             </intent-filter>
         </activity>
         <activity
+            android:name=".activities.Leads.LeadActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize">
+        </activity>
+        <activity
             android:name=".activities.Main.MainActivity"
             android:exported="false" />
+
     </application>
 
 </manifest>

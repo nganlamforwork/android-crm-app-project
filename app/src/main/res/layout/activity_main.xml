@@ -10,6 +10,31 @@
     tools:context=".activities.Main.MainActivity"
     tools:openDrawer="start">
 
+    <com.google.android.material.navigation.NavigationView
+        android:id="@+id/nav_view"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        app:headerLayout="@layout/nav_header"
+        app:menu="@menu/main_menu" />
+
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="@color/primary_dark"
+            android:theme="@style/ThemeOverlay.AppCompat.Dark"
+            app:menu="@menu/top_app_bar"
+            app:titleCentered="true"
+            app:titleTextAppearance="@style/TextAppearance.AppCompat.Widget.ActionBar.Title" />
+
+    </com.google.android.material.appbar.AppBarLayout>
+
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
@@ -19,53 +44,13 @@
         android:gravity="center"
         tools:context=".MainActivity">
 
-        <!-- Header -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/_50sdp"
-            android:background="@drawable/header"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
-            android:paddingStart="@dimen/_16sdp"
-            android:paddingEnd="@dimen/_16sdp">
-
-            <!-- Profile Image -->
-            <com.makeramen.roundedimageview.RoundedImageView
-                android:id="@+id/imageProfile"
-                android:layout_width="@dimen/_30sdp"
-                android:layout_height="@dimen/_30sdp"
-                android:scaleType="centerCrop"
-                android:src="@drawable/avatar"
-                app:riv_corner_radius="@dimen/_8sdp" />
-
-            <!-- Name -->
-            <TextView
-                android:id="@+id/textName"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/_16sdp"
-                android:layout_weight="1"
-                android:textColor="@color/white"
-                android:textSize="@dimen/_14sdp"
-                android:textStyle="bold"
-                tools:text="John Doe" />
-
-            <!-- Sign Out Button -->
-            <androidx.appcompat.widget.AppCompatImageView
-                android:id="@+id/imageSignOut"
-                android:layout_width="@dimen/_30sdp"
-                android:layout_height="@dimen/_30sdp"
-                android:src="@drawable/ic_logout"
-                android:tint="@color/white" />
-        </LinearLayout>
-
         <!-- Chart Labels -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:gravity="center_vertical"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="80dp"
             android:paddingStart="@dimen/_8sdp"
             android:paddingEnd="@dimen/_8sdp">
 
@@ -88,16 +73,15 @@
                 android:layout_weight="1"
                 android:text="Apr 10th - Apr 17th"
                 android:textColor="@color/secondary_text"
-                android:textSize="@dimen/_12sdp"
+                android:textSize="@dimen/_11sdp"
                 android:textStyle="bold" />
         </LinearLayout>
 
-        <!-- Bar Chart -->
-        <com.github.mikephil.charting.charts.BarChart
-            android:id="@+id/barChart"
+        <!-- Chart -->
+        <com.github.mikephil.charting.charts.CombinedChart
+            android:id="@+id/combinedChart"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
+            android:layout_height="300dp"
             android:layout_marginHorizontal="@dimen/_16sdp"
             android:layout_marginTop="@dimen/_16sdp"
             android:layout_marginBottom="@dimen/_8sdp"
@@ -133,32 +117,6 @@
         </LinearLayout>
 
     </LinearLayout>
-
-    <com.google.android.material.navigation.NavigationView
-        android:id="@+id/nav_view"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_gravity="start"
-        app:headerLayout="@layout/nav_header"
-        app:menu="@menu/main_menu" />
-
-
-    <com.google.android.material.appbar.AppBarLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <com.google.android.material.appbar.MaterialToolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="@color/primary_dark"
-            android:theme="@style/ThemeOverlay.AppCompat.Dark"
-            app:menu="@menu/top_app_bar"
-            app:titleCentered="true"
-            app:titleTextAppearance="@style/TextAppearance.AppCompat.Widget.ActionBar.Title" />
-
-    </com.google.android.material.appbar.AppBarLayout>
-
 
 </androidx.drawerlayout.widget.DrawerLayout>
 
