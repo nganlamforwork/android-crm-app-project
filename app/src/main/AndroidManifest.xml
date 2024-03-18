@@ -15,11 +15,14 @@
         android:theme="@style/Theme.CRM"
         tools:targetApi="31">
         <activity
-            android:name=".activities.SignUpActivity"
-            android:exported="false"
-            android:windowSoftInputMode="adjustResize"/>
+            android:name=".activities.Settings.SettingsActivity"
+            android:exported="false" />
         <activity
-            android:name=".activities.SignInActivity"
+            android:name=".activities.Authentication.SignUpActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".activities.Authentication.SignInActivity"
             android:exported="true"
             android:windowSoftInputMode="adjustResize">
             <intent-filter>
@@ -29,9 +32,8 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".MainActivity"
+            android:name=".activities.Main.MainActivity"
             android:exported="false" />
-
     </application>
 
 </manifest>
