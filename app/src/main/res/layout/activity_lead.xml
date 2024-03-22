@@ -7,30 +7,6 @@
     android:fitsSystemWindows="true"
     tools:context=".activities.Leads.LeadActivity">
 
-    <com.google.android.material.appbar.AppBarLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:fitsSystemWindows="true">
-
-        <com.google.android.material.appbar.MaterialToolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            app:titleTextAppearance="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"
-            app:subtitleTextAppearance="@style/TextAppearance.AppCompat.Widget.ActionBar.Subtitle"
-            app:contentInsetStart="0dp"
-            app:titleCentered="true"
-            app:contentInsetLeft="0dp"
-            app:layout_scrollFlags="scroll|enterAlways"
-            app:layout_collapseMode="pin"
-            android:background="@color/primary_dark"
-            app:menu="@menu/top_app_bar"
-            app:title="Leads"
-            android:theme="@style/ThemeOverlay.AppCompat.Dark"
-            />
-
-    </com.google.android.material.appbar.AppBarLayout>
-
     <include layout="@layout/content_lead" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton

@@ -1,123 +1,84 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<androidx.drawerlayout.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
+    android:orientation="vertical"
     tools:context=".activities.Main.MainActivity"
     tools:openDrawer="start">
 
-    <com.google.android.material.navigation.NavigationView
-        android:id="@+id/nav_view"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_gravity="start"
-        app:headerLayout="@layout/nav_header"
-        app:menu="@menu/main_menu" />
-
-
-    <com.google.android.material.appbar.AppBarLayout
+    <!-- Chart Labels -->
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginTop="80dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingStart="@dimen/_8sdp"
+        android:paddingEnd="@dimen/_8sdp">
 
-        <com.google.android.material.appbar.MaterialToolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="@color/primary_dark"
-            android:theme="@style/ThemeOverlay.AppCompat.Dark"
-            app:menu="@menu/top_app_bar"
-            app:titleCentered="true"
-            app:titleTextAppearance="@style/TextAppearance.AppCompat.Widget.ActionBar.Title" />
-
-    </com.google.android.material.appbar.AppBarLayout>
-
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:gravity="center"
-        tools:context=".MainActivity">
-
-        <!-- Chart Labels -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center_vertical"
-            android:layout_marginTop="80dp"
-            android:paddingStart="@dimen/_8sdp"
-            android:paddingEnd="@dimen/_8sdp">
-
-            <!-- Week in Review -->
-            <TextView
-                android:id="@+id/chartLabel"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Week in Review"
-                android:textColor="@color/primary_text"
-                android:textSize="@dimen/_18sdp"
-                android:textStyle="bold" />
-
-            <!-- Date Range -->
-            <TextView
-                android:id="@+id/chartDateLabel"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Apr 10th - Apr 17th"
-                android:textColor="@color/secondary_text"
-                android:textSize="@dimen/_11sdp"
-                android:textStyle="bold" />
-        </LinearLayout>
-
-        <!-- Chart -->
-        <com.github.mikephil.charting.charts.CombinedChart
-            android:id="@+id/combinedChart"
-            android:layout_width="match_parent"
-            android:layout_height="300dp"
-            android:layout_marginHorizontal="@dimen/_16sdp"
-            android:layout_marginTop="@dimen/_16sdp"
-            android:layout_marginBottom="@dimen/_8sdp"
-            />
-
-        <!-- Customer List Label -->
+        <!-- Week in Review -->
         <TextView
-            android:id="@+id/customerListLabel"
-            android:layout_width="match_parent"
+            android:id="@+id/chartLabel"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/_8sdp"
-            android:layout_marginTop="20dp"
-            android:text="Customer List"
+            android:layout_weight="1"
+            android:text="Week in Review"
             android:textColor="@color/primary_text"
             android:textSize="@dimen/_18sdp"
             android:textStyle="bold" />
 
-        <!-- Customer List ListView -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
+        <!-- Date Range -->
+        <TextView
+            android:id="@+id/chartDateLabel"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:orientation="vertical">
+            android:text="Apr 10th - Apr 17th"
+            android:textColor="@color/secondary_text"
+            android:textSize="@dimen/_11sdp"
+            android:textStyle="bold" />
+    </LinearLayout>
 
-            <ListView
-                android:id="@+id/customListView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:divider="@drawable/list_divider"
-                android:dividerHeight="20dp"
-                android:padding="20dp" />
+    <!-- Chart -->
+    <com.github.mikephil.charting.charts.CombinedChart
+        android:id="@+id/combinedChart"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        android:layout_marginHorizontal="@dimen/_16sdp"
+        android:layout_marginTop="@dimen/_16sdp"
+        android:layout_marginBottom="@dimen/_8sdp" />
 
-        </LinearLayout>
+    <!-- Customer List Label -->
+    <TextView
+        android:id="@+id/customerListLabel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/_8sdp"
+        android:layout_marginTop="20dp"
+        android:text="Customer List"
+        android:textColor="@color/primary_text"
+        android:textSize="@dimen/_18sdp"
+        android:textStyle="bold" />
+
+    <!-- Customer List ListView -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <ListView
+            android:id="@+id/customListView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:divider="@drawable/list_divider"
+            android:dividerHeight="20dp"
+            android:padding="20dp" />
 
     </LinearLayout>
 
-</androidx.drawerlayout.widget.DrawerLayout>
-
-
+</LinearLayout>
