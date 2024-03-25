@@ -63,7 +63,7 @@ public class MainActivity extends DrawerBase {
 
         ListView listView = findViewById(R.id.customListView);
         String[] customerList = {"Francis Holzworth", "Kaylyn Yokel", "Kimberly Muro", "Jack Sause", "Rebekkah Lafantano"};
-        String[] customerListId = {"00220", "00221", "00222", "00223", "00224"};
+        String[] customerListId = {"1231231231", "1231231231", "1231231231", "1231231231", "1231231231"};
         int[] customerImgs = {R.drawable.ava1, R.drawable.ava2, R.drawable.ava3, R.drawable.ava4, R.drawable.ava5};
 
         CustomBaseAdapter customBaseAdapter = new CustomBaseAdapter(getApplicationContext(), customerList, customerListId, customerImgs);
@@ -110,22 +110,22 @@ public class MainActivity extends DrawerBase {
         combinedChart.invalidate();
     }
 
-    private ArrayList<BarEntry> getBar1Enteries(ArrayList<BarEntry> entries){
+    private ArrayList<BarEntry> getBar1Enteries(ArrayList<BarEntry> entries) {
         entries.add(new BarEntry(1, 25));
         entries.add(new BarEntry(2, 30));
         entries.add(new BarEntry(3, 38));
         entries.add(new BarEntry(4, 10));
         entries.add(new BarEntry(5, 15));
-        return  entries;
+        return entries;
     }
 
-    private ArrayList<BarEntry> getBar2Enteries(ArrayList<BarEntry> entries){
+    private ArrayList<BarEntry> getBar2Enteries(ArrayList<BarEntry> entries) {
         entries.add(new BarEntry(1, 20));
         entries.add(new BarEntry(2, 25));
         entries.add(new BarEntry(3, 33));
         entries.add(new BarEntry(4, 5));
         entries.add(new BarEntry(5, 10));
-        return  entries;
+        return entries;
     }
 
     private BarData generateBarData() {
@@ -160,6 +160,4 @@ public class MainActivity extends DrawerBase {
 
         return d;
     }
-
-
 }

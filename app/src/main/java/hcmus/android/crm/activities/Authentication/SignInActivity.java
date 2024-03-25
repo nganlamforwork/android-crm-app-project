@@ -10,7 +10,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
-import android.widget.Toast;
 
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -30,6 +29,7 @@ import hcmus.android.crm.databinding.ActivitySignInBinding;
 import hcmus.android.crm.utilities.Constants;
 import hcmus.android.crm.utilities.HashHelper;
 import hcmus.android.crm.utilities.PreferenceManager;
+import hcmus.android.crm.utilities.Utils;
 
 public class SignInActivity extends AppCompatActivity {
 
@@ -64,9 +64,10 @@ public class SignInActivity extends AppCompatActivity {
         });
     }
 
-    private void showToast(String message) {
-        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+    private void showToast(String message, int length) {
+        Utils.showToast(getApplicationContext(), message, length);
     }
+
 
     private void signIn() {
         loading(true);
@@ -83,6 +84,7 @@ public class SignInActivity extends AppCompatActivity {
                     FirebaseUser firebaseUser = auth.getCurrentUser();
 
                     assert firebaseUser != null;
+
                     if (firebaseUser.isEmailVerified()) {
                         FirebaseFirestore db = FirebaseFirestore.getInstance();
                         db.collection(Constants.KEY_COLLECTION_USERS)
@@ -95,49 +97,52 @@ public class SignInActivity extends AppCompatActivity {
                                         preferenceManager.putString(Constants.KEY_USER_ID, firebaseUser.getUid());
                                         preferenceManager.putString(Constants.KEY_NAME, docSnap.getString(Constants.KEY_NAME));
                                         preferenceManager.putString(Constants.KEY_EMAIL, docSnap.getString(Constants.KEY_EMAIL));
+                                        preferenceManager.putString(Constants.KEY_IMAGE, docSnap.getString(Constants.KEY_IMAGE));
                                         preferenceManager.putString(Constants.KEY_PHONE_NUMBER, docSnap.getString(Constants.KEY_PHONE_NUMBER));
-                                        showToast("Login successfully");
+                                        showToast("Login successfully", 0);
                                         Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                                         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                                         startActivity(intent);
                                     }
                                 });
                     } else {
-                        firebaseUser.sendEmailVerification();
                         auth.signOut();
-                        showAlertDialog("You must verify your email to login");
+                        showAlertDialog(firebaseUser, "You must verify your email to login");
                     }
                 } else {
                     loading(false);
                     try {
                         throw Objects.requireNonNull(task.getException());
                     } catch (FirebaseAuthInvalidUserException e) {
-                        showToast("User not found!");
+                        showToast("User not found!", 0);
                     } catch (FirebaseAuthInvalidCredentialsException e) {
-                        showToast("Invalid credentials!");
+                        showToast("Invalid credentials!", 0);
                     } catch (Exception e) {
                         Log.e(TAG, Objects.requireNonNull(e.getMessage()));
-                        showToast(e.getMessage());
+                        showToast(e.getMessage(), 0);
                     }
                 }
             }
         });
     }
 
-    private void showAlertDialog(String message) {
+    private void showAlertDialog(FirebaseUser firebaseUser, String message) {
         AlertDialog.Builder builder = new AlertDialog.Builder(SignInActivity.this);
         builder.setTitle("Email not verified");
         builder.setMessage(message);
-        builder.setPositiveButton("Continue", new DialogInterface.OnClickListener() {
+        builder.setPositiveButton("Send verification email", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                Intent intent = new Intent(Intent.ACTION_MAIN);
-                intent.addCategory(Intent.CATEGORY_APP_EMAIL);
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                startActivity(intent);
+                firebaseUser.sendEmailVerification();
+                showToast("We have sent another verification to your email!", 0);
             }
         });
-
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss(); // Dismiss the dialog
+            }
+        });
         AlertDialog alertDialog = builder.create();
 
         alertDialog.show();
@@ -145,13 +150,13 @@ public class SignInActivity extends AppCompatActivity {
 
     private Boolean isValidCredentials() {
         if (binding.inputEmail.getText().toString().trim().isEmpty()) {
-            showToast("Please enter your email");
+            showToast("Please enter your email", 0);
             return false;
         } else if (!Patterns.EMAIL_ADDRESS.matcher(binding.inputEmail.getText().toString()).matches()) {
-            showToast("Please enter valid email");
+            showToast("Please enter valid email", 0);
             return false;
         } else if (binding.inputPassword.getText().toString().trim().isEmpty()) {
-            showToast("Please enter your password");
+            showToast("Please enter your password", 0);
             return false;
         } else {
             return true;

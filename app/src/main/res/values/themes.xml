@@ -6,5 +6,20 @@
         <item name="android:statusBarColor">@color/primary</item>
     </style>
 
-    <style name="Theme.CRM" parent="Base.Theme.CRM" />
+    <style name="Theme.CRM." parent="Base.Theme.CRM" />
+
+    <style name="AppBottomSheetDialogTheme" parent="Theme.Design.BottomSheetDialog">
+        <item name="bottomSheetStyle">@style/RoundedBottomSheetStyle</item>
+        <item name="colorPrimary">@color/primary</item>
+        <item name="colorPrimaryDark">@color/primary_dark</item>
+        <item name="colorSecondary">@color/secondary_text</item>
+        <item name="android:windowIsFloating">false</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:windowSoftInputMode">adjustResize</item>
+    </style>
+
+    <style name="RoundedBottomSheetStyle" parent="Widget.Design.BottomSheet.Modal">
+        <item name="android:background">@drawable/round_dialog</item>
+    </style>
+
 </resources>

@@ -9,7 +9,6 @@ import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
 import android.content.Intent;
-import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -18,14 +17,12 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.github.mikephil.charting.charts.BarChart;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 
 import hcmus.android.crm.activities.Authentication.SignInActivity;
 import hcmus.android.crm.activities.Authentication.SignUpActivity;
 import hcmus.android.crm.activities.Leads.LeadActivity;
-import hcmus.android.crm.activities.Main.MainActivity;
 import hcmus.android.crm.activities.Settings.SettingsActivity;
 import hcmus.android.crm.utilities.Constants;
 import hcmus.android.crm.utilities.PreferenceManager;
@@ -87,9 +84,6 @@ public class DrawerBase extends AppCompatActivity implements NavigationView.OnNa
 
         userName.setText(preferenceManager.getString(Constants.KEY_NAME));
         userEmail.setText(preferenceManager.getString(Constants.KEY_EMAIL));
-     /*   byte[] bytes = Base64.decode(preferenceManager.getString(Constants.KEY_IMAGE), Base64.DEFAULT);
-        Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-        binding.imageProfile.setImageBitmap(bitmap);*/
     }
 
     @Override

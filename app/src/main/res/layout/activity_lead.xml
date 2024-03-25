@@ -7,7 +7,20 @@
     android:fitsSystemWindows="true"
     tools:context=".activities.Leads.LeadActivity">
 
-    <include layout="@layout/content_lead" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/leadRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:divider="@drawable/list_divider"
+            android:dividerHeight="20dp"
+            android:padding="20dp"
+            />
+    </LinearLayout>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab"
@@ -16,10 +29,10 @@
         android:layout_gravity="bottom|end"
         android:layout_marginEnd="@dimen/fab_margin"
         android:layout_marginBottom="16dp"
+        android:contentDescription="@string/add_new_lead"
         app:backgroundTint="@color/primary_dark"
         app:shapeAppearanceOverlay="@style/ShapeAppearance.Material3.Corner.Full"
         app:srcCompat="@android:drawable/ic_input_add"
-        app:tint="@android:color/white"
-        android:contentDescription="@string/add_new_lead" />
+        app:tint="@android:color/white" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

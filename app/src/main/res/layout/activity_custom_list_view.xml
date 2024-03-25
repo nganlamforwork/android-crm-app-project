@@ -3,6 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:paddingVertical="10dp"
     android:orientation="horizontal">
 
     <com.makeramen.roundedimageview.RoundedImageView
@@ -30,7 +31,7 @@
             android:paddingBottom="@dimen/_4sdp"/>
 
         <TextView
-            android:id="@+id/idLabel"
+            android:id="@+id/phoneLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center"

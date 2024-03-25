@@ -1,5 +1,6 @@
 package hcmus.android.crm;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -38,14 +39,15 @@ public class CustomBaseAdapter extends BaseAdapter {
         return 0;
     }
 
+    @SuppressLint("ViewHolder")
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         convertView = inflater.inflate(R.layout.activity_custom_list_view, null);
         TextView txtView = (TextView) convertView.findViewById(R.id.nameLabel);
-        TextView idView = (TextView) convertView.findViewById(R.id.idLabel);
+        TextView phoneView = (TextView) convertView.findViewById(R.id.phoneLabel);
         ImageView customerImg = (ImageView) convertView.findViewById(R.id.imageIcon);
         txtView.setText(listCustomer[position]);
-        idView.setText("Customer ID#" + listCustomerId[position]);
+        phoneView.setText(listCustomerId[position]);
         customerImg.setImageResource(listImages[position]);
         return convertView;
     }
