@@ -6,7 +6,7 @@
         <item name="android:statusBarColor">@color/primary</item>
     </style>
 
-    <style name="Theme.CRM." parent="Base.Theme.CRM" />
+    <style name="Theme.CRM" parent="Base.Theme.CRM" />
 
     <style name="AppBottomSheetDialogTheme" parent="Theme.Design.BottomSheetDialog">
         <item name="bottomSheetStyle">@style/RoundedBottomSheetStyle</item>
@@ -17,6 +17,15 @@
         <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="android:windowSoftInputMode">adjustResize</item>
     </style>
+
+    <style name="Theme.CRM.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="Theme.CRM.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="Theme.CRM.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
     <style name="RoundedBottomSheetStyle" parent="Widget.Design.BottomSheet.Modal">
         <item name="android:background">@drawable/round_dialog</item>

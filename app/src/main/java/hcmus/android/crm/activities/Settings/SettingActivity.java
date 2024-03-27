@@ -4,9 +4,6 @@ import static hcmus.android.crm.utilities.Utils.encodeImage;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.appcompat.app.AppCompatActivity;
-
-import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -18,24 +15,20 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 
-import hcmus.android.crm.DrawerBase;
 import hcmus.android.crm.R;
-import hcmus.android.crm.activities.Main.MainActivity;
-import hcmus.android.crm.databinding.ActivityMainBinding;
-import hcmus.android.crm.databinding.ActivitySettingsBinding;
+import hcmus.android.crm.activities.DrawerBaseActivity;
+import hcmus.android.crm.databinding.ActivitySettingBinding;
 import hcmus.android.crm.utilities.Constants;
 import hcmus.android.crm.utilities.PreferenceManager;
 import hcmus.android.crm.utilities.Utils;
 
-public class SettingsActivity extends DrawerBase {
-    private ActivitySettingsBinding binding;
+public class SettingActivity extends DrawerBaseActivity {
+    private ActivitySettingBinding binding;
     ListView settingsOptions;
     // The n-th row in the list will consist of [icon, label] where icon = thumbnail[n] and label=items[n]
     String[] options = {"Information", "Devices", "Notifications", "Appearance", "Language", "Privacy & Security", "Storage"};
@@ -46,14 +39,21 @@ public class SettingsActivity extends DrawerBase {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = ActivitySettingsBinding.inflate(getLayoutInflater());
+        setTitle("Settings");
+
+        binding = ActivitySettingBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        setTitle("Settings");
         preferenceManager = new PreferenceManager(getApplicationContext());
 
         loadCredentials();
         setListeners();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        navigationView.setCheckedItem(R.id.nav_personal);
     }
 
     private void loadCredentials() {

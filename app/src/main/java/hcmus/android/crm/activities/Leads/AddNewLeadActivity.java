@@ -26,8 +26,11 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.FragmentActivity;
 
-import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.makeramen.roundedimageview.RoundedImageView;
 
@@ -36,13 +39,15 @@ import java.io.InputStream;
 import java.util.Objects;
 
 import hcmus.android.crm.R;
+import hcmus.android.crm.databinding.ActivityAddNewLeadBinding;
 import hcmus.android.crm.models.Lead;
 import hcmus.android.crm.utilities.Constants;
 import hcmus.android.crm.utilities.Utils;
 
 
-public class AddNewLead extends BottomSheetDialogFragment {
-    public static final String TAG = "AddNewLead";
+public class AddNewLeadActivity extends AppCompatActivity {
+    private ActivityAddNewLeadBinding binding;
+    private Lead newLead;
     private EditText leadName, leadEmail, leadPhone, leadAddress, leadJob, leadCompany, leadNotes;
     private Button newLeadSaveButton;
     private ProgressBar progressBar;
@@ -53,47 +58,46 @@ public class AddNewLead extends BottomSheetDialogFragment {
     private FirebaseFirestore db;
 
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setStyle(STYLE_NORMAL, R.style.AppBottomSheetDialogTheme);
-    }
+        setTitle("Add new lead");
 
-    public static AddNewLead newInstance() {
-        return new AddNewLead();
-    }
-
-    @Nullable
-    @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.add_new_lead, container, false);
-        Objects.requireNonNull(Objects.requireNonNull(getDialog()).getWindow()).setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
-        return view;
-    }
-
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
+        binding = ActivityAddNewLeadBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
 
         // Get element id
-        leadName = view.findViewById(R.id.leadName);
-        leadEmail = view.findViewById(R.id.leadEmail);
-        leadPhone = view.findViewById(R.id.leadPhone);
-        leadAddress = view.findViewById(R.id.leadAddress);
-        leadJob = view.findViewById(R.id.leadJob);
-        leadCompany = view.findViewById(R.id.leadCompany);
-        leadNotes = view.findViewById(R.id.leadNotes);
+        leadName = binding.leadName;
+        leadEmail = binding.leadEmail;
+        leadPhone = binding.leadPhone;
+        leadAddress = binding.leadAddress;
+        leadJob = binding.leadJob;
+        leadCompany = binding.leadCompany;
+        leadNotes = binding.leadNotes;
 
-        leadImage = view.findViewById(R.id.leadImage);
-        layoutImage = view.findViewById(R.id.layoutImage);
+        leadImage = binding.leadImage;
+        layoutImage = binding.layoutImage;
 
-                progressBar = view.findViewById(R.id.progressBar);
-        newLeadSaveButton = view.findViewById(R.id.buttonSaveLead);
+        progressBar = binding.progressBar;
+        newLeadSaveButton = binding.buttonSaveLead;
 
         // Handling logic here
         db = FirebaseFirestore.getInstance();
 
+        Toolbar toolbar = binding.toolbar;
+        setSupportActionBar(toolbar);
+
+        // Enable the back button in the action bar or toolbar
+        ActionBar actionBar = getSupportActionBar();
+
+        if (actionBar != null) {
+            actionBar.setTitle("Add new lead");
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setDisplayShowHomeEnabled(true);
+        }
+
         setListeners();
     }
+
     private void setListeners() {
         newLeadSaveButton.setEnabled(false); // Initially disable the button
 
@@ -140,7 +144,8 @@ public class AddNewLead extends BottomSheetDialogFragment {
                         // Process the selected image (in your case, you're encoding it and updating Firestore)
                         try {
                             // Open an input stream for the selected image URI
-                            InputStream inputStream = requireContext().getContentResolver().openInputStream(imageUri);
+                            assert imageUri != null;
+                            InputStream inputStream = getContentResolver().openInputStream(imageUri);
 
                             // Decode the input stream into a Bitmap
                             Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
@@ -170,19 +175,22 @@ public class AddNewLead extends BottomSheetDialogFragment {
 
     private boolean isFieldsFilled() {
         // Check if all required fields are filled
-        return !leadName.getText().toString().trim().isEmpty() ||
+        return !leadName.getText().toString().trim().isEmpty() &&
                 !leadEmail.getText().toString().trim().isEmpty() &&
-                !encodedImage.isEmpty() &&
                 !leadPhone.getText().toString().trim().isEmpty() &&
-                !leadAddress.getText().toString().trim().isEmpty();
+                !leadAddress.getText().toString().trim().isEmpty() &&
+                encodedImage != null && !encodedImage.isEmpty();
     }
+
     private void showToast(String message, int length) {
-        Utils.showToast(getContext(), message, length);
+        Utils.showToast(getApplicationContext(), message, length);
     }
+
     private void addLeadToFirestore(String name, String email, String phone, String address, String job, String company, String notes, String image) {
         // Add lead to Firestore
+        newLead = new Lead(name, email, phone, address, job, company, notes, image);
         db.collection(Constants.KEY_COLLECTION_LEADS)
-                .add(new Lead(name, email, phone, address, job, company, notes, image))
+                .add(newLead)
                 .addOnSuccessListener(documentReference -> {
                     // Reset fields
                     resetFields();
@@ -190,6 +198,13 @@ public class AddNewLead extends BottomSheetDialogFragment {
                     // Hide loading state
                     loading(false);
                     showToast("New lead added successful", 0);
+
+                    // Send back the new lead data to LeadActivity
+                    Intent resultIntent = new Intent();
+                    resultIntent.putExtra("newLead", newLead);
+                    setResult(Activity.RESULT_OK, resultIntent);
+
+                    finish();
                 })
                 .addOnFailureListener(e -> {
                     // Handle failure, e.g., show error message
@@ -197,6 +212,7 @@ public class AddNewLead extends BottomSheetDialogFragment {
                     showToast("Failed to add new lead", 0);
                 });
     }
+
     private void resetFields() {
         // Reset input fields
         leadName.setText("");
@@ -215,25 +231,15 @@ public class AddNewLead extends BottomSheetDialogFragment {
         // Disable save button
         newLeadSaveButton.setEnabled(false);
     }
-    @Override
-    public void onAttach(@NonNull Context context) {
-        super.onAttach(context);
-    }
 
-    @Override
-    public void onDismiss(@NonNull DialogInterface dialog) {
-        super.onDismiss(dialog);
-        Activity activity = getActivity();
-        if (activity instanceof OnDialogCloseListener) {
-            ((OnDialogCloseListener) activity).onDialogClose(dialog);
-        }
-    }
     private class FieldTextWatcher implements TextWatcher {
         @Override
-        public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+        }
 
         @Override
-        public void onTextChanged(CharSequence s, int start, int before, int count) {}
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+        }
 
         @Override
         public void afterTextChanged(Editable s) {
