@@ -1,26 +1,8 @@
 package hcmus.android.crm.activities.Main;
 
-import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.provider.Settings;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.view.View;
-import android.widget.ListView;
-import android.widget.TextView;
-import android.widget.Toast;
 
-import androidx.activity.OnBackPressedCallback;
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBarDrawerToggle;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.core.view.GravityCompat;
-import androidx.drawerlayout.widget.DrawerLayout;
-
-import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.CombinedChart;
 import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.LegendEntry;
@@ -30,46 +12,24 @@ import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.CombinedData;
-import com.github.mikephil.charting.formatter.IAxisValueFormatter;
-import com.google.android.material.navigation.NavigationView;
-import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.ArrayList;
 
-import hcmus.android.crm.CustomBaseAdapter;
-import hcmus.android.crm.DrawerBase;
-import hcmus.android.crm.R;
-import hcmus.android.crm.activities.Authentication.SignInActivity;
-import hcmus.android.crm.activities.Authentication.SignUpActivity;
-import hcmus.android.crm.activities.Leads.LeadActivity;
-import hcmus.android.crm.activities.Settings.SettingsActivity;
+import hcmus.android.crm.activities.DrawerBaseActivity;
 import hcmus.android.crm.databinding.ActivityMainBinding;
-import hcmus.android.crm.utilities.Constants;
-import hcmus.android.crm.utilities.PreferenceManager;
 
-public class MainActivity extends DrawerBase {
-    BarChart barChart;
-    TextView chartLabel;
-    TextView chartDateLabel;
-    private CombinedChart combinedChart;
+public class MainActivity extends DrawerBaseActivity {
     private ActivityMainBinding binding;
-
+    private CombinedChart combinedChart;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        ListView listView = findViewById(R.id.customListView);
-        String[] customerList = {"Francis Holzworth", "Kaylyn Yokel", "Kimberly Muro", "Jack Sause", "Rebekkah Lafantano"};
-        String[] customerListId = {"1231231231", "1231231231", "1231231231", "1231231231", "1231231231"};
-        int[] customerImgs = {R.drawable.ava1, R.drawable.ava2, R.drawable.ava3, R.drawable.ava4, R.drawable.ava5};
-
-        CustomBaseAdapter customBaseAdapter = new CustomBaseAdapter(getApplicationContext(), customerList, customerListId, customerImgs);
-        listView.setAdapter(customBaseAdapter);
-
-        combinedChart = (CombinedChart) findViewById(R.id.combinedChart);
+        combinedChart = binding.combinedChart;
         combinedChart.getDescription().setEnabled(false);
         combinedChart.setDrawGridBackground(false);
         combinedChart.setDrawBarShadow(false);
@@ -119,6 +79,7 @@ public class MainActivity extends DrawerBase {
         return entries;
     }
 
+
     private ArrayList<BarEntry> getBar2Enteries(ArrayList<BarEntry> entries) {
         entries.add(new BarEntry(1, 20));
         entries.add(new BarEntry(2, 25));
@@ -160,4 +121,5 @@ public class MainActivity extends DrawerBase {
 
         return d;
     }
+
 }

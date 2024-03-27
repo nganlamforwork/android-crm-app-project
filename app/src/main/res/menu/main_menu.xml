@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/nav_home"
@@ -9,34 +10,34 @@
         <item
             android:id="@+id/nav_leads"
             android:icon="@drawable/target"
-            android:title="Leads" />
+            android:title="@string/leads" />
         <item
             android:id="@+id/nav_contact"
             android:icon="@drawable/baseline_contacts_24"
-            android:title="Contact" />
+            android:title="@string/contacts" />
         <item
             android:id="@+id/nav_organization"
             android:icon="@drawable/organization"
-            android:title="Organization" />
+            android:title="@string/organization" />
         <item
             android:id="@+id/nav_opportunity"
             android:icon="@drawable/baseline_work_24"
-            android:title="Opportunity" />
+            android:title="@string/opportunity" />
         <item
             android:id="@+id/nav_quotations"
             android:icon="@drawable/quotation"
-            android:title="Quotations" />
+            android:title="@string/quotations" />
         <item
             android:id="@+id/nav_sales"
             android:icon="@drawable/sale"
-            android:title="Sales" />
+            android:title="@string/sales" />
         <item
             android:id="@+id/nav_territory"
             android:icon="@drawable/territory"
-            android:title="Territory" />
+            android:title="@string/territory" />
     </group>
 
-    <item android:title="Communicate">
+    <item android:title="@string/communicate">
         <menu>
             <group android:checkableBehavior="single">
                 <item
@@ -54,24 +55,20 @@
             </group>
         </menu>
     </item>
-    <item android:title="Personal">
+    <item android:title="@string/personal">
         <menu>
             <group android:checkableBehavior="single">
                 <item
                     android:id="@+id/nav_personal"
                     android:icon="@drawable/baseline_communication_alt_24"
-                    android:title="Settings" />
-            </group>
-            <group android:checkableBehavior="single">
+                    android:title="@string/settings" />
                 <item
                     android:id="@+id/nav_logout"
                     android:icon="@drawable/baseline_logout_24"
-                    android:title="Log Out" />
+                    android:title="@string/log_out" />
             </group>
         </menu>
     </item>
-
-
 
 
 </menu>

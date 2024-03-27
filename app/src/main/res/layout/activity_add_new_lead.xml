@@ -5,24 +5,29 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="16dp"
-    tools:context=".activities.Leads.AddNewLead">
+    tools:context=".activities.Leads.AddNewLeadActivity">
 
-    <TextView
-        android:layout_width="wrap_content"
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginBottom="16dp"
-        android:text="Add new lead"
-        android:textColor="@color/primary_dark"
-        android:textSize="24sp"
-        android:textStyle="bold" />
+        android:theme="@style/Theme.CRM.AppBarOverlay">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            android:elevation="4dp"
+            app:popupTheme="@style/Theme.CRM.PopupOverlay" />
+
+    </com.google.android.material.appbar.AppBarLayout>
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:clipToPadding="false"
         android:overScrollMode="never"
+        android:padding="16dp"
         android:scrollbars="none">
 
         <LinearLayout
@@ -39,12 +44,12 @@
 
                 <com.makeramen.roundedimageview.RoundedImageView
                     android:id="@+id/leadImage"
-                    android:layout_width="@dimen/_60sdp"
-                    android:layout_height="@dimen/_60sdp"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
                     android:background="@drawable/background_image"
                     android:scaleType="centerCrop"
                     android:src="@drawable/avatar"
-                    app:riv_corner_radius="@dimen/_30sdp" />
+                    app:riv_corner_radius="50dp" />
 
             </FrameLayout>
 

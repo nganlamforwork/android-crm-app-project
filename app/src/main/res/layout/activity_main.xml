@@ -1,14 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
     android:orientation="vertical"
-    tools:context=".activities.Main.MainActivity"
-    tools:openDrawer="start">
+    android:padding="16dp"
+    tools:context=".activities.Main.MainActivity">
 
     <!-- Chart Labels -->
     <LinearLayout
@@ -51,34 +48,4 @@
         android:layout_marginHorizontal="@dimen/_16sdp"
         android:layout_marginTop="@dimen/_16sdp"
         android:layout_marginBottom="@dimen/_8sdp" />
-
-    <!-- Customer List Label -->
-    <TextView
-        android:id="@+id/customerListLabel"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/_8sdp"
-        android:layout_marginTop="20dp"
-        android:text="Customer List"
-        android:textColor="@color/primary_text"
-        android:textSize="@dimen/_18sdp"
-        android:textStyle="bold" />
-
-    <!-- Customer List ListView -->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:orientation="vertical">
-
-        <ListView
-            android:id="@+id/customListView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:divider="@drawable/list_divider"
-            android:dividerHeight="20dp"
-            android:padding="20dp" />
-
-    </LinearLayout>
-
 </LinearLayout>

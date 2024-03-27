@@ -7,20 +7,20 @@
     android:fitsSystemWindows="true"
     tools:context=".activities.Leads.LeadActivity">
 
-    <LinearLayout
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_marginTop="?attr/actionBarSize"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/leadRecyclerView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:divider="@drawable/list_divider"
-            android:dividerHeight="20dp"
-            android:padding="20dp"
-            />
-    </LinearLayout>
+            android:dividerHeight="20dp" />
+
+    </androidx.core.widget.NestedScrollView>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab"
@@ -34,5 +34,4 @@
         app:shapeAppearanceOverlay="@style/ShapeAppearance.Material3.Corner.Full"
         app:srcCompat="@android:drawable/ic_input_add"
         app:tint="@android:color/white" />
-
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

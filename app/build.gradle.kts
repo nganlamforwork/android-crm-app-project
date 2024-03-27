@@ -54,9 +54,10 @@ dependencies {
 
     // Import the Firebase BoM
     implementation(platform("com.google.firebase:firebase-bom:32.7.3"))
-    implementation("com.google.firebase:firebase-firestore:24.10.3")
+    implementation("com.google.firebase:firebase-firestore:24.11.0")
     implementation("com.google.firebase:firebase-auth:22.3.1")
 
     // MultiDex
     implementation("androidx.multidex:multidex:2.0.1")
+    implementation("it.xabaras.android:recyclerview-swipedecorator:1.4")
 }
