@@ -57,8 +57,6 @@ public class LeadAdapter extends RecyclerView.Adapter<LeadAdapter.MyViewHolder> 
         notifyItemRemoved(position);
     }
 
-
-
     public Context getContext() {
         return context;
     }
@@ -95,6 +93,7 @@ public class LeadAdapter extends RecyclerView.Adapter<LeadAdapter.MyViewHolder> 
     public interface OnLeadItemClickListener {
         void onLeadItemClick(int position);
     }
+
 
     @Override
     public int getItemCount() {
@@ -159,7 +158,7 @@ public class LeadAdapter extends RecyclerView.Adapter<LeadAdapter.MyViewHolder> 
             protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
                 leadListFiltered = (ArrayList<Lead>) filterResults.values;
 
-                for(Lead lead : leadListFiltered) {
+                for (Lead lead : leadListFiltered) {
                     Log.d("NAME", lead.getName());
                 }
                 // refresh the list with filtered data

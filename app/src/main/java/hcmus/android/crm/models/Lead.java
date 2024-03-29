@@ -36,6 +36,12 @@ public class Lead extends LeadId implements Parcelable {
     @PropertyName("notes")
     private String notes;
 
+    @PropertyName("latitude")
+    private String latitude;
+
+    @PropertyName("longitude")
+    private String longitude;
+
     @PropertyName("createdAt")
     @ServerTimestamp
     private Date createdAt;
@@ -46,7 +52,7 @@ public class Lead extends LeadId implements Parcelable {
     public Lead() {
     }
 
-    public Lead(String name, String email, String phone, String address, String job, String company, String notes, String image) {
+    public Lead(String name, String email, String phone, String address, String job, String company, String notes, String image, String latitude, String longitude) {
         this.name = name;
         this.image = image;
         this.email = email;
@@ -55,48 +61,11 @@ public class Lead extends LeadId implements Parcelable {
         this.job = job;
         this.company = company;
         this.notes = notes;
-    }
-
-    // Getters and setters for fields
-
-    public String getName() {
-        return name;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public String getPhone() {
-        return phone;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public String getJob() {
-        return job;
-    }
-
-    public String getCompany() {
-        return company;
-    }
-
-    public String getNotes() {
-        return notes;
-    }
-
-    public String getImage() {
-        return image;
-    }
-
-    public Date getCreatedAt() {
-        return createdAt;
+        this.latitude = latitude;
+        this.longitude = longitude;
     }
 
     // Parcelable implementation
-
     protected Lead(Parcel in) {
         name = in.readString();
         image = in.readString();
@@ -106,6 +75,8 @@ public class Lead extends LeadId implements Parcelable {
         job = in.readString();
         company = in.readString();
         notes = in.readString();
+        latitude = in.readString();
+        longitude = in.readString();
         long tmpCreatedAt = in.readLong();
         createdAt = tmpCreatedAt == -1 ? null : new Date(tmpCreatedAt);
     }
@@ -127,6 +98,94 @@ public class Lead extends LeadId implements Parcelable {
         return 0;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getJob() {
+        return job;
+    }
+
+    public void setJob(String job) {
+        this.job = job;
+    }
+
+    public String getCompany() {
+        return company;
+    }
+
+    public void setCompany(String company) {
+        this.company = company;
+    }
+
+    public String getNotes() {
+        return notes;
+    }
+
+    public void setNotes(String notes) {
+        this.notes = notes;
+    }
+
+    public String getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(String latitude) {
+        this.latitude = latitude;
+    }
+
+    public String getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(String longitude) {
+        this.longitude = longitude;
+    }
+
+    public Date getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Date createdAt) {
+        this.createdAt = createdAt;
+    }
+
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(name);
@@ -137,6 +196,8 @@ public class Lead extends LeadId implements Parcelable {
         dest.writeString(job);
         dest.writeString(company);
         dest.writeString(notes);
+        dest.writeString(latitude);
+        dest.writeString(longitude);
         dest.writeLong(createdAt != null ? createdAt.getTime() : -1);
     }
 }

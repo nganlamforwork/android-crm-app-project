@@ -3,6 +3,14 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-feature
+        android:name="android.hardware.telephony"
+        android:required="false" />
+    <uses-permission android:name="com.google.android.providers.gsf.permisson.READ_GSERVICES" />
+    <uses-permission android:name="android.permission.CALL_PHONE" />
 
     <application
         android:allowBackup="true"
@@ -17,6 +25,7 @@
         <meta-data
             android:name="android.app.searchable"
             android:resource="@xml/searchable" />
+
         <activity
             android:name=".activities.Authentication.SignUpActivity"
             android:exported="false"
@@ -44,7 +53,13 @@
             android:name=".activities.Leads.LeadDetailActivity"
             android:exported="false"
             android:parentActivityName=".activities.Leads.LeadActivity"
-            android:windowSoftInputMode="adjustResize" />
+            android:windowSoftInputMode="adjustResize">
+            <intent-filter>
+                <action android:name="android.intent.action.SENDTO" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:scheme="mailto" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".activities.Leads.AddNewLeadActivity"
             android:exported="false"
@@ -56,8 +71,16 @@
             android:parentActivityName=".activities.Main.MainActivity"
             android:windowSoftInputMode="adjustResize" />
         <activity
+            android:name=".activities.Maps.MapsActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
             android:name=".activities.Main.MainActivity"
             android:exported="false" />
+
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="${MAPS_API_KEY}" />
     </application>
 
 </manifest>

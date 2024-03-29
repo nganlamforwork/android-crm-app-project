@@ -37,7 +37,6 @@ import hcmus.android.crm.databinding.ActivityLeadBinding;
 import hcmus.android.crm.models.Lead;
 import hcmus.android.crm.utilities.Constants;
 import hcmus.android.crm.utilities.TouchHelper;
-import hcmus.android.crm.utilities.Utils;
 
 public class LeadActivity extends DrawerBaseActivity implements LeadAdapter.OnLeadItemClickListener {
 
@@ -49,6 +48,7 @@ public class LeadActivity extends DrawerBaseActivity implements LeadAdapter.OnLe
     private LeadAdapter leadAdapter;
     private List<Lead> leadList;
     private ActivityResultLauncher<Intent> activityResultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
+        @SuppressLint("NotifyDataSetChanged")
         @Override
         public void onActivityResult(ActivityResult result) {
             if(result.getResultCode() == RESULT_OK) {
@@ -57,6 +57,7 @@ public class LeadActivity extends DrawerBaseActivity implements LeadAdapter.OnLe
                 Lead newLead = intent.getParcelableExtra("newLead");
                 leadList.add(0, newLead);
                 leadAdapter.notifyItemInserted(0);
+                leadAdapter.notifyDataSetChanged();
             }
         }
     });
@@ -110,6 +111,7 @@ public class LeadActivity extends DrawerBaseActivity implements LeadAdapter.OnLe
         Lead lead = leadList.get(position);
         Intent intent = new Intent(LeadActivity.this, LeadDetailActivity.class);
         intent.putExtra("leadDetails", lead);
+        intent.putExtra("leadId", lead.LeadId);
         startActivity(intent);
     }
 

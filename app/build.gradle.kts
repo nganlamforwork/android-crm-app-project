@@ -2,6 +2,8 @@ plugins {
     id("com.android.application")
     // Add the Google services Gradle plugin
     id("com.google.gms.google-services")
+    id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin")
+
 }
 
 android {
@@ -60,4 +62,8 @@ dependencies {
     // MultiDex
     implementation("androidx.multidex:multidex:2.0.1")
     implementation("it.xabaras.android:recyclerview-swipedecorator:1.4")
+
+    // Google Map SDK
+    implementation("com.google.android.gms:play-services-maps:18.2.0")
+    implementation("com.google.android.gms:play-services-location:21.2.0")
 }
