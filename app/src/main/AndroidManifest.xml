@@ -58,6 +58,15 @@
         <activity
             android:name=".activities.Main.MainActivity"
             android:exported="false" />
+        <activity
+            android:name=".activities.Settings.Information"
+            android:exported="false"
+            android:parentActivityName=".activities.Settings.SettingActivity" />
+        <activity
+            android:name=".activities.Authentication.ChangePasswordActivity"
+            android:exported="false"
+            android:parentActivityName=".activities.Settings.Information" />
+
     </application>
 
 </manifest>

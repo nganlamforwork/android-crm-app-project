@@ -137,8 +137,7 @@ public class LeadActivity extends DrawerBaseActivity implements LeadAdapter.OnLe
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.search, menu);
 
-        SearchView searchView = (SearchView) menu.findItem(R.id.action_search)
-                .getActionView();
+        SearchView searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
         searchView.setQueryHint("Type here to search");
         searchView.setMaxWidth(Integer.MAX_VALUE);
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
