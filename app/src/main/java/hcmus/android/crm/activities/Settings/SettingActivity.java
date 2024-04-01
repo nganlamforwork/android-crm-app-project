@@ -95,9 +95,7 @@ public class SettingActivity extends DrawerBaseActivity {
             pickImage.launch(intent);
         });
     }
-    private void showToast(String message, int length) {
-        Utils.showToast(getApplicationContext(), message, length);
-    }
+
     private final ActivityResultLauncher<Intent> pickImage = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             result -> {

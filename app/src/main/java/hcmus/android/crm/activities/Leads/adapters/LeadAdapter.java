@@ -27,7 +27,7 @@ import hcmus.android.crm.R;
 import hcmus.android.crm.models.Lead;
 import hcmus.android.crm.utilities.Constants;
 
-public class LeadAdapter extends RecyclerView.Adapter<LeadAdapter.MyViewHolder> implements Filterable {
+public class LeadAdapter extends RecyclerView.Adapter<LeadAdapter.LeadViewHolder> implements Filterable {
     private final List<Lead> leadList;
     private List<Lead> leadListFiltered;
     private final Context context;
@@ -43,11 +43,11 @@ public class LeadAdapter extends RecyclerView.Adapter<LeadAdapter.MyViewHolder> 
 
     @NonNull
     @Override
-    public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public LeadViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.activity_custom_list_view, parent, false);
         db = FirebaseFirestore.getInstance();
 
-        return new MyViewHolder(view);
+        return new LeadViewHolder(view);
     }
 
     public void deleteLead(int position) {
@@ -80,7 +80,7 @@ public class LeadAdapter extends RecyclerView.Adapter<LeadAdapter.MyViewHolder> 
     }
 
     @Override
-    public void onBindViewHolder(@NonNull LeadAdapter.MyViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull LeadAdapter.LeadViewHolder holder, int position) {
         Lead lead = leadList.get(position);
         holder.leadName.setText(lead.getName());
         holder.leadPhone.setText(lead.getPhone());
@@ -100,11 +100,11 @@ public class LeadAdapter extends RecyclerView.Adapter<LeadAdapter.MyViewHolder> 
         return leadListFiltered.size();
     }
 
-    public static class MyViewHolder extends RecyclerView.ViewHolder {
+    public static class LeadViewHolder extends RecyclerView.ViewHolder {
         TextView leadName, leadPhone;
         RoundedImageView leadImage;
 
-        public MyViewHolder(@NonNull View itemView) {
+        public LeadViewHolder(@NonNull View itemView) {
             super(itemView);
 
             leadName = itemView.findViewById(R.id.nameLabel);

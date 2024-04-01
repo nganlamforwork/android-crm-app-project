@@ -88,7 +88,6 @@ public class LeadActivity extends DrawerBaseActivity implements LeadAdapter.OnLe
         setListeners();
     }
 
-    @SuppressLint("NotifyDataSetChanged")
     @Override
     protected void onResume() {
         super.onResume();

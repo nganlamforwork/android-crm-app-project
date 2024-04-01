@@ -6,9 +6,11 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
     <uses-feature
         android:name="android.hardware.telephony"
         android:required="false" />
+
     <uses-permission android:name="com.google.android.providers.gsf.permisson.READ_GSERVICES" />
     <uses-permission android:name="android.permission.CALL_PHONE" />
 
@@ -25,6 +27,9 @@
         <meta-data
             android:name="android.app.searchable"
             android:resource="@xml/searchable" />
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="${MAPS_API_KEY}" />
 
         <activity
             android:name=".activities.Authentication.SignUpActivity"
@@ -71,8 +76,23 @@
             android:parentActivityName=".activities.Main.MainActivity"
             android:windowSoftInputMode="adjustResize" />
         <activity
+            android:name=".activities.Sales.SaleActivity"
+            android:exported="false"
+            android:parentActivityName=".activities.Main.MainActivity"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
             android:name=".activities.Maps.MapsActivity"
             android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".activities.Calendar.WeekViewActivity"
+            android:exported="false"
+            android:parentActivityName=".activities.Main.MainActivity"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".activities.Calendar.EventEditActivity"
+            android:exported="false"
+            android:parentActivityName=".activities.Calendar.WeekViewActivity"
             android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".activities.Main.MainActivity"
