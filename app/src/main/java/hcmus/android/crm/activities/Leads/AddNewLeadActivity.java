@@ -46,6 +46,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.makeramen.roundedimageview.RoundedImageView;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 import java.util.Locale;
@@ -103,11 +104,9 @@ public class AddNewLeadActivity extends DrawerBaseActivity {
                 .setMinUpdateIntervalMillis(2000)
                 .build();
 
-
-        // Handling logic here
         db = FirebaseFirestore.getInstance();
 
-        Toolbar toolbar = binding.toolbar;
+        Toolbar toolbar = binding.appBar.toolbar;
         setSupportActionBar(toolbar);
 
         // Enable the back button in the action bar or toolbar
@@ -149,6 +148,11 @@ public class AddNewLeadActivity extends DrawerBaseActivity {
                 String company = leadCompany.getText().toString().trim();
                 String notes = leadNotes.getText().toString().trim();
 
+                if(!leadLocation.getText().toString().trim().isEmpty()) {
+                    address = leadLocation.getText().toString().trim();
+                    getLocationFromAddress(address);
+                }
+
                 // Add lead to Firestore
                 addLeadToFirestore(name, email, phone, address, job, company, notes, encodedImage);
             }
@@ -169,6 +173,7 @@ public class AddNewLeadActivity extends DrawerBaseActivity {
         locationManager = (LocationManager) getApplicationContext().getSystemService(LOCATION_SERVICE);
         if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
             onGPS();
+            getLeadLocation.setChecked(false);
         } else {
             getCurrentLocation();
         }
@@ -213,9 +218,24 @@ public class AddNewLeadActivity extends DrawerBaseActivity {
                 address = addresses.get(0).getAddressLine(0);
             }
             leadLocation.setText(address);
-            // moving text in text view
-            leadLocation.setSelected(true);
         } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    private void getLocationFromAddress(String strAddress) {
+        Geocoder geocoder = new Geocoder(this, Locale.getDefault());
+        try {
+            List<Address> addressList = geocoder.getFromLocationName(strAddress, 1);
+            if (addressList != null && addressList.size() > 0) {
+                Address address = addressList.get(0);
+                double latitude = address.getLatitude();
+                double longitude = address.getLongitude();
+
+                leadLat = String.valueOf(latitude);
+                leadLong = String.valueOf(longitude);
+            } else {
+            }
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
@@ -287,14 +307,13 @@ public class AddNewLeadActivity extends DrawerBaseActivity {
                 encodedImage != null && !encodedImage.isEmpty();
     }
 
-    private void showToast(String message, int length) {
-        Utils.showToast(getApplicationContext(), message, length);
-    }
 
     private void addLeadToFirestore(String name, String email, String phone, String address, String job, String company, String notes, String image) {
         // Add lead to Firestore
         newLead = new Lead(name, email, phone, address, job, company, notes, image, leadLat, leadLong);
-        db.collection(Constants.KEY_COLLECTION_LEADS)
+        db.collection(Constants.KEY_COLLECTION_USERS)
+                .document(preferenceManager.getString(Constants.KEY_USER_ID))
+                .collection(Constants.KEY_COLLECTION_LEADS)
                 .add(newLead)
                 .addOnSuccessListener(documentReference -> {
                     // Reset fields

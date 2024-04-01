@@ -75,9 +75,6 @@ public class LeadDetailActivity extends DrawerBaseActivity {
         setListeners();
     }
 
-    private void showToast(String message, int length) {
-        Utils.showToast(getApplicationContext(), message, length);
-    }
 
     private void setListeners() {
         binding.leadLocation.setOnClickListener(v -> {
@@ -146,8 +143,13 @@ public class LeadDetailActivity extends DrawerBaseActivity {
     }
 
     private void deleteLead() {
-        db.collection(Constants.KEY_COLLECTION_LEADS).document(leadId).delete();
-        startActivity(new Intent(this, LeadActivity.class));
+        db.collection(Constants.KEY_COLLECTION_USERS)
+                .document(preferenceManager.getString(Constants.KEY_USER_ID))
+                .collection(Constants.KEY_COLLECTION_LEADS)
+                .document(leadId).delete();
+        Intent intent = new Intent(this, LeadActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
         finish();
     }
 

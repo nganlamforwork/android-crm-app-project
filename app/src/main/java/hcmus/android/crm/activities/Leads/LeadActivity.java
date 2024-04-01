@@ -14,9 +14,11 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 
 import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.EventListener;
@@ -51,8 +53,8 @@ public class LeadActivity extends DrawerBaseActivity implements LeadAdapter.OnLe
         @SuppressLint("NotifyDataSetChanged")
         @Override
         public void onActivityResult(ActivityResult result) {
-            if(result.getResultCode() == RESULT_OK) {
-                Intent intent  = result.getData();
+            if (result.getResultCode() == RESULT_OK) {
+                Intent intent = result.getData();
                 assert intent != null;
                 Lead newLead = intent.getParcelableExtra("newLead");
                 leadList.add(0, newLead);
@@ -88,7 +90,6 @@ public class LeadActivity extends DrawerBaseActivity implements LeadAdapter.OnLe
         setListeners();
     }
 
-    @SuppressLint("NotifyDataSetChanged")
     @Override
     protected void onResume() {
         super.onResume();
@@ -116,19 +117,29 @@ public class LeadActivity extends DrawerBaseActivity implements LeadAdapter.OnLe
     }
 
     private void showData() {
-        query = db.collection(Constants.KEY_COLLECTION_LEADS).orderBy("createdAt", Query.Direction.DESCENDING);
+        query = db.collection(Constants.KEY_COLLECTION_USERS)
+                .document(preferenceManager.getString(Constants.KEY_USER_ID))
+                .collection(Constants.KEY_COLLECTION_LEADS)
+                .orderBy("createdAt", Query.Direction.DESCENDING);
         listenerRegistration = query.addSnapshotListener(new EventListener<QuerySnapshot>() {
             @SuppressLint("NotifyDataSetChanged")
             @Override
             public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+                if (error != null) {
+                    Log.e("Firestore", "Error fetching leads: " + error.getMessage());
+                    return;
+                }
                 assert value != null;
                 for (DocumentChange documentChange : value.getDocumentChanges()) {
                     String id = documentChange.getDocument().getId();
                     Lead lead = documentChange.getDocument().toObject(Lead.class).withId(id);
 
+                    Log.d("LEAD", lead.getName());
                     leadList.add(lead);
                 }
                 leadAdapter.notifyDataSetChanged();
+                toggleEmptyViewVisibility(leadList.isEmpty());
+
                 listenerRegistration.remove();
             }
         });
@@ -170,5 +181,15 @@ public class LeadActivity extends DrawerBaseActivity implements LeadAdapter.OnLe
         }
 
         return super.onOptionsItemSelected(item);
+    }
+    private void toggleEmptyViewVisibility(boolean isEmpty) {
+        TextView emptyView = binding.emptyView;
+        if (isEmpty) {
+            emptyView.setVisibility(View.VISIBLE); // Show empty view
+            recyclerView.setVisibility(View.GONE); // Hide RecyclerView
+        } else {
+            emptyView.setVisibility(View.GONE); // Hide empty view
+            recyclerView.setVisibility(View.VISIBLE); // Show RecyclerView
+        }
     }
 }

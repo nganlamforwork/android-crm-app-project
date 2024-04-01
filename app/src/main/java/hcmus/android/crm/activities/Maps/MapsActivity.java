@@ -2,6 +2,7 @@ package hcmus.android.crm.activities.Maps;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -46,10 +47,13 @@ public class MapsActivity extends DrawerBaseActivity implements OnMapReadyCallba
         // Retrieve latitude and longitude from intent extras
         Intent intent = getIntent();
         if (intent != null) {
-            latitude = intent.getDoubleExtra("latitude", 0.0);
-            longitude = intent.getDoubleExtra("longitude", 0.0);
+            latitude = Double.parseDouble(intent.getStringExtra("latitude"));
+            longitude = Double.parseDouble(intent.getStringExtra("longitude"));
             name = intent.getStringExtra("name");
         }
+
+        Log.d("LAT", String.valueOf(latitude));
+        Log.d("LONG", String.valueOf(longitude));
 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
@@ -61,7 +65,7 @@ public class MapsActivity extends DrawerBaseActivity implements OnMapReadyCallba
 
         LatLng location = new LatLng(latitude, longitude);
         myMap.addMarker(new MarkerOptions().position(location).title(name));
-        myMap.moveCamera(CameraUpdateFactory.newLatLng(location));
+        myMap.moveCamera(CameraUpdateFactory.newLatLngZoom(location, 15));
     }
     @Override
     public boolean onSupportNavigateUp() {
