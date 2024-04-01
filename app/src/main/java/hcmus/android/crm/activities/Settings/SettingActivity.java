@@ -70,18 +70,23 @@ public class SettingActivity extends DrawerBaseActivity {
         SettingsListViewAdapter adapter = new SettingsListViewAdapter(this, R.layout.settings_list_view_item, options);
 
         // bind intrinsic ListView to custom adapter
-        settingsOptions = (ListView) findViewById(R.id.settingsOptions);
+        settingsOptions = findViewById(R.id.settingsOptions);
         settingsOptions.setAdapter(adapter);
         settingsOptions.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
                 // Update selected item position
                 adapter.setSelectedItemPosition(position);
 
                 // Notify the adapter that the data set has changed
                 adapter.notifyDataSetChanged();
+
+                // Handle click event for "Information" item
+                if (position == 0) {
+                    // Create an Intent to navigate to SettingInformationActivity
+                    Intent intent = new Intent(SettingActivity.this, Information.class);
+                    startActivity(intent);
+                }
             }
         });
         binding.layoutImage.setOnClickListener(v -> {
