@@ -287,10 +287,6 @@ public class AddNewContactActivity extends DrawerBaseActivity {
                 encodedImage != null && !encodedImage.isEmpty();
     }
 
-    private void showToast(String message, int length) {
-        Utils.showToast(getApplicationContext(), message, length);
-    }
-
     private void addContactToFirestore(String name, String email, String phone, String address, String job, String company, String notes, String image) {
         // Add contact to Firestore
         newContact = new Contact(name, email, phone, address, job, company, notes, image, contactLat, contactLong);

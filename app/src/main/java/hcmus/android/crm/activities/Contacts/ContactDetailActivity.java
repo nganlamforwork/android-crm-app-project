@@ -75,10 +75,6 @@ public class ContactDetailActivity extends DrawerBaseActivity {
         setListeners();
     }
 
-    private void showToast(String message, int length) {
-        Utils.showToast(getApplicationContext(), message, length);
-    }
-
     private void setListeners() {
         binding.contactLocation.setOnClickListener(v -> {
             String latitude = contact.getLatitude();
