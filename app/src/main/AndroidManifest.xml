@@ -24,6 +24,16 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.CRM"
         tools:targetApi="31">
+        <activity
+            android:name=".activities.Contacts.ContactDetailActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.Contacts.ContactActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.Contacts.AddNewContactActivity"
+            android:exported="false" />
+
         <meta-data
             android:name="android.app.searchable"
             android:resource="@xml/searchable" />
@@ -61,7 +71,9 @@
             android:windowSoftInputMode="adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.SENDTO" />
+
                 <category android:name="android.intent.category.DEFAULT" />
+
                 <data android:scheme="mailto" />
             </intent-filter>
         </activity>
@@ -105,7 +117,6 @@
             android:name=".activities.Authentication.ChangePasswordActivity"
             android:exported="false"
             android:parentActivityName=".activities.Settings.Information" />
-
     </application>
 
 </manifest>
