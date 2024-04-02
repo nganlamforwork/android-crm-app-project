@@ -4,6 +4,7 @@ import static hcmus.android.crm.utilities.Utils.encodeImage;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -60,9 +61,11 @@ public class SettingActivity extends DrawerBaseActivity {
         binding.displayName.setText(preferenceManager.getString(Constants.KEY_NAME));
         binding.textUserEmail.setText(preferenceManager.getString(Constants.KEY_EMAIL));
 
-        byte[] bytes = Base64.decode(preferenceManager.getString(Constants.KEY_IMAGE), Base64.DEFAULT);
-        Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-        binding.avatar.setImageBitmap(bitmap);
+        if (preferenceManager.getString(Constants.KEY_IMAGE) != null) {
+            byte[] bytes = Base64.decode(preferenceManager.getString(Constants.KEY_IMAGE), Base64.DEFAULT);
+            Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+            binding.avatar.setImageBitmap(bitmap);
+        }
     }
 
     private void setListeners() {
