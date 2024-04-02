@@ -29,6 +29,7 @@ import hcmus.android.crm.activities.Authentication.SignInActivity;
 import hcmus.android.crm.activities.Contacts.ContactActivity;
 import hcmus.android.crm.activities.Leads.LeadActivity;
 import hcmus.android.crm.activities.Main.MainActivity;
+import hcmus.android.crm.activities.Sales.SaleActivity;
 import hcmus.android.crm.activities.Settings.SettingActivity;
 import hcmus.android.crm.utilities.Constants;
 import hcmus.android.crm.utilities.PreferenceManager;
@@ -117,6 +118,8 @@ public class DrawerBaseActivity extends AppCompatActivity implements NavigationV
             targetActivityClass = ContactActivity.class;
         } else if (id == R.id.nav_personal) {
             targetActivityClass = SettingActivity.class;
+        } else if(id == R.id.nav_sales) {
+            targetActivityClass = SaleActivity.class;
         } else if (id == R.id.nav_logout) {
             logout();
             return true; // Return immediately after logout
@@ -139,7 +142,7 @@ public class DrawerBaseActivity extends AppCompatActivity implements NavigationV
         navigationView.setCheckedItem(R.id.nav_home);
     }
 
-    private void showToast(String message, int length) {
+    protected void showToast(String message, int length) {
         Utils.showToast(getApplicationContext(), message, length);
     }
 

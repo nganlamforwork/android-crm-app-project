@@ -26,7 +26,7 @@ public class Information extends DrawerBaseActivity {
         binding = SettingInformationBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        Toolbar toolbar = binding.toolbar;
+        Toolbar toolbar = binding.appBar.toolbar;
         setSupportActionBar(toolbar);
 
         // Enable the back button in the action bar or toolbar
@@ -55,9 +55,6 @@ public class Information extends DrawerBaseActivity {
         binding.planEdittext.setText("Premium✨");
     }
 
-    private void showToast(String message, int length) {
-        Utils.showToast(getApplicationContext(), message, length);
-    }
 
     private void setListeners() {
         binding.passwordIcon.setOnClickListener(v -> {
@@ -65,5 +62,10 @@ public class Information extends DrawerBaseActivity {
             Intent intent = new Intent(Information.this, ChangePasswordActivity.class);
             startActivity(intent);
         });
+    }
+    @Override
+    public boolean onSupportNavigateUp() {
+        getOnBackPressedDispatcher().onBackPressed();
+        return true;
     }
 }

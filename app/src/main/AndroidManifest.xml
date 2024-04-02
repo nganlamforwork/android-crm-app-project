@@ -37,6 +37,9 @@
         <meta-data
             android:name="android.app.searchable"
             android:resource="@xml/searchable" />
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="${MAPS_API_KEY}" />
 
         <activity
             android:name=".activities.Authentication.SignUpActivity"
@@ -85,8 +88,23 @@
             android:parentActivityName=".activities.Main.MainActivity"
             android:windowSoftInputMode="adjustResize" />
         <activity
+            android:name=".activities.Sales.SaleActivity"
+            android:exported="false"
+            android:parentActivityName=".activities.Main.MainActivity"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
             android:name=".activities.Maps.MapsActivity"
             android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".activities.Calendar.WeekViewActivity"
+            android:exported="false"
+            android:parentActivityName=".activities.Main.MainActivity"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".activities.Calendar.EventEditActivity"
+            android:exported="false"
+            android:parentActivityName=".activities.Calendar.WeekViewActivity"
             android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".activities.Main.MainActivity"

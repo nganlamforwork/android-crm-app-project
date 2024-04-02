@@ -103,11 +103,9 @@ public class AddNewLeadActivity extends DrawerBaseActivity {
                 .setMinUpdateIntervalMillis(2000)
                 .build();
 
-
-        // Handling logic here
         db = FirebaseFirestore.getInstance();
 
-        Toolbar toolbar = binding.toolbar;
+        Toolbar toolbar = binding.appBar.toolbar;
         setSupportActionBar(toolbar);
 
         // Enable the back button in the action bar or toolbar
@@ -287,9 +285,6 @@ public class AddNewLeadActivity extends DrawerBaseActivity {
                 encodedImage != null && !encodedImage.isEmpty();
     }
 
-    private void showToast(String message, int length) {
-        Utils.showToast(getApplicationContext(), message, length);
-    }
 
     private void addLeadToFirestore(String name, String email, String phone, String address, String job, String company, String notes, String image) {
         // Add lead to Firestore

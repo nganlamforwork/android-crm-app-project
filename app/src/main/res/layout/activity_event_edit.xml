@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".activities.Leads.AddNewLeadActivity">
+    tools:context=".activities.Calendar.EventEditActivity">
 
     <include
         android:id="@+id/app_bar"
@@ -27,134 +27,78 @@
             android:gravity="center_horizontal"
             android:orientation="vertical">
 
-            <FrameLayout
-                android:id="@+id/layoutImage"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/_20sdp">
-
-                <com.makeramen.roundedimageview.RoundedImageView
-                    android:id="@+id/leadImage"
-                    android:layout_width="100dp"
-                    android:layout_height="100dp"
-                    android:background="@drawable/background_image"
-                    android:scaleType="centerCrop"
-                    android:src="@drawable/avatar"
-                    app:riv_corner_radius="50dp" />
-
-            </FrameLayout>
-
             <EditText
-                android:id="@+id/leadName"
+                android:id="@+id/eventName"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_35sdp"
                 android:layout_marginTop="20dp"
                 android:background="@drawable/border"
-                android:hint="Name"
+                android:hint="Event Name"
                 android:inputType="text"
                 android:paddingStart="@dimen/_16sdp"
+                android:paddingEnd="10dp"
                 android:textColor="@color/primary_dark"
                 android:textColorHint="@color/secondary_text"
                 android:textSize="@dimen/_13ssp" />
 
             <EditText
-                android:id="@+id/leadEmail"
+                android:id="@+id/eventLocation"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_35sdp"
                 android:layout_marginTop="15dp"
                 android:background="@drawable/border"
-                android:hint="Email"
-                android:inputType="textEmailAddress"
-                android:paddingStart="@dimen/_16sdp"
-                android:textColor="@color/primary_dark"
-                android:textColorHint="@color/secondary_text"
-                android:textSize="@dimen/_13ssp" />
-
-            <EditText
-                android:id="@+id/leadPhone"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/_35sdp"
-                android:layout_marginTop="15dp"
-                android:background="@drawable/border"
-                android:hint="Phone"
-                android:inputType="phone"
-                android:maxLength="10"
-                android:paddingStart="@dimen/_16sdp"
-                android:textColor="@color/primary_dark"
-                android:textColorHint="@color/secondary_text"
-                android:textSize="@dimen/_13ssp" />
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="45dp"
-                android:layout_marginTop="10dp">
-
-                <TextView
-                    android:id="@+id/leadlocation"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:background="@drawable/border"
-                    android:paddingStart="@dimen/_16sdp"
-                    android:paddingTop="@dimen/_10sdp"
-                    android:text="Addresses"
-                    android:singleLine="true"
-                    android:ellipsize="marquee"
-                    android:scrollHorizontally="true"
-                    android:marqueeRepeatLimit="marquee_forever"
-                    android:focusableInTouchMode="true"
-                    android:textColor="@color/primary_dark"
-                    android:textColorHint="@color/secondary_text"
-                    android:textSize="@dimen/_13ssp" />
-
-                <com.google.android.material.switchmaterial.SwitchMaterial
-                    android:id="@+id/getLeadLocation"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
-                    android:layout_centerVertical="true"
-                    android:layout_gravity="center_vertical" />
-
-            </RelativeLayout>
-
-            <EditText
-                android:id="@+id/leadJob"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/_35sdp"
-                android:layout_marginTop="15dp"
-                android:background="@drawable/border"
-                android:hint="Ex: CEO Vinamilk"
+                android:hint="Event Location"
                 android:inputType="text"
                 android:paddingStart="@dimen/_16sdp"
+                android:paddingEnd="10dp"
                 android:textColor="@color/primary_dark"
                 android:textColorHint="@color/secondary_text"
                 android:textSize="@dimen/_13ssp" />
 
             <EditText
-                android:id="@+id/leadCompany"
+                android:id="@+id/eventDescription"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_35sdp"
                 android:layout_marginTop="15dp"
                 android:background="@drawable/border"
-                android:hint="Add a company"
+                android:hint="Event Description"
                 android:inputType="text"
                 android:paddingStart="@dimen/_16sdp"
+                android:paddingEnd="10dp"
                 android:textColor="@color/primary_dark"
                 android:textColorHint="@color/secondary_text"
                 android:textSize="@dimen/_13ssp" />
 
             <EditText
-                android:id="@+id/leadNotes"
+                android:id="@+id/eventDate"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="@dimen/_35sdp"
                 android:layout_marginTop="15dp"
                 android:background="@drawable/border"
-                android:gravity="top|start"
-                android:hint="Add a note"
-                android:inputType="textMultiLine"
-                android:lines="5"
+                android:drawableEnd="@drawable/ic_calendar"
+                android:focusable="false"
+                android:focusableInTouchMode="false"
+                android:hint="Event Date"
+                android:inputType="time"
                 android:paddingStart="@dimen/_16sdp"
-                android:paddingTop="@dimen/_10sdp"
-                android:scrollbars="vertical"
+                android:paddingEnd="10dp"
+                android:textColor="@color/primary_dark"
+                android:textColorHint="@color/secondary_text"
+                android:textSize="@dimen/_13ssp" />
+
+            <EditText
+                android:id="@+id/eventTime"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_35sdp"
+                android:layout_marginTop="15dp"
+                android:background="@drawable/border"
+                android:drawableEnd="@drawable/baseline_access_time_24"
+                android:focusable="false"
+                android:focusableInTouchMode="false"
+                android:hint="Event Time"
+                android:inputType="time"
+                android:paddingStart="@dimen/_16sdp"
+                android:paddingEnd="10dp"
                 android:textColor="@color/primary_dark"
                 android:textColorHint="@color/secondary_text"
                 android:textSize="@dimen/_13ssp" />
@@ -166,10 +110,10 @@
                 android:animateLayoutChanges="true">
 
                 <com.google.android.material.button.MaterialButton
-                    android:id="@+id/buttonSaveLead"
+                    android:id="@+id/buttonSaveEvent"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/_50sdp"
-                    android:text="Save"
+                    android:text="Save Event"
                     android:textColor="@color/white"
                     android:textSize="@dimen/_13sdp"
                     android:textStyle="bold"
@@ -183,6 +127,5 @@
                     android:visibility="invisible" />
             </FrameLayout>
         </LinearLayout>
-
     </ScrollView>
 </LinearLayout>
