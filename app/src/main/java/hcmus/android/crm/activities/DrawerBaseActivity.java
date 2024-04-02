@@ -26,6 +26,7 @@ import com.google.firebase.auth.FirebaseAuth;
 
 import hcmus.android.crm.R;
 import hcmus.android.crm.activities.Authentication.SignInActivity;
+import hcmus.android.crm.activities.Contacts.ContactActivity;
 import hcmus.android.crm.activities.Leads.LeadActivity;
 import hcmus.android.crm.activities.Main.MainActivity;
 import hcmus.android.crm.activities.Settings.SettingActivity;
@@ -112,6 +113,8 @@ public class DrawerBaseActivity extends AppCompatActivity implements NavigationV
             targetActivityClass = MainActivity.class;
         } else if (id == R.id.nav_leads) {
             targetActivityClass = LeadActivity.class;
+        } else if (id == R.id.nav_contact) {
+            targetActivityClass = ContactActivity.class;
         } else if (id == R.id.nav_personal) {
             targetActivityClass = SettingActivity.class;
         } else if (id == R.id.nav_logout) {
