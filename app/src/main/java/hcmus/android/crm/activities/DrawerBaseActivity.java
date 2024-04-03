@@ -1,7 +1,6 @@
 package hcmus.android.crm.activities;
 
 import android.content.Intent;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -11,11 +10,9 @@ import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -28,6 +25,7 @@ import hcmus.android.crm.R;
 import hcmus.android.crm.activities.Authentication.SignInActivity;
 import hcmus.android.crm.activities.Leads.LeadActivity;
 import hcmus.android.crm.activities.Main.MainActivity;
+import hcmus.android.crm.activities.BusinessCard.BusinessCardActivity;
 import hcmus.android.crm.activities.Sales.SaleActivity;
 import hcmus.android.crm.activities.Settings.SettingActivity;
 import hcmus.android.crm.utilities.Constants;
@@ -111,6 +109,8 @@ public class DrawerBaseActivity extends AppCompatActivity implements NavigationV
         Class<?> targetActivityClass = null;
         if (id == R.id.nav_home) {
             targetActivityClass = MainActivity.class;
+        } else if (id == R.id.nav_business_card) {
+            targetActivityClass = BusinessCardActivity.class;
         } else if (id == R.id.nav_leads) {
             targetActivityClass = LeadActivity.class;
         } else if (id == R.id.nav_personal) {

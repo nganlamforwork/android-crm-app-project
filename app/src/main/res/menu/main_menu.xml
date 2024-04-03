@@ -8,6 +8,10 @@
             android:icon="@drawable/baseline_home_24"
             android:title="@string/home" />
         <item
+            android:id="@+id/nav_business_card"
+            android:icon="@drawable/ic_business_card"
+            android:title="@string/business" />
+        <item
             android:id="@+id/nav_leads"
             android:icon="@drawable/target"
             android:title="@string/leads" />
