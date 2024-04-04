@@ -81,7 +81,7 @@ public class LeadAdapter extends RecyclerView.Adapter<LeadAdapter.LeadViewHolder
 
     @Override
     public void onBindViewHolder(@NonNull LeadAdapter.LeadViewHolder holder, int position) {
-        Lead lead = leadList.get(position);
+        Lead lead = leadListFiltered.get(position);
         holder.leadName.setText(lead.getName());
         holder.leadPhone.setText(lead.getPhone());
 
