@@ -1,9 +1,11 @@
 package hcmus.android.crm.activities.BusinessCard;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
 
+import hcmus.android.crm.R;
 import hcmus.android.crm.activities.DrawerBaseActivity;
 import hcmus.android.crm.databinding.ActivityBusinessCardBinding;
 public class BusinessCardActivity extends DrawerBaseActivity {
@@ -18,7 +20,6 @@ public class BusinessCardActivity extends DrawerBaseActivity {
         binding = ActivityBusinessCardBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        // Bắt sự kiện khi CardView được click
         binding.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -26,9 +27,14 @@ public class BusinessCardActivity extends DrawerBaseActivity {
             }
         });
     }
-    // Phương thức được gọi khi CardView được click
+    protected void onResume() {
+        super.onResume();
+        navigationView.setCheckedItem(R.id.nav_business_card);
+    }
     public void onCardViewClicked(View view) {
-        // Xử lý sự kiện ở đây
+
+        Intent intent = new Intent(BusinessCardActivity.this, AddNewBusinessCardActivity.class);
+        startActivity(intent);
         Toast.makeText(this, "CardView clicked", Toast.LENGTH_SHORT).show();
     }
 
