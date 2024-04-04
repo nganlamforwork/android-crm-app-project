@@ -78,17 +78,6 @@
                 android:paddingVertical="15dp"
                 android:src="@drawable/ic_email" />
 
-            <!-- Location Icon -->
-            <ImageView
-                android:id="@+id/contactLocation"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginEnd="8dp"
-                android:layout_weight="1"
-                android:background="@drawable/background_border"
-                android:paddingVertical="15dp"
-                android:src="@drawable/ic_location" />
 
             <!-- Star Icon -->
             <ImageView
@@ -165,37 +154,6 @@
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 
-        <!-- Address Card -->
-        <androidx.cardview.widget.CardView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            app:cardCornerRadius="8dp">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/white"
-                android:orientation="horizontal"
-                android:padding="16dp">
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/ic_location"
-                    app:tint="@color/primary_dark" />
-
-                <TextView
-                    android:id="@+id/contactAddress"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:text="Contact Address"
-                    android:textColor="@color/primary_dark"
-                    android:textSize="16sp" />
-
-            </LinearLayout>
-        </androidx.cardview.widget.CardView>
 
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"

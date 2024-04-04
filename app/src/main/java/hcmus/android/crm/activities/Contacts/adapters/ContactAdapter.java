@@ -68,8 +68,6 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.MyViewHo
         bundle.putString("contactName", contact.getName());
         bundle.putString("contactEmail", contact.getEmail());
         bundle.putString("contactPhone", contact.getPhone());
-        bundle.putString("contactAddress", contact.getAddress());
-        bundle.putString("contactJob", contact.getJob());
         bundle.putString("contactCompany", contact.getCompany());
         bundle.putString("contactImage", contact.getImage());
         bundle.putString("contactNotes", contact.getNotes());
@@ -140,8 +138,7 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.MyViewHo
                     List<Contact> filteredList = new ArrayList<>();
                     for (Contact contact : contactList) {
                         if (contact.getName().toLowerCase().contains(charString)
-                                || contact.getPhone().toLowerCase().contains(charString)
-                                || contact.getCompany().toLowerCase().contains(charString)) {
+                                || contact.getPhone().toLowerCase().contains(charString)) {
                             filteredList.add(contact);
                         }
                     }

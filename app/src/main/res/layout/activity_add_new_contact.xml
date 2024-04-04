@@ -93,63 +93,6 @@
                 android:textColorHint="@color/secondary_text"
                 android:textSize="@dimen/_13ssp" />
 
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="45dp"
-                android:layout_marginTop="10dp">
-
-                <TextView
-                    android:id="@+id/contactlocation"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:background="@drawable/border"
-                    android:ellipsize="marquee"
-                    android:focusableInTouchMode="true"
-                    android:marqueeRepeatLimit="marquee_forever"
-                    android:paddingStart="@dimen/_16sdp"
-                    android:paddingTop="@dimen/_10sdp"
-                    android:scrollHorizontally="true"
-                    android:singleLine="true"
-                    android:text="Addresses"
-                    android:textColor="@color/primary_dark"
-                    android:textColorHint="@color/secondary_text"
-                    android:textSize="@dimen/_13ssp" />
-
-                <com.google.android.material.switchmaterial.SwitchMaterial
-                    android:id="@+id/getContactLocation"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
-                    android:layout_centerVertical="true"
-                    android:layout_gravity="center_vertical" />
-
-            </RelativeLayout>
-
-            <EditText
-                android:id="@+id/contactJob"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/_35sdp"
-                android:layout_marginTop="15dp"
-                android:background="@drawable/border"
-                android:hint="Ex: CEO Vinamilk"
-                android:inputType="text"
-                android:paddingStart="@dimen/_16sdp"
-                android:textColor="@color/primary_dark"
-                android:textColorHint="@color/secondary_text"
-                android:textSize="@dimen/_13ssp" />
-
-            <EditText
-                android:id="@+id/contactCompany"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/_35sdp"
-                android:layout_marginTop="15dp"
-                android:background="@drawable/border"
-                android:hint="Add a company"
-                android:inputType="text"
-                android:paddingStart="@dimen/_16sdp"
-                android:textColor="@color/primary_dark"
-                android:textColorHint="@color/secondary_text"
-                android:textSize="@dimen/_13ssp" />
 
             <EditText
                 android:id="@+id/contactNotes"
