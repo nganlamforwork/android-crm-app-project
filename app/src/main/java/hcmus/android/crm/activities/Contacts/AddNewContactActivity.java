@@ -68,11 +68,6 @@ public class AddNewContactActivity extends DrawerBaseActivity {
     private RoundedImageView contactImage;
     private FrameLayout layoutImage;
     private String encodedImage;
-    private SwitchMaterial getContactLocation;
-    private LocationManager locationManager;
-    private LocationRequest locationRequest;
-    private String contactLat, contactLong, address;
-
     private FirebaseFirestore db;
 
     @Override
@@ -87,22 +82,12 @@ public class AddNewContactActivity extends DrawerBaseActivity {
         contactName = binding.contactName;
         contactEmail = binding.contactEmail;
         contactPhone = binding.contactPhone;
-        contactJob = binding.contactJob;
-        contactCompany = binding.contactCompany;
         contactNotes = binding.contactNotes;
-        getContactLocation = binding.getContactLocation;
         contactImage = binding.contactImage;
         layoutImage = binding.layoutImage;
-//        contactLocation = binding.contactlocation;
 
         progressBar = binding.progressBar;
         newContactSaveButton = binding.buttonSaveContact;
-
-        locationRequest = new LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY, 5000)
-                .setWaitForAccurateLocation(false)
-                .setMinUpdateIntervalMillis(2000)
-                .build();
-
 
         // Handling logic here
         db = FirebaseFirestore.getInstance();
@@ -145,97 +130,13 @@ public class AddNewContactActivity extends DrawerBaseActivity {
                 String name = contactName.getText().toString().trim();
                 String email = contactEmail.getText().toString().trim();
                 String phone = contactPhone.getText().toString().trim();
-                String job = contactJob.getText().toString().trim();
                 String company = contactCompany.getText().toString().trim();
                 String notes = contactNotes.getText().toString().trim();
 
                 // Add contact to Firestore
-                addContactToFirestore(name, email, phone, address, job, company, notes, encodedImage);
+                addContactToFirestore(name, email, phone, company, notes, encodedImage);
             }
         });
-
-        getContactLocation.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (buttonView.isChecked()) {
-                    // check location permission
-                    CheckedLocationPermission();
-                }
-            }
-        });
-    }
-
-    private void CheckedLocationPermission() {
-        locationManager = (LocationManager) getApplicationContext().getSystemService(LOCATION_SERVICE);
-        if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-            onGPS();
-        } else {
-            getCurrentLocation();
-        }
-    }
-
-    private void getCurrentLocation() {
-        if (ActivityCompat.checkSelfPermission(
-                AddNewContactActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                && ActivityCompat.checkSelfPermission(AddNewContactActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_LOCATION);
-        } else {
-            LocationServices.getFusedLocationProviderClient(AddNewContactActivity.this).requestLocationUpdates(locationRequest, new LocationCallback() {
-                @Override
-                public void onLocationResult(@NonNull LocationResult locationResult) {
-                    super.onLocationResult(locationResult);
-
-                    LocationServices.getFusedLocationProviderClient(AddNewContactActivity.this).removeLocationUpdates(this);
-
-                    if (locationResult != null && locationResult.getLocations().size() > 0) {
-                        int index = locationResult.getLocations().size() - 1;
-                        double latitude = locationResult.getLocations().get(index).getLatitude();
-                        double longitude = locationResult.getLocations().get(index).getLongitude();
-
-                        contactLat = String.valueOf(latitude);
-                        contactLong = String.valueOf(longitude);
-
-                        getAddressFromLocation(AddNewContactActivity.this, latitude, longitude);
-                    }
-                }
-            }, Looper.getMainLooper());
-        }
-
-    }
-
-    public void getAddressFromLocation(Context context, double LATITUDE, double LONGITUDE) {
-        try {
-            Geocoder geocoder = new Geocoder(context, Locale.getDefault());
-
-            List<Address> addresses = geocoder.getFromLocation(LATITUDE, LONGITUDE, 1);
-            if (addresses != null && addresses.size() > 0) {
-                // get country name, postal code, state, city name
-                address = addresses.get(0).getAddressLine(0);
-            }
-//            contactLocation.setText(address);
-            // moving text in text view
-//            contactLocation.setSelected(true);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void onGPS() {
-        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage("Enable GPS").setCancelable(false)
-                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS));
-                    }
-                }).setNegativeButton("No", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                });
-        final AlertDialog dialog = builder.create();
-        dialog.show();
     }
 
     private final ActivityResultLauncher<Intent> pickImage = registerForActivityResult(
@@ -283,13 +184,12 @@ public class AddNewContactActivity extends DrawerBaseActivity {
         return !contactName.getText().toString().trim().isEmpty() &&
                 !contactEmail.getText().toString().trim().isEmpty() &&
                 !contactPhone.getText().toString().trim().isEmpty() &&
-//                !contactLocation.getText().toString().trim().isEmpty() &&
                 encodedImage != null && !encodedImage.isEmpty();
     }
 
-    private void addContactToFirestore(String name, String email, String phone, String address, String job, String company, String notes, String image) {
+    private void addContactToFirestore(String name, String email, String phone, String company, String notes, String image) {
         // Add contact to Firestore
-        newContact = new Contact(name, email, phone, address, job, company, notes, image, contactLat, contactLong);
+        newContact = new Contact(name, email, phone, company, notes, image);
         db.collection(Constants.KEY_COLLECTION_CONTACTS)
                 .add(newContact)
                 .addOnSuccessListener(documentReference -> {
@@ -319,10 +219,8 @@ public class AddNewContactActivity extends DrawerBaseActivity {
         contactName.setText("");
         contactEmail.setText("");
         contactPhone.setText("");
-        contactJob.setText("");
         contactCompany.setText("");
         contactNotes.setText("");
-//        contactLocation.setText("");
         // Reset the image view
         contactImage.setImageResource(android.R.color.transparent);
 

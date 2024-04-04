@@ -68,7 +68,6 @@ public class ContactDetailActivity extends DrawerBaseActivity {
             binding.contactName.setText(contact.getName());
             binding.contactPhone.setText(contact.getPhone());
             binding.contactEmail.setText(contact.getEmail());
-            binding.contactAddress.setText(contact.getAddress());
             binding.contactNotes.setText(contact.getNotes());
         }
 
@@ -76,22 +75,6 @@ public class ContactDetailActivity extends DrawerBaseActivity {
     }
 
     private void setListeners() {
-        binding.contactLocation.setOnClickListener(v -> {
-            String latitude = contact.getLatitude();
-            String longitude = contact.getLongitude();
-            String contactName = contact.getName();
-            // Create intent to start MapActivity
-            Intent intent = new Intent(this, MapsActivity.class);
-
-            // Add latitude and longitude as extras to the intent
-            intent.putExtra("latitude", latitude);
-            intent.putExtra("longitude", longitude);
-            intent.putExtra("name", contactName);
-
-
-            startActivity(intent);
-        });
-
         binding.contactMakePhoneCall.setOnClickListener(v -> {
             if (ContextCompat.checkSelfPermission(this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
                 ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CALL_PHONE}, REQUEST_PHONE_CALL);
