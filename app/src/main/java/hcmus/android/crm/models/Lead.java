@@ -8,9 +8,8 @@ import com.google.firebase.firestore.ServerTimestamp;
 
 import java.util.Date;
 
-import hcmus.android.crm.activities.Leads.LeadId;
 
-public class Lead extends LeadId implements Parcelable {
+public class Lead  implements Parcelable {
 
     @PropertyName("name")
     private String name;

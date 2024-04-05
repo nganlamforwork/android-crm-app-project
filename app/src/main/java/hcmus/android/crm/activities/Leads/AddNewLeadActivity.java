@@ -411,12 +411,9 @@ public class AddNewLeadActivity extends DrawerBaseActivity {
                     // Hide loading state
                     loading(false);
                     showToast("New lead added successful", 0);
-
-                    // Send back the new lead data to LeadActivity
-                    Intent resultIntent = new Intent();
-                    resultIntent.putExtra("newLead", newLead);
-                    setResult(Activity.RESULT_OK, resultIntent);
-
+                    Intent intent = new Intent(this, LeadActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivity(intent);
                     finish();
                 })
                 .addOnFailureListener(e -> {

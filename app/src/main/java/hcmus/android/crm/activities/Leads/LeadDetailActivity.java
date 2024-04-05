@@ -9,6 +9,7 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Base64;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.Manifest;
@@ -26,6 +27,7 @@ import androidx.core.content.ContextCompat;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import hcmus.android.crm.R;
+import hcmus.android.crm.activities.Chat.ChatActivity;
 import hcmus.android.crm.activities.DrawerBaseActivity;
 import hcmus.android.crm.activities.Maps.MapsActivity;
 import hcmus.android.crm.databinding.ActivityLeadDetailBinding;
@@ -38,7 +40,7 @@ public class LeadDetailActivity extends DrawerBaseActivity {
 
     private Lead lead;
     private String leadId;
-    FirebaseFirestore db;
+    private FirebaseFirestore db;
 
     private final ActivityResultLauncher<Intent> activityResultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
         @SuppressLint("NotifyDataSetChanged")
@@ -79,7 +81,6 @@ public class LeadDetailActivity extends DrawerBaseActivity {
         if (intent != null) {
             lead = intent.getParcelableExtra("leadDetails");
             leadId = intent.getStringExtra("leadId");
-
             updateUI(lead);
         }
 
@@ -142,10 +143,16 @@ public class LeadDetailActivity extends DrawerBaseActivity {
             }
         });
 
+        binding.leadFav.setOnClickListener(v -> {
+            showToast("Coming soon...", 0);
+        });
+
         binding.textDeleteLead.setOnClickListener(v -> {
             showDeleteConfirmationDialog();
         });
     }
+
+
 
     private void showDeleteConfirmationDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -171,9 +178,9 @@ public class LeadDetailActivity extends DrawerBaseActivity {
                 .document(preferenceManager.getString(Constants.KEY_USER_ID))
                 .collection(Constants.KEY_COLLECTION_LEADS)
                 .document(leadId).delete();
-        Intent intent = new Intent(this, LeadActivity.class);
+       /* Intent intent = new Intent(this, LeadActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        startActivity(intent);
+        startActivity(intent);*/
         finish();
     }
 
