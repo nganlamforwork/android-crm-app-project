@@ -48,7 +48,6 @@ public class Lead extends LeadId implements Parcelable {
 
     // Constructors, getters, and setters
 
-    // Empty constructor needed for Firestore
     public Lead() {
     }
 

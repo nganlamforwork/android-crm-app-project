@@ -107,6 +107,7 @@ public class EventEditActivity extends DrawerBaseActivity {
         String time = eventTime.getText().toString().trim();
 
         if (!isFieldsFilled()) {
+            loading(false);
             showToast("All field is required", 0);
             eventName.setError("Event name is required");
             eventName.requestFocus();

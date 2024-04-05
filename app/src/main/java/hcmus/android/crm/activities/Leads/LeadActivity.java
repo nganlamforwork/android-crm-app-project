@@ -49,7 +49,7 @@ public class LeadActivity extends DrawerBaseActivity implements LeadAdapter.OnLe
     private FirebaseFirestore db;
     private LeadAdapter leadAdapter;
     private List<Lead> leadList;
-    private ActivityResultLauncher<Intent> activityResultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
+    private final ActivityResultLauncher<Intent> activityResultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
         @SuppressLint("NotifyDataSetChanged")
         @Override
         public void onActivityResult(ActivityResult result) {
@@ -60,6 +60,7 @@ public class LeadActivity extends DrawerBaseActivity implements LeadAdapter.OnLe
                 leadList.add(0, newLead);
                 leadAdapter.notifyItemInserted(0);
                 leadAdapter.notifyDataSetChanged();
+                toggleEmptyViewVisibility(false);
             }
         }
     });
@@ -78,7 +79,7 @@ public class LeadActivity extends DrawerBaseActivity implements LeadAdapter.OnLe
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         leadList = new ArrayList<>();
-        leadAdapter = new LeadAdapter(this, leadList);
+        leadAdapter = new LeadAdapter(this, leadList, preferenceManager);
 
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new TouchHelper(leadAdapter));
         itemTouchHelper.attachToRecyclerView(recyclerView);
@@ -94,6 +95,7 @@ public class LeadActivity extends DrawerBaseActivity implements LeadAdapter.OnLe
     protected void onResume() {
         super.onResume();
         navigationView.setCheckedItem(R.id.nav_leads);
+        showData();
     }
 
 
@@ -129,17 +131,22 @@ public class LeadActivity extends DrawerBaseActivity implements LeadAdapter.OnLe
                     Log.e("Firestore", "Error fetching leads: " + error.getMessage());
                     return;
                 }
-                assert value != null;
+                if (value == null || value.isEmpty()) {
+                    Log.d("Firestore", "No leads found.");
+                    leadList.clear();
+                    leadAdapter.notifyDataSetChanged();
+                    return;
+                }
+                leadList.clear();
+
                 for (DocumentChange documentChange : value.getDocumentChanges()) {
                     String id = documentChange.getDocument().getId();
                     Lead lead = documentChange.getDocument().toObject(Lead.class).withId(id);
 
-                    Log.d("LEAD", lead.getName());
                     leadList.add(lead);
                 }
                 leadAdapter.notifyDataSetChanged();
                 toggleEmptyViewVisibility(leadList.isEmpty());
-
                 listenerRegistration.remove();
             }
         });
@@ -175,13 +182,13 @@ public class LeadActivity extends DrawerBaseActivity implements LeadAdapter.OnLe
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_search) {
             return true;
         }
 
         return super.onOptionsItemSelected(item);
     }
+
     private void toggleEmptyViewVisibility(boolean isEmpty) {
         TextView emptyView = binding.emptyView;
         if (isEmpty) {

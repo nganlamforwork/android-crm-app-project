@@ -170,7 +170,6 @@ public class WeekViewActivity extends DrawerBaseActivity implements CalendarAdap
                 for (DocumentChange documentChange : value.getDocumentChanges()) {
                     String id = documentChange.getDocument().getId();
                     Event event = documentChange.getDocument().toObject(Event.class).withId(id);
-                    Log.d("EVENT", event.getName());
                     eventAdapter.add(event);
                 }
                 eventAdapter.notifyDataSetChanged();
