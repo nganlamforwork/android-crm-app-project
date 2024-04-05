@@ -26,6 +26,22 @@
         android:theme="@style/Theme.CRM"
         tools:targetApi="31">
         <activity
+            android:name=".activities.User.UserActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.Main.SplashActivity"
+            android:exported="true"
+            android:theme="@style/SplashScreen">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".activities.Chat.ChatActivity"
+            android:exported="false" />
+        <activity
             android:name=".activities.Contacts.ContactDetailActivity"
             android:exported="false" />
         <activity
@@ -48,19 +64,12 @@
             android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".activities.Authentication.SignInActivity"
-            android:exported="true"
-            android:windowSoftInputMode="adjustResize">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".activities.Leads.LeadActivity"
             android:exported="false"
-            android:parentActivityName=".activities.Main.MainActivity"
-            android:windowSoftInputMode="adjustResize">
+            >
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />
             </intent-filter>
