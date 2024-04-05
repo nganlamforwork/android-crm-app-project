@@ -172,7 +172,6 @@ public class EventEditActivity extends DrawerBaseActivity {
         eventDate.setText("");
         eventTime.setText("");
     }
-
     private boolean isFieldsFilled() {
         // Check if all required fields are filled
         return !eventName.getText().toString().trim().isEmpty() &&
@@ -181,7 +180,6 @@ public class EventEditActivity extends DrawerBaseActivity {
                 !eventDate.getText().toString().trim().isEmpty() &&
                 !eventTime.getText().toString().trim().isEmpty();
     }
-
     @Override
     public boolean onSupportNavigateUp() {
         getOnBackPressedDispatcher().onBackPressed();
@@ -197,7 +195,6 @@ public class EventEditActivity extends DrawerBaseActivity {
             binding.buttonSaveEvent.setVisibility(View.VISIBLE);
         }
     }
-
     public void showDatePicker() {
         Calendar calendar = Calendar.getInstance();
         int year = calendar.get(Calendar.YEAR);

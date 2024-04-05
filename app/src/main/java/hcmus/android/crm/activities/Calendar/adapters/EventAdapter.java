@@ -13,9 +13,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 
-import com.google.firebase.firestore.FirebaseFirestore;
-
-import java.util.List;
 
 import hcmus.android.crm.R;
 import hcmus.android.crm.models.Event;

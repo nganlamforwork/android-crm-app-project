@@ -6,13 +6,11 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".activities.Calendar.WeekViewActivity">
-
     <include
         android:id="@+id/app_bar"
         layout="@layout/toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -125,15 +123,26 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/calendarRecyclerView"
         android:layout_width="match_parent"
+<<<<<<< HEAD
         android:layout_height="60dp" />
+=======
+        android:layout_height="60dp"
+        />
+>>>>>>> a3a32665ae452fc8b4180cf5e094dff8cd2e313e
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
+<<<<<<< HEAD
         android:layout_marginTop="10dp"
         android:background="@null"
         android:onClick="newEventAction"
+=======
+        android:background="@null"
+        android:onClick="newEventAction"
+        android:layout_marginTop="10dp"
+>>>>>>> a3a32665ae452fc8b4180cf5e094dff8cd2e313e
         android:text="New Event"
         android:textSize="16sp" />
 
@@ -141,6 +150,7 @@
         android:id="@+id/eventListView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+<<<<<<< HEAD
         android:layout_weight="5"
         android:divider="@null"
         android:dividerHeight="0dp" />
@@ -152,4 +162,7 @@
         android:gravity="top|center"
         android:paddingTop="20dp"
         android:text="No recent events" />
+=======
+        android:layout_weight="5" />
+>>>>>>> a3a32665ae452fc8b4180cf5e094dff8cd2e313e
 </LinearLayout>

@@ -26,7 +26,7 @@ public class Information extends DrawerBaseActivity {
         binding = SettingInformationBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        Toolbar toolbar = binding.toolbar;
+        Toolbar toolbar = binding.appBar.toolbar;
         setSupportActionBar(toolbar);
 
         // Enable the back button in the action bar or toolbar
