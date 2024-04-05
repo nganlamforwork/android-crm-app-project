@@ -20,6 +20,8 @@ import android.provider.MediaStore;
 import android.provider.Settings;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Base64;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
@@ -73,7 +75,8 @@ public class AddNewLeadActivity extends DrawerBaseActivity {
     private LocationManager locationManager;
     private LocationRequest locationRequest;
     private String leadLat, leadLong, address;
-
+    private boolean isEditMode = false;
+    private String leadId;
     private FirebaseFirestore db;
 
     @Override
@@ -83,21 +86,6 @@ public class AddNewLeadActivity extends DrawerBaseActivity {
 
         binding = ActivityAddNewLeadBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-
-        // Get element id
-        leadName = binding.leadName;
-        leadEmail = binding.leadEmail;
-        leadPhone = binding.leadPhone;
-        leadJob = binding.leadJob;
-        leadCompany = binding.leadCompany;
-        leadNotes = binding.leadNotes;
-        getLeadLocation = binding.getLeadLocation;
-        leadImage = binding.leadImage;
-        layoutImage = binding.layoutImage;
-        leadLocation = binding.leadlocation;
-
-        progressBar = binding.progressBar;
-        newLeadSaveButton = binding.buttonSaveLead;
 
         locationRequest = new LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY, 5000)
                 .setWaitForAccurateLocation(false)
@@ -117,7 +105,50 @@ public class AddNewLeadActivity extends DrawerBaseActivity {
             actionBar.setDisplayShowHomeEnabled(true);
         }
 
+        // Get element id
+        leadName = binding.leadName;
+        leadEmail = binding.leadEmail;
+        leadPhone = binding.leadPhone;
+        leadJob = binding.leadJob;
+        leadCompany = binding.leadCompany;
+        leadNotes = binding.leadNotes;
+        getLeadLocation = binding.getLeadLocation;
+        leadImage = binding.leadImage;
+        layoutImage = binding.layoutImage;
+        leadLocation = binding.leadlocation;
+
+        progressBar = binding.progressBar;
+        newLeadSaveButton = binding.buttonSaveLead;
+
+        leadId = getIntent().getStringExtra("leadId");
+        newLead = getIntent().getParcelableExtra("lead");
+
+        if (leadId != null) {
+            isEditMode = true;
+            setTitle("Edit lead");
+            populateEventData();
+        }
+
         setListeners();
+    }
+
+    private void populateEventData() {
+        leadName.setText(newLead.getName());
+        leadEmail.setText(newLead.getEmail());
+        leadPhone.setText(newLead.getPhone());
+        leadLocation.setText(newLead.getAddress());
+        leadCompany.setText(newLead.getCompany());
+        leadJob.setText(newLead.getJob());
+        leadNotes.setText(newLead.getNotes());
+
+        // Decode base64 encoded image string and set it to ImageView
+        String imageString = newLead.getImage();
+        if (imageString != null && !imageString.isEmpty()) {
+            byte[] bytes = Base64.decode(imageString, Base64.DEFAULT);
+            Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+            encodedImage = encodeImage(bitmap);
+            leadImage.setImageBitmap(bitmap);
+        }
     }
 
     private void setListeners() {
@@ -135,28 +166,20 @@ public class AddNewLeadActivity extends DrawerBaseActivity {
             pickImage.launch(intent);
         });
 
-        newLeadSaveButton.setOnClickListener(v -> {
-            if (isFieldsFilled()) {
-                // Show loading state
+        if (isEditMode) {
+            newLeadSaveButton.setText("Update Lead");
+            newLeadSaveButton.setOnClickListener(v -> {
                 loading(true);
+                handleUpdateLead();
+            });
+        } else {
+            newLeadSaveButton.setText("Save Lead");
+            newLeadSaveButton.setOnClickListener(v -> {
+                loading(true);
+                handleAddNewLead();
+            });
+        }
 
-                // Get input values
-                String name = leadName.getText().toString().trim();
-                String email = leadEmail.getText().toString().trim();
-                String phone = leadPhone.getText().toString().trim();
-                String job = leadJob.getText().toString().trim();
-                String company = leadCompany.getText().toString().trim();
-                String notes = leadNotes.getText().toString().trim();
-
-                if(!leadLocation.getText().toString().trim().isEmpty()) {
-                    address = leadLocation.getText().toString().trim();
-                    getLocationFromAddress(address);
-                }
-
-                // Add lead to Firestore
-                addLeadToFirestore(name, email, phone, address, job, company, notes, encodedImage);
-            }
-        });
 
         getLeadLocation.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -222,6 +245,7 @@ public class AddNewLeadActivity extends DrawerBaseActivity {
             e.printStackTrace();
         }
     }
+
     private void getLocationFromAddress(String strAddress) {
         Geocoder geocoder = new Geocoder(this, Locale.getDefault());
         try {
@@ -303,14 +327,79 @@ public class AddNewLeadActivity extends DrawerBaseActivity {
         return !leadName.getText().toString().trim().isEmpty() &&
                 !leadEmail.getText().toString().trim().isEmpty() &&
                 !leadPhone.getText().toString().trim().isEmpty() &&
-                !leadLocation.getText().toString().trim().isEmpty() &&
-                encodedImage != null && !encodedImage.isEmpty();
+                !leadLocation.getText().toString().trim().isEmpty();
     }
 
+    private void handleUpdateLead() {
+        // Get input values
+        String name = leadName.getText().toString().trim();
+        String email = leadEmail.getText().toString().trim();
+        String phone = leadPhone.getText().toString().trim();
+        String job = leadJob.getText().toString().trim();
+        String company = leadCompany.getText().toString().trim();
+        String notes = leadNotes.getText().toString().trim();
 
-    private void addLeadToFirestore(String name, String email, String phone, String address, String job, String company, String notes, String image) {
-        // Add lead to Firestore
-        newLead = new Lead(name, email, phone, address, job, company, notes, image, leadLat, leadLong);
+        if (!leadLocation.getText().toString().trim().isEmpty()) {
+            address = leadLocation.getText().toString().trim();
+            getLocationFromAddress(address);
+        }
+
+        if (!isFieldsFilled()) {
+            loading(false);
+            showToast("All field is required", 0);
+            return;
+        }
+
+        Lead updatedLead = new Lead(name, email, phone, address, job, company, notes, encodedImage, leadLat, leadLong);
+
+        db.collection(Constants.KEY_COLLECTION_USERS)
+                .document(preferenceManager.getString(Constants.KEY_USER_ID))
+                .collection(Constants.KEY_COLLECTION_LEADS)
+                .document(leadId)
+                .set(updatedLead)
+                .addOnSuccessListener(documentReference -> {
+                    // Reset fields
+                    resetFields();
+
+                    // Hide loading state
+                    loading(false);
+                    showToast("Lead updated successful", 0);
+
+                    // Send back the new lead data to LeadDetailActivity
+                    Intent resultIntent = new Intent();
+                    resultIntent.putExtra("updatedLead", updatedLead);
+                    setResult(Activity.RESULT_OK, resultIntent);
+
+                    finish();
+                })
+                .addOnFailureListener(e -> {
+                    // Handle failure, e.g., show error message
+                    loading(false);
+                    showToast("Failed to update lead", 0);
+                });
+    }
+
+    private void handleAddNewLead() {
+        // Get input values
+        String name = leadName.getText().toString().trim();
+        String email = leadEmail.getText().toString().trim();
+        String phone = leadPhone.getText().toString().trim();
+        String job = leadJob.getText().toString().trim();
+        String company = leadCompany.getText().toString().trim();
+        String notes = leadNotes.getText().toString().trim();
+
+        if (!leadLocation.getText().toString().trim().isEmpty()) {
+            address = leadLocation.getText().toString().trim();
+            getLocationFromAddress(address);
+        }
+
+        if (!isFieldsFilled()) {
+            loading(false);
+            showToast("All field is required", 0);
+            return;
+        }
+
+        newLead = new Lead(name, email, phone, address, job, company, notes, encodedImage, leadLat, leadLong);
         db.collection(Constants.KEY_COLLECTION_USERS)
                 .document(preferenceManager.getString(Constants.KEY_USER_ID))
                 .collection(Constants.KEY_COLLECTION_LEADS)
@@ -336,6 +425,7 @@ public class AddNewLeadActivity extends DrawerBaseActivity {
                     showToast("Failed to add new lead", 0);
                 });
     }
+
 
     private void resetFields() {
         // Reset input fields

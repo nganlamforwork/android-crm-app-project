@@ -26,19 +26,21 @@ import java.util.List;
 import hcmus.android.crm.R;
 import hcmus.android.crm.models.Lead;
 import hcmus.android.crm.utilities.Constants;
+import hcmus.android.crm.utilities.PreferenceManager;
 
 public class LeadAdapter extends RecyclerView.Adapter<LeadAdapter.LeadViewHolder> implements Filterable {
     private final List<Lead> leadList;
     private List<Lead> leadListFiltered;
     private final Context context;
     private FirebaseFirestore db;
-
+    private PreferenceManager preferenceManager;
     private static OnLeadItemClickListener listener;
 
-    public LeadAdapter(Context context, List<Lead> leadList) {
+    public LeadAdapter(Context context, List<Lead> leadList, PreferenceManager preferenceManager) {
         this.leadList = leadList;
         this.leadListFiltered = leadList;
         this.context = context;
+        this.preferenceManager = preferenceManager;
     }
 
     @NonNull
@@ -52,7 +54,10 @@ public class LeadAdapter extends RecyclerView.Adapter<LeadAdapter.LeadViewHolder
 
     public void deleteLead(int position) {
         Lead lead = leadList.get(position);
-        db.collection(Constants.KEY_COLLECTION_LEADS).document(lead.LeadId).delete();
+        db.collection(Constants.KEY_COLLECTION_USERS)
+                .document(preferenceManager.getString(Constants.KEY_USER_ID))
+                .collection(Constants.KEY_COLLECTION_LEADS)
+                .document(lead.LeadId).delete();
         leadList.remove(position);
         notifyItemRemoved(position);
     }
@@ -99,9 +104,11 @@ public class LeadAdapter extends RecyclerView.Adapter<LeadAdapter.LeadViewHolder
 
     @Override
     public int getItemCount() {
-        return leadListFiltered.size();
+        return leadListFiltered.isEmpty() ? 1 : leadListFiltered.size();
     }
-
+    public boolean isEmpty() {
+        return leadListFiltered.isEmpty();
+    }
     public static class LeadViewHolder extends RecyclerView.ViewHolder {
         TextView leadName, leadPhone;
         RoundedImageView leadImage;
