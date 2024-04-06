@@ -26,6 +26,7 @@ import hcmus.android.crm.activities.Authentication.SignInActivity;
 import hcmus.android.crm.activities.Contacts.ContactActivity;
 import hcmus.android.crm.activities.Leads.LeadActivity;
 import hcmus.android.crm.activities.Main.MainActivity;
+import hcmus.android.crm.activities.BusinessCard.BusinessCardActivity;
 import hcmus.android.crm.activities.Sales.SaleActivity;
 import hcmus.android.crm.activities.Settings.SettingActivity;
 import hcmus.android.crm.activities.User.UserActivity;
@@ -111,6 +112,8 @@ public class DrawerBaseActivity extends AppCompatActivity implements NavigationV
         Class<?> targetActivityClass = null;
         if (id == R.id.nav_home) {
             targetActivityClass = MainActivity.class;
+        } else if (id == R.id.nav_business_card) {
+            targetActivityClass = BusinessCardActivity.class;
         } else if (id == R.id.nav_leads) {
             targetActivityClass = LeadActivity.class;
         } else if (id == R.id.nav_contact) {

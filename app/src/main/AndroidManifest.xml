@@ -26,6 +26,15 @@
         android:theme="@style/Theme.CRM"
         tools:targetApi="31">
         <activity
+            android:name=".activities.BusinessCard.AddNewBusinessCardActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.BusinessCard.BusinessCardActivity"
+            android:exported="false"
+            android:label="@string/title_activity_business_card"
+            android:theme="@style/Theme.CRM" />
+        <activity
+            android:name=".activities.BusinessCard.BusinessCard"
             android:name=".activities.User.UserActivity"
             android:exported="false" />
         <activity
