@@ -9,7 +9,6 @@ import com.google.firebase.firestore.ServerTimestamp;
 import java.util.Date;
 
 import hcmus.android.crm.activities.BusinessCard.BusinessCardId;
-import hcmus.android.crm.activities.Leads.LeadId;
 
 public class BusinessCard extends BusinessCardId implements Parcelable {
     @PropertyName("fullname")
