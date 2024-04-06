@@ -8,7 +8,8 @@ import com.google.firebase.firestore.ServerTimestamp;
 
 import java.util.Date;
 
-import hcmus.android.crm.activities.BusinessCard.BusinessCardId;
+import hcmus.android.crm.activities.BusinessCard.BusinessCardId;import android.graphics.Bitmap;
+
 
 public class BusinessCard extends BusinessCardId implements Parcelable {
     @PropertyName("fullname")
@@ -39,6 +40,11 @@ public class BusinessCard extends BusinessCardId implements Parcelable {
     @ServerTimestamp
     private Date createdAt;
 
+
+    @PropertyName("qrcode")
+    private String qrcode;
+
+
     // Constructors, getters, and setters
 
     // Empty constructor needed for Firestore
@@ -66,6 +72,7 @@ public class BusinessCard extends BusinessCardId implements Parcelable {
         phone = in.readString();
         note = in.readString();
         cardname = in.readString();
+        qrcode = in.readString();
         long tmpCreatedAt = in.readLong();
         createdAt = tmpCreatedAt == -1 ? null : new Date(tmpCreatedAt);
     }
@@ -158,7 +165,13 @@ public class BusinessCard extends BusinessCardId implements Parcelable {
     public void setCreatedAt(Date createdAt) {
         this.createdAt = createdAt;
     }
+    public String getQrcode() {
+        return qrcode;
+    }
 
+    public void setQrcode(String qrcode) {
+        this.qrcode = qrcode;
+    }
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(fullname);
@@ -169,6 +182,7 @@ public class BusinessCard extends BusinessCardId implements Parcelable {
         dest.writeString(phone);
         dest.writeString(note);
         dest.writeString(cardname);
+        dest.writeString(qrcode);
         dest.writeLong(createdAt != null ? createdAt.getTime() : -1);
     }
 }
