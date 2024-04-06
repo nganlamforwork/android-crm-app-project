@@ -5,13 +5,22 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".activities.Leads.AddNewLeadActivity">
+    tools:context=".activities.Contacts.AddNewContactActivity">
 
-    <include
-        android:id="@+id/app_bar"
-        layout="@layout/toolbar"
+    <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:theme="@style/Theme.CRM.AppBarOverlay">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            android:elevation="4dp"
+            app:popupTheme="@style/Theme.CRM.PopupOverlay" />
+
+    </com.google.android.material.appbar.AppBarLayout>
 
     <ScrollView
         android:layout_width="match_parent"
@@ -34,7 +43,7 @@
                 android:layout_marginTop="@dimen/_20sdp">
 
                 <com.makeramen.roundedimageview.RoundedImageView
-                    android:id="@+id/leadImage"
+                    android:id="@+id/contactImage"
                     android:layout_width="100dp"
                     android:layout_height="100dp"
                     android:background="@drawable/background_image"
@@ -45,7 +54,7 @@
             </FrameLayout>
 
             <EditText
-                android:id="@+id/leadName"
+                android:id="@+id/contactName"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_35sdp"
                 android:layout_marginTop="20dp"
@@ -53,15 +62,12 @@
                 android:hint="Name"
                 android:inputType="text"
                 android:paddingStart="@dimen/_16sdp"
-                android:paddingEnd="50dp"
-                android:scrollHorizontally="true"
-                android:singleLine="true"
                 android:textColor="@color/primary_dark"
                 android:textColorHint="@color/secondary_text"
                 android:textSize="@dimen/_13ssp" />
 
             <EditText
-                android:id="@+id/leadEmail"
+                android:id="@+id/contactEmail"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_35sdp"
                 android:layout_marginTop="15dp"
@@ -69,15 +75,12 @@
                 android:hint="Email"
                 android:inputType="textEmailAddress"
                 android:paddingStart="@dimen/_16sdp"
-                android:paddingEnd="50dp"
-                android:scrollHorizontally="true"
-                android:singleLine="true"
                 android:textColor="@color/primary_dark"
                 android:textColorHint="@color/secondary_text"
                 android:textSize="@dimen/_13ssp" />
 
             <EditText
-                android:id="@+id/leadPhone"
+                android:id="@+id/contactPhone"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_35sdp"
                 android:layout_marginTop="15dp"
@@ -86,76 +89,13 @@
                 android:inputType="phone"
                 android:maxLength="10"
                 android:paddingStart="@dimen/_16sdp"
-                android:paddingEnd="50dp"
-                android:scrollHorizontally="true"
-                android:singleLine="true"
                 android:textColor="@color/primary_dark"
                 android:textColorHint="@color/secondary_text"
                 android:textSize="@dimen/_13ssp" />
 
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="45dp"
-                android:layout_marginTop="10dp">
-
-                <EditText
-                    android:id="@+id/leadlocation"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:background="@drawable/border"
-                    android:hint="Addresses"
-                    android:paddingStart="@dimen/_16sdp"
-                    android:paddingEnd="50dp"
-                    android:scrollHorizontally="true"
-                    android:singleLine="true"
-                    android:textColor="@color/primary_dark"
-                    android:textColorHint="@color/secondary_text"
-                    android:textSize="@dimen/_13ssp" />
-
-                <com.google.android.material.switchmaterial.SwitchMaterial
-                    android:id="@+id/getLeadLocation"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
-                    android:layout_centerVertical="true"
-                    android:layout_gravity="center_vertical" />
-
-            </RelativeLayout>
 
             <EditText
-                android:id="@+id/leadJob"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/_35sdp"
-                android:layout_marginTop="15dp"
-                android:background="@drawable/border"
-                android:hint="Ex: CEO Vinamilk"
-                android:inputType="text"
-                android:paddingStart="@dimen/_16sdp"
-                android:paddingEnd="50dp"
-                android:scrollHorizontally="true"
-                android:singleLine="true"
-                android:textColor="@color/primary_dark"
-                android:textColorHint="@color/secondary_text"
-                android:textSize="@dimen/_13ssp" />
-
-            <EditText
-                android:id="@+id/leadCompany"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/_35sdp"
-                android:layout_marginTop="15dp"
-                android:background="@drawable/border"
-                android:hint="Add a company"
-                android:inputType="text"
-                android:paddingStart="@dimen/_16sdp"
-                android:paddingEnd="50dp"
-                android:scrollHorizontally="true"
-                android:singleLine="true"
-                android:textColor="@color/primary_dark"
-                android:textColorHint="@color/secondary_text"
-                android:textSize="@dimen/_13ssp" />
-
-            <EditText
-                android:id="@+id/leadNotes"
+                android:id="@+id/contactNotes"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="15dp"
@@ -178,7 +118,7 @@
                 android:animateLayoutChanges="true">
 
                 <com.google.android.material.button.MaterialButton
-                    android:id="@+id/buttonSaveLead"
+                    android:id="@+id/buttonSaveContact"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/_50sdp"
                     android:text="Save"

@@ -1,5 +1,6 @@
 package hcmus.android.crm.activities.Leads;
 
+import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -13,6 +14,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.Manifest;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.Toolbar;
@@ -22,12 +27,12 @@ import androidx.core.content.ContextCompat;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import hcmus.android.crm.R;
+import hcmus.android.crm.activities.Chat.ChatActivity;
 import hcmus.android.crm.activities.DrawerBaseActivity;
 import hcmus.android.crm.activities.Maps.MapsActivity;
 import hcmus.android.crm.databinding.ActivityLeadDetailBinding;
 import hcmus.android.crm.models.Lead;
 import hcmus.android.crm.utilities.Constants;
-import hcmus.android.crm.utilities.Utils;
 
 public class LeadDetailActivity extends DrawerBaseActivity {
     private ActivityLeadDetailBinding binding;
@@ -35,7 +40,22 @@ public class LeadDetailActivity extends DrawerBaseActivity {
 
     private Lead lead;
     private String leadId;
-    FirebaseFirestore db;
+    private FirebaseFirestore db;
+
+    private final ActivityResultLauncher<Intent> activityResultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
+        @SuppressLint("NotifyDataSetChanged")
+        @Override
+        public void onActivityResult(ActivityResult result) {
+            if (result.getResultCode() == RESULT_OK) {
+                Intent intent = result.getData();
+                assert intent != null;
+                Lead updatedLead = intent.getParcelableExtra("updatedLead");
+                if (updatedLead != null) {
+                    updateUI(updatedLead);
+                }
+            }
+        }
+    });
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,20 +81,25 @@ public class LeadDetailActivity extends DrawerBaseActivity {
         if (intent != null) {
             lead = intent.getParcelableExtra("leadDetails");
             leadId = intent.getStringExtra("leadId");
-            byte[] bytes = Base64.decode(lead.getImage(), Base64.DEFAULT);
-            Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-            binding.avatar.setImageBitmap(bitmap);
-
-            binding.leadName.setText(lead.getName());
-            binding.leadPhone.setText(lead.getPhone());
-            binding.leadEmail.setText(lead.getEmail());
-            binding.leadAddress.setText(lead.getAddress());
-            binding.leadNotes.setText(lead.getNotes());
+            updateUI(lead);
         }
 
         setListeners();
     }
 
+    private void updateUI(Lead updatedLead) {
+        binding.leadName.setText(updatedLead.getName());
+        binding.leadPhone.setText(updatedLead.getPhone());
+        binding.leadEmail.setText(updatedLead.getEmail());
+        binding.leadAddress.setText(updatedLead.getAddress());
+        binding.leadNotes.setText(updatedLead.getNotes());
+
+        if (lead.getImage() != null) {
+            byte[] bytes = Base64.decode(lead.getImage(), Base64.DEFAULT);
+            Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+            binding.avatar.setImageBitmap(bitmap);
+        }
+    }
 
     private void setListeners() {
         binding.leadLocation.setOnClickListener(v -> {
@@ -118,10 +143,16 @@ public class LeadDetailActivity extends DrawerBaseActivity {
             }
         });
 
+        binding.leadFav.setOnClickListener(v -> {
+            showToast("Coming soon...", 0);
+        });
+
         binding.textDeleteLead.setOnClickListener(v -> {
             showDeleteConfirmationDialog();
         });
     }
+
+
 
     private void showDeleteConfirmationDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -143,10 +174,13 @@ public class LeadDetailActivity extends DrawerBaseActivity {
     }
 
     private void deleteLead() {
-        db.collection(Constants.KEY_COLLECTION_LEADS).document(leadId).delete();
-        Intent intent = new Intent(this, LeadActivity.class);
+        db.collection(Constants.KEY_COLLECTION_USERS)
+                .document(preferenceManager.getString(Constants.KEY_USER_ID))
+                .collection(Constants.KEY_COLLECTION_LEADS)
+                .document(leadId).delete();
+       /* Intent intent = new Intent(this, LeadActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        startActivity(intent);
+        startActivity(intent);*/
         finish();
     }
 
@@ -172,9 +206,11 @@ public class LeadDetailActivity extends DrawerBaseActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_edit) {
-            return true;
+            Intent intent = new Intent(getApplicationContext(), AddNewLeadActivity.class);
+            intent.putExtra("leadId", leadId);
+            intent.putExtra("lead", lead);
+            activityResultLauncher.launch(intent);
         }
 
         return super.onOptionsItemSelected(item);

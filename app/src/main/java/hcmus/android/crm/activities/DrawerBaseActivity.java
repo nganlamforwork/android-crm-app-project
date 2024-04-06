@@ -23,11 +23,13 @@ import com.google.firebase.auth.FirebaseAuth;
 
 import hcmus.android.crm.R;
 import hcmus.android.crm.activities.Authentication.SignInActivity;
+import hcmus.android.crm.activities.Contacts.ContactActivity;
 import hcmus.android.crm.activities.Leads.LeadActivity;
 import hcmus.android.crm.activities.Main.MainActivity;
 import hcmus.android.crm.activities.BusinessCard.BusinessCardActivity;
 import hcmus.android.crm.activities.Sales.SaleActivity;
 import hcmus.android.crm.activities.Settings.SettingActivity;
+import hcmus.android.crm.activities.User.UserActivity;
 import hcmus.android.crm.utilities.Constants;
 import hcmus.android.crm.utilities.PreferenceManager;
 import hcmus.android.crm.utilities.Utils;
@@ -36,6 +38,7 @@ public class DrawerBaseActivity extends AppCompatActivity implements NavigationV
 
     private TextView userName, userEmail;
     protected FirebaseAuth auth;
+
     protected PreferenceManager preferenceManager;
     protected DrawerLayout drawerLayout;
     protected NavigationView navigationView;
@@ -113,10 +116,14 @@ public class DrawerBaseActivity extends AppCompatActivity implements NavigationV
             targetActivityClass = BusinessCardActivity.class;
         } else if (id == R.id.nav_leads) {
             targetActivityClass = LeadActivity.class;
+        } else if (id == R.id.nav_contact) {
+            targetActivityClass = ContactActivity.class;
         } else if (id == R.id.nav_personal) {
             targetActivityClass = SettingActivity.class;
         } else if(id == R.id.nav_sales) {
             targetActivityClass = SaleActivity.class;
+        } else if(id == R.id.nav_coworkers) {
+            targetActivityClass = UserActivity.class;
         } else if (id == R.id.nav_logout) {
             logout();
             return true; // Return immediately after logout

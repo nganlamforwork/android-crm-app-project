@@ -11,6 +11,7 @@
         android:name="android.hardware.telephony"
         android:required="false" />
 
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
     <uses-permission android:name="com.google.android.providers.gsf.permisson.READ_GSERVICES" />
     <uses-permission android:name="android.permission.CALL_PHONE" />
 
@@ -34,6 +35,29 @@
             android:theme="@style/Theme.CRM" />
         <activity
             android:name=".activities.BusinessCard.BusinessCard"
+            android:name=".activities.User.UserActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.Main.SplashActivity"
+            android:exported="true"
+            android:theme="@style/SplashScreen">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".activities.Chat.ChatActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.Contacts.ContactDetailActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.Contacts.ContactActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.Contacts.AddNewContactActivity"
             android:exported="false" />
 
         <meta-data
@@ -49,19 +73,12 @@
             android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".activities.Authentication.SignInActivity"
-            android:exported="true"
-            android:windowSoftInputMode="adjustResize">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".activities.Leads.LeadActivity"
             android:exported="false"
-            android:parentActivityName=".activities.Main.MainActivity"
-            android:windowSoftInputMode="adjustResize">
+            >
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />
             </intent-filter>

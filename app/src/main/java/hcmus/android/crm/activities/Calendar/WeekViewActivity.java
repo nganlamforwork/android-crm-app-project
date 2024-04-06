@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -66,6 +67,7 @@ public class WeekViewActivity extends DrawerBaseActivity implements CalendarAdap
         calendarRecyclerView = binding.calendarRecyclerView;
         monthYearText = binding.monthYearTV;
         eventListView = binding.eventListView;
+        eventListView.setEmptyView(binding.empty);
 
         Toolbar toolbar = binding.appBar.toolbar;
         setSupportActionBar(toolbar);
@@ -78,10 +80,30 @@ public class WeekViewActivity extends DrawerBaseActivity implements CalendarAdap
             actionBar.setDisplayShowHomeEnabled(true);
         }
         dailyEvents = new ArrayList<>();
-        eventAdapter = new EventAdapter(this, dailyEvents);
+        eventAdapter = new EventAdapter(this, dailyEvents, db, preferenceManager);
         eventListView.setAdapter(eventAdapter);
 
         setWeekView();
+        setListeners();
+    }
+
+    private void setListeners() {
+        eventListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Event event = (Event) parent.getItemAtPosition(position);
+                Intent intent = new Intent(view.getContext(), EventEditActivity.class);
+
+                intent.putExtra("eventId", event.EventId);
+                intent.putExtra("selectedDate", String.valueOf(CalendarUtils.selectedDate));
+                intent.putExtra("name", event.getName());
+                intent.putExtra("description", event.getDescription());
+                intent.putExtra("time", event.getTime());
+                intent.putExtra("location", event.getLocation());
+
+                startActivity(intent);
+            }
+        });
     }
 
     private void setWeekView() {
@@ -124,7 +146,9 @@ public class WeekViewActivity extends DrawerBaseActivity implements CalendarAdap
     }
 
     private void showData() {
-        query = db.collection(Constants.KEY_COLLECTION_EVENTS)
+        query = db.collection(Constants.KEY_COLLECTION_USERS)
+                .document(preferenceManager.getString(Constants.KEY_USER_ID))
+                .collection(Constants.KEY_COLLECTION_EVENTS)
                 .whereEqualTo("date", CalendarUtils.selectedDate.toString())
                 .orderBy("createdAt", Query.Direction.DESCENDING);
         listenerRegistration = query.addSnapshotListener(new EventListener<QuerySnapshot>() {
@@ -155,6 +179,10 @@ public class WeekViewActivity extends DrawerBaseActivity implements CalendarAdap
     }
 
     public void newEventAction(View view) {
-        startActivity(new Intent(this, EventEditActivity.class));
+        Intent intent = new Intent(this, EventEditActivity.class);
+
+        intent.putExtra("selectedDate", String.valueOf(CalendarUtils.selectedDate));
+
+        startActivity(intent);
     }
 }

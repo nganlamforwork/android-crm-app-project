@@ -5,9 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".activities.Leads.LeadDetailActivity">
-
-
+    tools:context=".activities.Contacts.ContactDetailActivity">
     <include
         android:id="@+id/app_bar"
         layout="@layout/toolbar"
@@ -37,13 +35,13 @@
                 app:riv_corner_radius="@dimen/_75sdp" />
 
             <TextView
-                android:id="@+id/leadName"
+                android:id="@+id/contactName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/avatar"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="16dp"
-                android:text="Lead Name"
+                android:text="Contact Name"
                 android:textSize="25sp"
                 android:textStyle="bold" />
 
@@ -58,7 +56,7 @@
 
             <!-- Phone Icon -->
             <ImageView
-                android:id="@+id/leadMakePhoneCall"
+                android:id="@+id/contactMakePhoneCall"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -70,7 +68,7 @@
 
             <!-- Email Icon -->
             <ImageView
-                android:id="@+id/leadSendMail"
+                android:id="@+id/contactSendMail"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -80,21 +78,9 @@
                 android:paddingVertical="15dp"
                 android:src="@drawable/ic_email" />
 
-            <!-- Location Icon -->
-            <ImageView
-                android:id="@+id/leadLocation"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginEnd="8dp"
-                android:layout_weight="1"
-                android:background="@drawable/background_border"
-                android:paddingVertical="15dp"
-                android:src="@drawable/ic_location" />
 
             <!-- Star Icon -->
             <ImageView
-                android:id="@+id/leadFav"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -124,11 +110,11 @@
                     app:tint="@color/primary_dark" />
 
                 <TextView
-                    android:id="@+id/leadPhone"
+                    android:id="@+id/contactPhone"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
-                    android:text="Lead Phone"
+                    android:text="Contact Phone"
                     android:textColor="@color/blue"
                     android:textSize="16sp" />
 
@@ -157,48 +143,17 @@
                     app:tint="@color/primary_dark" />
 
                 <TextView
-                    android:id="@+id/leadEmail"
+                    android:id="@+id/contactEmail"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
-                    android:text="Lead Email"
+                    android:text="Contact Email"
                     android:textColor="@color/primary_dark"
                     android:textSize="16sp" />
 
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 
-        <!-- Address Card -->
-        <androidx.cardview.widget.CardView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            app:cardCornerRadius="8dp">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/white"
-                android:orientation="horizontal"
-                android:padding="16dp">
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/ic_location"
-                    app:tint="@color/primary_dark" />
-
-                <TextView
-                    android:id="@+id/leadAddress"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:text="Lead Address"
-                    android:textColor="@color/primary_dark"
-                    android:textSize="16sp" />
-
-            </LinearLayout>
-        </androidx.cardview.widget.CardView>
 
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
@@ -220,11 +175,11 @@
                     app:tint="@color/primary_dark" />
 
                 <TextView
-                    android:id="@+id/leadNotes"
+                    android:id="@+id/contactNotes"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
-                    android:text="Lead Notes"
+                    android:text="Contact Notes"
                     android:textColor="@color/primary_dark"
                     android:textSize="16sp" />
 
@@ -237,25 +192,23 @@
             android:orientation="vertical"
             android:layout_marginTop="16dp">
 
-        <TextView
-            android:id="@+id/textAddNewNotes"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:text="Add new notes"
-            android:textColor="@color/blue"
-            android:textSize="16sp" />
-        <TextView
-            android:id="@+id/textDeleteLead"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:text="Delete this lead"
-            android:textColor="@color/error"
-            android:textSize="16sp" />
+            <TextView
+                android:id="@+id/textAddNewNotes"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="Add new notes"
+                android:textColor="@color/blue"
+                android:textSize="16sp" />
+            <TextView
+                android:id="@+id/textDeleteContact"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="Delete this contact"
+                android:textColor="@color/error"
+                android:textSize="16sp" />
         </LinearLayout>
 
     </LinearLayout>
 </LinearLayout>
-
-

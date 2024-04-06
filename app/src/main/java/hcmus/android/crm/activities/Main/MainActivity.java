@@ -43,6 +43,13 @@ public class MainActivity extends DrawerBaseActivity implements CalendarAdapter.
         setMonthView();
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // Reset calendar to the current date when returning to the home screen
+        CalendarUtils.selectedDate = LocalDate.now();
+        setMonthView();
+    }
 
     private void setMonthView()
     {

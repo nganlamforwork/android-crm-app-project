@@ -1,9 +1,7 @@
 package hcmus.android.crm.activities.Calendar;
 
-import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.DatePicker;
@@ -21,7 +19,6 @@ import java.util.Calendar;
 import hcmus.android.crm.activities.DrawerBaseActivity;
 import hcmus.android.crm.databinding.ActivityEventEditBinding;
 import hcmus.android.crm.models.Event;
-import hcmus.android.crm.models.Lead;
 import hcmus.android.crm.utilities.Constants;
 
 public class EventEditActivity extends DrawerBaseActivity {
@@ -29,6 +26,8 @@ public class EventEditActivity extends DrawerBaseActivity {
     private EditText eventName, eventLocation, eventDescription, eventDate, eventTime;
     private FirebaseFirestore db;
     private Event newEvent;
+    private boolean isEditMode = false;
+    private String eventId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,7 +55,24 @@ public class EventEditActivity extends DrawerBaseActivity {
         eventDate = binding.eventDate;
         eventTime = binding.eventTime;
 
+        eventId = getIntent().getStringExtra("eventId");
+        if (eventId != null) {
+            isEditMode = true;
+            setTitle("Edit event");
+            populateEventData();
+        } else {
+            eventDate.setText(getIntent().getStringExtra("selectedDate"));
+        }
+
         setListeners();
+    }
+
+    private void populateEventData() {
+        eventName.setText(getIntent().getStringExtra("name"));
+        eventDescription.setText(getIntent().getStringExtra("description"));
+        eventLocation.setText(getIntent().getStringExtra("location"));
+        eventDate.setText(getIntent().getStringExtra("selectedDate"));
+        eventTime.setText(getIntent().getStringExtra("time"));
     }
 
     private void setListeners() {
@@ -66,10 +82,21 @@ public class EventEditActivity extends DrawerBaseActivity {
         eventTime.setOnClickListener(v -> {
             showTimePicker();
         });
-        binding.buttonSaveEvent.setOnClickListener(v -> {
-            loading(true);
-            handleSaveEvent();
-        });
+        if (isEditMode) {
+            // Edit mode: Set button text to "Update Event"
+            binding.buttonSaveEvent.setText("Update Event");
+            binding.buttonSaveEvent.setOnClickListener(v -> {
+                loading(true);
+                handleUpdateEvent();
+            });
+        } else {
+            // Add mode: Set button text to "Save Event"
+            binding.buttonSaveEvent.setText("Save Event");
+            binding.buttonSaveEvent.setOnClickListener(v -> {
+                loading(true);
+                handleSaveEvent();
+            });
+        }
     }
 
     private void handleSaveEvent() {
@@ -79,7 +106,8 @@ public class EventEditActivity extends DrawerBaseActivity {
         String date = eventDate.getText().toString().trim();
         String time = eventTime.getText().toString().trim();
 
-        if(!isFieldsFilled()) {
+        if (!isFieldsFilled()) {
+            loading(false);
             showToast("All field is required", 0);
             eventName.setError("Event name is required");
             eventName.requestFocus();
@@ -87,24 +115,57 @@ public class EventEditActivity extends DrawerBaseActivity {
         }
         newEvent = new Event(name, description, location, date, time);
 
-        db.collection(Constants.KEY_COLLECTION_EVENTS)
+        db.collection(Constants.KEY_COLLECTION_USERS)
+                .document(preferenceManager.getString(Constants.KEY_USER_ID))
+                .collection(Constants.KEY_COLLECTION_EVENTS)
                 .add(newEvent)
                 .addOnSuccessListener(documentReference -> {
-                    // Reset fields
                     resetFields();
 
-                    // Hide loading state
                     loading(false);
                     showToast("New event added successful", 0);
 
                     finish();
                 })
                 .addOnFailureListener(e -> {
-                    // Handle failure, e.g., show error message
                     loading(false);
                     showToast("Failed to add new event", 0);
                 });
     }
+
+    private void handleUpdateEvent() {
+        String name = eventName.getText().toString().trim();
+        String description = eventDescription.getText().toString().trim();
+        String location = eventLocation.getText().toString().trim();
+        String date = eventDate.getText().toString().trim();
+        String time = eventTime.getText().toString().trim();
+
+        if (!isFieldsFilled()) {
+            showToast("All field is required", 0);
+            eventName.setError("Event name is required");
+            eventName.requestFocus();
+            return;
+        }
+        Event updatedEvent = new Event(name, description, location, date, time);
+
+        db.collection(Constants.KEY_COLLECTION_USERS)
+                .document(preferenceManager.getString(Constants.KEY_USER_ID))
+                .collection(Constants.KEY_COLLECTION_EVENTS)
+                .document(eventId)
+                .set(updatedEvent)
+                .addOnSuccessListener(aVoid -> {
+                    resetFields();
+
+                    loading(false);
+                    showToast("Event updated successfully", 0);
+                    finish();
+                })
+                .addOnFailureListener(e -> {
+                    loading(false);
+                    showToast("Failed to update event", 0);
+                });
+    }
+
     private void resetFields() {
         eventName.setText("");
         eventDescription.setText("");
