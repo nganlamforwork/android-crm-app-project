@@ -1,9 +1,12 @@
 package hcmus.android.crm.activities.BusinessCard;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Base64;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
@@ -13,9 +16,13 @@ import android.widget.Toast;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.widget.Toolbar;
 
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.gson.Gson;
 
+import java.io.ByteArrayOutputStream;
+
+import androidmads.library.qrgenearator.QRGContents;
+import androidmads.library.qrgenearator.QRGEncoder;
 import hcmus.android.crm.R;
 import hcmus.android.crm.activities.DrawerBaseActivity;
 import hcmus.android.crm.databinding.ActivityAddNewBussinessCardAcitivityBinding;
@@ -29,6 +36,7 @@ public class AddNewBusinessCardActivity extends DrawerBaseActivity {
     private FrameLayout logoImage;
 
     private FirebaseFirestore db;
+    private QRGEncoder qrgEncoder;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -121,9 +129,13 @@ public class AddNewBusinessCardActivity extends DrawerBaseActivity {
 
         return super.onOptionsItemSelected(item);
     }
-
+    public static String bitmapToBase64(Bitmap bitmap) {
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
+        byte[] byteArray = byteArrayOutputStream.toByteArray();
+        return Base64.encodeToString(byteArray, Base64.DEFAULT);
+    }
     private void addBusinessCardToFirestore() {
-
         String name = fullName.getText().toString().trim();
         String aboutMe = this.aboutMe.getText().toString().trim();
         String email = this.email.getText().toString().trim();
@@ -132,9 +144,27 @@ public class AddNewBusinessCardActivity extends DrawerBaseActivity {
         String companyName = company.getText().toString().trim();
         String note = this.note.getText().toString().trim();
         String cardName = this.cardName.getText().toString().trim();
-        // Add lead to Firestore
+
         BusinessCard newCard = new BusinessCard(name, aboutMe, companyName, job, email, phoneNumber, note, cardName);
 
+        // Object to Json
+        Gson gson = new Gson();
+        String json = gson.toJson(newCard);
+
+        // Get QR code for card information
+        QRGEncoder qrgEncoder = new QRGEncoder(json, null, QRGContents.Type.TEXT, 700);
+        try{
+            Bitmap bitmap = qrgEncoder.getBitmap(0);
+            if (bitmap != null){
+                String base64String = bitmapToBase64(bitmap);
+                newCard.setQrcode(base64String);
+            }
+            else
+                Log.d("Bitmap QR", "null");
+        }catch (Exception ignored){
+        }
+
+        // Add card to Firestore
         db.collection(Constants.KEY_COLLECTION_USERS)
                 .document(preferenceManager.getString(Constants.KEY_USER_ID))
                 .collection(Constants.KEY_COLLECTION_CARDS)
