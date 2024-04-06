@@ -49,6 +49,7 @@ public class User implements Parcelable {
         image = in.readString();
         email = in.readString();
         phone = in.readString();
+        fcmToken = in.readString();
         long tmpCreatedAt = in.readLong();
         createdAt = tmpCreatedAt == -1 ? null : new Date(tmpCreatedAt);
     }
@@ -122,6 +123,7 @@ public class User implements Parcelable {
         dest.writeString(image);
         dest.writeString(email);
         dest.writeString(phone);
+        dest.writeString(fcmToken);
         dest.writeLong(createdAt != null ? createdAt.getTime() : -1);
     }
 

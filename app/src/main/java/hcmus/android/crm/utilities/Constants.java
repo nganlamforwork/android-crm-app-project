@@ -7,6 +7,7 @@ public class Constants {
     public static final String KEY_COLLECTION_EVENTS = "events";
     public static final String KEY_COLLECTION_CHAT_ROOMS = "chatrooms";
     public static final String KEY_COLLECTION_CHATS = "chats";
+    public static final String KEY_FCM_TOKEN = "fcmToken";
 
     public static final String KEY_NAME = "name";
     public static final String KEY_EMAIL = "email";
@@ -16,6 +17,10 @@ public class Constants {
     public static final String KEY_PREFERENCE_NAME = "crmAppPreference";
     public static final String KEY_IS_SIGNED_IN = "isSignedIn";
     public static final String KEY_USER_ID = "userId";
-    public static final String KEY_IMAGE = "image";
+   public static final String KEY_IMAGE = "image";
+   public static final String URL_FCM_API = "https://fcm.googleapis.com/v1/projects/android-crm-group-10/messages:send";
+
+    public static final String MESSAGING_SCOPE = "https://www.googleapis.com/auth/firebase.messaging";
+    public static final String[] SCOPES = { MESSAGING_SCOPE };
 
 }
