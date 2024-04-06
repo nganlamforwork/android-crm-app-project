@@ -18,8 +18,11 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 import hcmus.android.crm.R;
 import hcmus.android.crm.activities.Authentication.SignInActivity;
@@ -27,6 +30,7 @@ import hcmus.android.crm.activities.Contacts.ContactActivity;
 import hcmus.android.crm.activities.Leads.LeadActivity;
 import hcmus.android.crm.activities.Main.MainActivity;
 import hcmus.android.crm.activities.BusinessCard.BusinessCardActivity;
+import hcmus.android.crm.activities.Main.SplashActivity;
 import hcmus.android.crm.activities.Sales.SaleActivity;
 import hcmus.android.crm.activities.Settings.SettingActivity;
 import hcmus.android.crm.activities.User.UserActivity;
@@ -120,9 +124,9 @@ public class DrawerBaseActivity extends AppCompatActivity implements NavigationV
             targetActivityClass = ContactActivity.class;
         } else if (id == R.id.nav_personal) {
             targetActivityClass = SettingActivity.class;
-        } else if(id == R.id.nav_sales) {
+        } else if (id == R.id.nav_sales) {
             targetActivityClass = SaleActivity.class;
-        } else if(id == R.id.nav_coworkers) {
+        } else if (id == R.id.nav_coworkers) {
             targetActivityClass = UserActivity.class;
         } else if (id == R.id.nav_logout) {
             logout();
@@ -152,10 +156,18 @@ public class DrawerBaseActivity extends AppCompatActivity implements NavigationV
 
     private void logout() {
         showToast("See you later!", 0);
-        preferenceManager.clear();
-        auth.signOut();
-        startActivity(new Intent(getApplicationContext(), SignInActivity.class));
-        finish();
+        FirebaseMessaging.getInstance().deleteToken().addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if (task.isSuccessful()) {
+                    preferenceManager.clear();
+                    auth.signOut();
+                    Intent intent = new Intent(getApplicationContext(), SplashActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    startActivity(intent);
+                }
+            }
+        });
     }
 
     protected boolean isActivityInBackStack(Class<?> activityClass) {
