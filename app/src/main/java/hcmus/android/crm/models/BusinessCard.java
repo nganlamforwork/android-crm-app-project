@@ -111,11 +111,11 @@ public class BusinessCard extends BusinessCardId implements Parcelable {
         this.company = company;
     }
 
-    public String getJobtitle() {
+    public String getJobTitle() {
         return jobtitle;
     }
 
-    public void setJobtitle(String jobtitle) {
+    public void setJobTitle(String jobtitle) {
         this.jobtitle = jobtitle;
     }
 
