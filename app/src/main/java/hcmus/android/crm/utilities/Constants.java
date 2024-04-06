@@ -3,6 +3,7 @@ package hcmus.android.crm.utilities;
 public class Constants {
     public static final String KEY_COLLECTION_USERS = "users";
     public static final String KEY_COLLECTION_LEADS = "leads";
+    public static final String KEY_COLLECTION_CARDS = "cards";
     public static final String KEY_COLLECTION_EVENTS = "events";
 
     public static final String KEY_NAME = "name";

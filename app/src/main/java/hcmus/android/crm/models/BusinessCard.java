@@ -8,15 +8,21 @@ import com.google.firebase.firestore.ServerTimestamp;
 
 import java.util.Date;
 
+import hcmus.android.crm.activities.BusinessCard.BusinessCardId;
 import hcmus.android.crm.activities.Leads.LeadId;
 
-public class BusinessCard extends LeadId implements Parcelable {
+public class BusinessCard extends BusinessCardId implements Parcelable {
+    @PropertyName("fullname")
+    private String fullname;
 
-    @PropertyName("name")
-    private String name;
+    @PropertyName("aboutme")
+    private String aboutme;
 
-    @PropertyName("image")
-    private String image;
+    @PropertyName("company")
+    private String company;
+
+    @PropertyName("jobtitle")
+    private String jobtitle;
 
     @PropertyName("email")
     private String email;
@@ -24,23 +30,11 @@ public class BusinessCard extends LeadId implements Parcelable {
     @PropertyName("phone")
     private String phone;
 
-    @PropertyName("address")
-    private String address;
+    @PropertyName("note")
+    private String note;
 
-    @PropertyName("job")
-    private String job;
-
-    @PropertyName("company")
-    private String company;
-
-    @PropertyName("notes")
-    private String notes;
-
-    @PropertyName("latitude")
-    private String latitude;
-
-    @PropertyName("longitude")
-    private String longitude;
+    @PropertyName("cardname")
+    private String cardname;
 
     @PropertyName("createdAt")
     @ServerTimestamp
@@ -52,31 +46,27 @@ public class BusinessCard extends LeadId implements Parcelable {
     public BusinessCard() {
     }
 
-    public BusinessCard(String name, String email, String phone, String address, String job, String company, String notes, String image, String latitude, String longitude) {
-        this.name = name;
-        this.image = image;
+    public BusinessCard(String fullname, String aboutme, String company, String jobtitle, String email, String phone, String note, String cardname) {
+        this.fullname = fullname;
+        this.aboutme = aboutme;
+        this.company = company;
+        this.jobtitle = jobtitle;
         this.email = email;
         this.phone = phone;
-        this.address = address;
-        this.job = job;
-        this.company = company;
-        this.notes = notes;
-        this.latitude = latitude;
-        this.longitude = longitude;
+        this.note = note;
+        this.cardname = cardname;
     }
 
     // Parcelable implementation
     protected BusinessCard(Parcel in) {
-        name = in.readString();
-        image = in.readString();
+        fullname = in.readString();
+        aboutme = in.readString();
+        company = in.readString();
+        jobtitle = in.readString();
         email = in.readString();
         phone = in.readString();
-        address = in.readString();
-        job = in.readString();
-        company = in.readString();
-        notes = in.readString();
-        latitude = in.readString();
-        longitude = in.readString();
+        note = in.readString();
+        cardname = in.readString();
         long tmpCreatedAt = in.readLong();
         createdAt = tmpCreatedAt == -1 ? null : new Date(tmpCreatedAt);
     }
@@ -98,20 +88,36 @@ public class BusinessCard extends LeadId implements Parcelable {
         return 0;
     }
 
-    public String getName() {
-        return name;
+    public String getFullname() {
+        return fullname;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setFullname(String fullname) {
+        this.fullname = fullname;
     }
 
-    public String getImage() {
-        return image;
+    public String getAboutme() {
+        return aboutme;
     }
 
-    public void setImage(String image) {
-        this.image = image;
+    public void setAboutme(String aboutme) {
+        this.aboutme = aboutme;
+    }
+
+    public String getCompany() {
+        return company;
+    }
+
+    public void setCompany(String company) {
+        this.company = company;
+    }
+
+    public String getJobtitle() {
+        return jobtitle;
+    }
+
+    public void setJobtitle(String jobtitle) {
+        this.jobtitle = jobtitle;
     }
 
     public String getEmail() {
@@ -130,52 +136,20 @@ public class BusinessCard extends LeadId implements Parcelable {
         this.phone = phone;
     }
 
-    public String getAddress() {
-        return address;
+    public String getNote() {
+        return note;
     }
 
-    public void setAddress(String address) {
-        this.address = address;
+    public void setNote(String note) {
+        this.note = note;
     }
 
-    public String getJob() {
-        return job;
+    public String getCardname() {
+        return cardname;
     }
 
-    public void setJob(String job) {
-        this.job = job;
-    }
-
-    public String getCompany() {
-        return company;
-    }
-
-    public void setCompany(String company) {
-        this.company = company;
-    }
-
-    public String getNotes() {
-        return notes;
-    }
-
-    public void setNotes(String notes) {
-        this.notes = notes;
-    }
-
-    public String getLatitude() {
-        return latitude;
-    }
-
-    public void setLatitude(String latitude) {
-        this.latitude = latitude;
-    }
-
-    public String getLongitude() {
-        return longitude;
-    }
-
-    public void setLongitude(String longitude) {
-        this.longitude = longitude;
+    public void setCardname(String cardname) {
+        this.cardname = cardname;
     }
 
     public Date getCreatedAt() {
@@ -188,16 +162,14 @@ public class BusinessCard extends LeadId implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(name);
-        dest.writeString(image);
+        dest.writeString(fullname);
+        dest.writeString(aboutme);
+        dest.writeString(company);
+        dest.writeString(jobtitle);
         dest.writeString(email);
         dest.writeString(phone);
-        dest.writeString(address);
-        dest.writeString(job);
-        dest.writeString(company);
-        dest.writeString(notes);
-        dest.writeString(latitude);
-        dest.writeString(longitude);
+        dest.writeString(note);
+        dest.writeString(cardname);
         dest.writeLong(createdAt != null ? createdAt.getTime() : -1);
     }
 }

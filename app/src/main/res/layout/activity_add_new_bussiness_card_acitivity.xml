@@ -97,7 +97,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
-                android:text="Full Name"
+                android:text="Full Name *"
                 android:textColor="@android:color/black" />
 
             <EditText
@@ -140,7 +140,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:text="Company"
+                android:text="Company *"
                 android:textColor="@android:color/black" />
 
             <EditText
@@ -160,7 +160,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:text="Job Title"
+                android:text="Job Title *"
                 android:textColor="@android:color/black" />
 
             <EditText
@@ -180,7 +180,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:text="Email"
+                android:text="Email *"
                 android:textColor="@android:color/black" />
 
             <EditText
@@ -200,7 +200,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:text="Phone"
+                android:text="Phone *"
                 android:textColor="@android:color/black" />
 
             <EditText
@@ -244,7 +244,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:text="Card Name"
+                android:text="Card Name *"
                 android:textColor="@android:color/black" />
 
             <EditText
