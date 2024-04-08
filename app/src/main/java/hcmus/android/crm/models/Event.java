@@ -1,5 +1,6 @@
 package hcmus.android.crm.models;
 
+import android.annotation.SuppressLint;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -8,9 +9,7 @@ import com.google.firebase.firestore.ServerTimestamp;
 
 import java.util.Date;
 
-import hcmus.android.crm.activities.Calendar.EventId;
-
-public class Event extends EventId implements Parcelable {
+public class Event implements Parcelable {
 
     @PropertyName("name")
     private String name;
@@ -27,6 +26,9 @@ public class Event extends EventId implements Parcelable {
     @PropertyName("time")
     private String time;
 
+    @PropertyName("isPassed")
+    private boolean isPassed;
+
     @PropertyName("createdAt")
     @ServerTimestamp
     private Date createdAt;
@@ -37,15 +39,17 @@ public class Event extends EventId implements Parcelable {
     public Event() {
     }
 
-    public Event(String name, String description, String location, String date, String time) {
+    public Event(String name, String description, String location, String date, String time, boolean isPassed) {
         this.name = name;
         this.description = description;
         this.location = location;
         this.date = date;
         this.time = time;
+        this.isPassed = isPassed;
     }
 
     // Parcelable implementation
+    @SuppressLint("NewApi")
     protected Event(Parcel in) {
         name = in.readString();
         description = in.readString();
@@ -53,6 +57,7 @@ public class Event extends EventId implements Parcelable {
         long tmpDate = in.readLong();
         date = in.readString();
         time = in.readString();
+        isPassed = in.readBoolean();
         long tmpCreatedAt = in.readLong();
         createdAt = tmpCreatedAt == -1 ? null : new Date(tmpCreatedAt);
     }
@@ -68,6 +73,15 @@ public class Event extends EventId implements Parcelable {
             return new Event[size];
         }
     };
+
+
+    public boolean isPassed() {
+        return isPassed;
+    }
+
+    public void setPassed(boolean passed) {
+        isPassed = passed;
+    }
 
     @Override
     public int describeContents() {
@@ -122,6 +136,7 @@ public class Event extends EventId implements Parcelable {
         this.createdAt = createdAt;
     }
 
+    @SuppressLint("NewApi")
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(name);
@@ -129,6 +144,7 @@ public class Event extends EventId implements Parcelable {
         dest.writeString(location);
         dest.writeString(date);
         dest.writeString(time);
+        dest.writeBoolean(isPassed);
         dest.writeLong(createdAt != null ? createdAt.getTime() : -1);
     }
 }

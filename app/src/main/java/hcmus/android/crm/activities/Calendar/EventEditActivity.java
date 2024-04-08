@@ -2,8 +2,12 @@ package hcmus.android.crm.activities.Calendar;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TimePicker;
@@ -16,7 +20,10 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
+import hcmus.android.crm.R;
 import hcmus.android.crm.activities.DrawerBaseActivity;
+import hcmus.android.crm.activities.Leads.AddNewLeadActivity;
+import hcmus.android.crm.activities.Leads.LeadActivity;
 import hcmus.android.crm.databinding.ActivityEventEditBinding;
 import hcmus.android.crm.models.Event;
 import hcmus.android.crm.utilities.Constants;
@@ -28,6 +35,7 @@ public class EventEditActivity extends DrawerBaseActivity {
     private Event newEvent;
     private boolean isEditMode = false;
     private String eventId;
+    private boolean isPassed;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,6 +81,7 @@ public class EventEditActivity extends DrawerBaseActivity {
         eventLocation.setText(getIntent().getStringExtra("location"));
         eventDate.setText(getIntent().getStringExtra("selectedDate"));
         eventTime.setText(getIntent().getStringExtra("time"));
+        isPassed = getIntent().getBooleanExtra("isPassed", false);
     }
 
     private void setListeners() {
@@ -106,6 +115,19 @@ public class EventEditActivity extends DrawerBaseActivity {
         String date = eventDate.getText().toString().trim();
         String time = eventTime.getText().toString().trim();
 
+        // Get current date
+        Calendar currentDate = Calendar.getInstance();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        String currentDateString = dateFormat.format(currentDate.getTime());
+
+        // Check if selected date is before current date
+        if (date.compareTo(currentDateString) < 0) {
+            // Date is in the past, notify user and prevent event creation
+            loading(false);
+            showToast("Cannot create event for past dates", 0);
+            return;
+        }
+
         if (!isFieldsFilled()) {
             loading(false);
             showToast("All field is required", 0);
@@ -113,7 +135,7 @@ public class EventEditActivity extends DrawerBaseActivity {
             eventName.requestFocus();
             return;
         }
-        newEvent = new Event(name, description, location, date, time);
+        newEvent = new Event(name, description, location, date, time, false);
 
         db.collection(Constants.KEY_COLLECTION_USERS)
                 .document(preferenceManager.getString(Constants.KEY_USER_ID))
@@ -124,7 +146,9 @@ public class EventEditActivity extends DrawerBaseActivity {
 
                     loading(false);
                     showToast("New event added successful", 0);
-
+                    Intent intent = new Intent(this, WeekViewActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivity(intent);
                     finish();
                 })
                 .addOnFailureListener(e -> {
@@ -141,12 +165,13 @@ public class EventEditActivity extends DrawerBaseActivity {
         String time = eventTime.getText().toString().trim();
 
         if (!isFieldsFilled()) {
+            loading(false);
             showToast("All field is required", 0);
             eventName.setError("Event name is required");
             eventName.requestFocus();
             return;
         }
-        Event updatedEvent = new Event(name, description, location, date, time);
+        Event updatedEvent = new Event(name, description, location, date, time, isPassed);
 
         db.collection(Constants.KEY_COLLECTION_USERS)
                 .document(preferenceManager.getString(Constants.KEY_USER_ID))
@@ -173,6 +198,7 @@ public class EventEditActivity extends DrawerBaseActivity {
         eventDate.setText("");
         eventTime.setText("");
     }
+
     private boolean isFieldsFilled() {
         // Check if all required fields are filled
         return !eventName.getText().toString().trim().isEmpty() &&
@@ -181,6 +207,7 @@ public class EventEditActivity extends DrawerBaseActivity {
                 !eventDate.getText().toString().trim().isEmpty() &&
                 !eventTime.getText().toString().trim().isEmpty();
     }
+
     @Override
     public boolean onSupportNavigateUp() {
         getOnBackPressedDispatcher().onBackPressed();
@@ -196,6 +223,7 @@ public class EventEditActivity extends DrawerBaseActivity {
             binding.buttonSaveEvent.setVisibility(View.VISIBLE);
         }
     }
+
     public void showDatePicker() {
         Calendar calendar = Calendar.getInstance();
         int year = calendar.get(Calendar.YEAR);

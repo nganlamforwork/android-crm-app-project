@@ -73,8 +73,6 @@ dependencies {
     implementation("com.google.firebase:firebase-storage-ktx:20.1.0")
     implementation("com.google.firebase:firebase-messaging:23.4.1")
 
-
-
     // MultiDex
     implementation("androidx.multidex:multidex:2.0.1")
     implementation("it.xabaras.android:recyclerview-swipedecorator:1.4")
@@ -87,4 +85,6 @@ dependencies {
     implementation("com.squareup.okhttp3:okhttp:4.12.0")
     implementation("com.google.auth:google-auth-library-oauth2-http:1.19.0")
 
+    // Worker
+    implementation("androidx.work:work-runtime:2.9.0")
 }

@@ -7,6 +7,7 @@ import android.os.Bundle;
 
 import java.util.ArrayList;
 
+import hcmus.android.crm.activities.Calendar.EventUpdateWorker;
 import hcmus.android.crm.activities.Calendar.WeekViewActivity;
 import hcmus.android.crm.activities.DrawerBaseActivity;
 import hcmus.android.crm.activities.Main.adapters.Calendar.CalendarAdapter;
@@ -16,12 +17,15 @@ import hcmus.android.crm.utilities.Constants;
 
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.work.PeriodicWorkRequest;
+import androidx.work.WorkManager;
 
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
 import java.time.LocalDate;
+import java.util.concurrent.TimeUnit;
 
 import static hcmus.android.crm.utilities.CalendarUtils.daysInMonthArray;
 import static hcmus.android.crm.utilities.CalendarUtils.monthYearFromDate;
@@ -48,6 +52,16 @@ public class MainActivity extends DrawerBaseActivity implements CalendarAdapter.
 
         setMonthView();
         getFCMToken();
+        scheduleEventUpdate();
+    }
+    private void scheduleEventUpdate() {
+        PeriodicWorkRequest periodicWorkRequest = new PeriodicWorkRequest.Builder(
+                EventUpdateWorker.class,
+                1, // Repeat interval in days
+                TimeUnit.DAYS
+        ).build();
+
+        WorkManager.getInstance(this).enqueue(periodicWorkRequest);
     }
 
     @Override
