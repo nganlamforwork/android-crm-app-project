@@ -282,16 +282,6 @@ public class ChatActivity extends DrawerBaseActivity {
                 }
             });
         }).start();
-
-
-       /* Log.d("JSON", jsonObject.toString());
-        ApplicationInfo ai = getApplicationContext().getPackageManager()
-                .getApplicationInfo(getApplicationContext().getPackageName(), PackageManager.GET_META_DATA);
-        Object value = ai.metaData.get("CLOUD_MESSAGE_API_KEY");
-
-        String apiKey = value.toString();*/
-
-
     }
 
     private void getOrCreateChatRoom() {

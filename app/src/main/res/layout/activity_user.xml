@@ -12,8 +12,7 @@
         android:layout_height="match_parent"
         android:layout_marginTop="?attr/actionBarSize"
         android:divider="@drawable/list_divider"
-        android:dividerHeight="20dp"
-      />
+        android:dividerHeight="20dp" />
 
     <TextView
         android:id="@+id/emptyView"

@@ -3,43 +3,32 @@ package hcmus.android.crm.activities.Calendar;
 import static hcmus.android.crm.utilities.CalendarUtils.daysInWeekArray;
 import static hcmus.android.crm.utilities.CalendarUtils.monthYearFromDate;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ListView;
 import android.widget.TextView;
 
-import androidx.activity.result.ActivityResult;
-import androidx.activity.result.ActivityResultCallback;
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.annotation.Nullable;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.firebase.firestore.DocumentChange;
-import com.google.firebase.firestore.EventListener;
+import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
-import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.List;
-
 import hcmus.android.crm.activities.Calendar.adapters.EventAdapter;
 import hcmus.android.crm.activities.DrawerBaseActivity;
 import hcmus.android.crm.activities.Main.adapters.Calendar.CalendarAdapter;
 import hcmus.android.crm.databinding.ActivityWeekViewBinding;
 import hcmus.android.crm.models.Event;
-import hcmus.android.crm.models.Lead;
 import hcmus.android.crm.utilities.CalendarUtils;
 import hcmus.android.crm.utilities.Constants;
 
@@ -48,12 +37,8 @@ public class WeekViewActivity extends DrawerBaseActivity implements CalendarAdap
     private FirebaseFirestore db;
     private TextView monthYearText;
     private RecyclerView calendarRecyclerView;
-    private ListView eventListView;
-
-    private Query query;
-    private ListenerRegistration listenerRegistration;
-    private List<Event> dailyEvents;
     private EventAdapter eventAdapter;
+    private RecyclerView recyclerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,8 +51,6 @@ public class WeekViewActivity extends DrawerBaseActivity implements CalendarAdap
 
         calendarRecyclerView = binding.calendarRecyclerView;
         monthYearText = binding.monthYearTV;
-        eventListView = binding.eventListView;
-        eventListView.setEmptyView(binding.empty);
 
         Toolbar toolbar = binding.appBar.toolbar;
         setSupportActionBar(toolbar);
@@ -79,29 +62,45 @@ public class WeekViewActivity extends DrawerBaseActivity implements CalendarAdap
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setDisplayShowHomeEnabled(true);
         }
-        dailyEvents = new ArrayList<>();
-        eventAdapter = new EventAdapter(this, dailyEvents, db, preferenceManager);
-        eventListView.setAdapter(eventAdapter);
 
         setWeekView();
-        setListeners();
     }
 
-    private void setListeners() {
-        eventListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+    private void setupEventRecyclerview() {
+        recyclerView = binding.eventRecyclerView;
+        Query query = db.collection(Constants.KEY_COLLECTION_USERS)
+                .document(preferenceManager.getString(Constants.KEY_USER_ID))
+                .collection(Constants.KEY_COLLECTION_EVENTS)
+                .whereEqualTo("date", CalendarUtils.selectedDate.toString())
+                .orderBy("createdAt", Query.Direction.DESCENDING);
+
+        checkIfListEmpty(query);
+
+        FirestoreRecyclerOptions<Event> options = new FirestoreRecyclerOptions.Builder<Event>()
+                .setQuery(query, Event.class).build();
+
+        eventAdapter = new EventAdapter(options, this);
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setAdapter(eventAdapter);
+
+
+        eventAdapter.startListening();
+    }
+
+    private void checkIfListEmpty(Query query) {
+        query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Event event = (Event) parent.getItemAtPosition(position);
-                Intent intent = new Intent(view.getContext(), EventEditActivity.class);
-
-                intent.putExtra("eventId", event.EventId);
-                intent.putExtra("selectedDate", String.valueOf(CalendarUtils.selectedDate));
-                intent.putExtra("name", event.getName());
-                intent.putExtra("description", event.getDescription());
-                intent.putExtra("time", event.getTime());
-                intent.putExtra("location", event.getLocation());
-
-                startActivity(intent);
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    if (task.getResult().getDocuments().size() > 0) {
+                        recyclerView.setVisibility(View.VISIBLE);
+                        binding.emptyView.setVisibility(View.GONE);
+                    } else {
+                        recyclerView.setVisibility(View.GONE);
+                        binding.emptyView.setVisibility(View.VISIBLE);
+                    }
+                }
             }
         });
     }
@@ -114,7 +113,7 @@ public class WeekViewActivity extends DrawerBaseActivity implements CalendarAdap
         RecyclerView.LayoutManager layoutManager = new GridLayoutManager(this, 7);
         calendarRecyclerView.setLayoutManager(layoutManager);
         calendarRecyclerView.setAdapter(calendarAdapter);
-        showData();
+        setupEventRecyclerview();
     }
 
     public void previousWeekAction(View view) {
@@ -139,13 +138,31 @@ public class WeekViewActivity extends DrawerBaseActivity implements CalendarAdap
         setWeekView();
     }
 
+
     @Override
     protected void onResume() {
         super.onResume();
-        showData();
+        if (eventAdapter != null) {
+            eventAdapter.startListening();
+            eventAdapter.notifyDataSetChanged();
+        }
     }
 
-    private void showData() {
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if (eventAdapter != null)
+            eventAdapter.startListening();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (eventAdapter != null)
+            eventAdapter.stopListening();
+    }
+
+    /*private void showData() {
         query = db.collection(Constants.KEY_COLLECTION_USERS)
                 .document(preferenceManager.getString(Constants.KEY_USER_ID))
                 .collection(Constants.KEY_COLLECTION_EVENTS)
@@ -167,20 +184,32 @@ public class WeekViewActivity extends DrawerBaseActivity implements CalendarAdap
                 }
                 // Clear the eventAdapter before adding new events
                 eventAdapter.clear();
+
+                LocalDate currentDate = LocalDate.now(); // Get current date
                 for (DocumentChange documentChange : value.getDocumentChanges()) {
                     String id = documentChange.getDocument().getId();
                     Event event = documentChange.getDocument().toObject(Event.class).withId(id);
+
+                    // Compare event date with current date
+                    LocalDate eventDate = LocalDate.parse(event.getDate());
+                    if (eventDate.isBefore(currentDate)) {
+                        // Event date has passed
+                        event.setPassed(true);
+                    } else {
+                        // Event date is in the future
+                        event.setPassed(false);
+                    }
+
                     eventAdapter.add(event);
                 }
                 eventAdapter.notifyDataSetChanged();
                 listenerRegistration.remove();
             }
         });
-    }
+    }*/
 
     public void newEventAction(View view) {
         Intent intent = new Intent(this, EventEditActivity.class);
-
         intent.putExtra("selectedDate", String.valueOf(CalendarUtils.selectedDate));
 
         startActivity(intent);

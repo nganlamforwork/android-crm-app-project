@@ -10,6 +10,8 @@
     <color name="error">#B00020</color>
     <color name="red">#ff2e2c</color>
     <color name="blue">#3186EE</color>
+    <color name="success">#28a745</color>
+    <color name="warning">#e59103</color>
     <color name="black">#000000</color>
     <color name="dark_blue">#1C2E46</color>
     <color name="gray">#8e97a3</color>

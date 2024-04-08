@@ -113,6 +113,7 @@ public class LeadActivity extends DrawerBaseActivity {
         super.onResume();
         navigationView.setCheckedItem(R.id.nav_leads);
         if (leadAdapter != null)  {
+            leadAdapter.startListening();
             leadAdapter.notifyDataSetChanged();
         }
     }
