@@ -146,9 +146,6 @@
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
-        <meta-data
-            android:name="CLOUD_MESSAGE_API_KEY"
-            android:value="${CLOUD_MESSAGE_API_KEY}" />
     </application>
 
 </manifest>
