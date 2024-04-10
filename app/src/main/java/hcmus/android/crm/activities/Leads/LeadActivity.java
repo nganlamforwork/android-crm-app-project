@@ -140,7 +140,7 @@ public class LeadActivity extends DrawerBaseActivity {
     }
 
     private void setListeners() {
-        binding.craftButton.setOnClickListener(new View.OnClickListener() {
+        binding.manualButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 startActivity(new Intent(LeadActivity.this, AddNewLeadActivity.class));
@@ -149,7 +149,7 @@ public class LeadActivity extends DrawerBaseActivity {
         binding.scanButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(LeadActivity.this, "Scan Button Clicked", Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(LeadActivity.this, ScanBusinessCardActivity.class));
             }
         });
         binding.fab.setOnClickListener(new View.OnClickListener() {
@@ -168,10 +168,10 @@ public class LeadActivity extends DrawerBaseActivity {
 
     private void setVisibility(boolean clicked) {
         if (!clicked) {
-            binding.craftButton.setVisibility(View.VISIBLE);
+            binding.manualButton.setVisibility(View.VISIBLE);
             binding.scanButton.setVisibility(View.VISIBLE);
         } else {
-            binding.craftButton.setVisibility(View.INVISIBLE);
+            binding.manualButton.setVisibility(View.INVISIBLE);
             binding.scanButton.setVisibility(View.INVISIBLE);
         }
 
@@ -179,11 +179,11 @@ public class LeadActivity extends DrawerBaseActivity {
 
     private void setAnimation(boolean clicked) {
         if (!clicked){
-            binding.craftButton.startAnimation(fromBottom);
+            binding.manualButton.startAnimation(fromBottom);
             binding.scanButton.startAnimation(fromBottom);
             binding.fab.startAnimation(rotateOpen);
         }else{
-            binding.craftButton.startAnimation(toBottom);
+            binding.manualButton.startAnimation(toBottom);
             binding.scanButton.startAnimation(toBottom);
             binding.fab.startAnimation(rotateClose);
 
