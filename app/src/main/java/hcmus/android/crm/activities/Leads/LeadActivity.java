@@ -18,7 +18,10 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -51,7 +54,11 @@ public class LeadActivity extends DrawerBaseActivity {
     private RecyclerView recyclerView;
     private FirebaseFirestore db;
     private LeadAdapter leadAdapter;
-
+    private Animation rotateOpen;
+    private Animation rotateClose;
+    private Animation fromBottom;
+    private Animation toBottom;
+    private boolean clicked;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,6 +73,11 @@ public class LeadActivity extends DrawerBaseActivity {
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
+        rotateOpen = AnimationUtils.loadAnimation(this, R.anim.rotate_open_anim);
+        rotateClose = AnimationUtils.loadAnimation(this, R.anim.rotate_close_anim);
+        fromBottom = AnimationUtils.loadAnimation(this, R.anim.from_bottom_anim);
+        toBottom = AnimationUtils.loadAnimation(this, R.anim.to_bottom_anim);
+
         setupLeadRecyclerView();
 
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new TouchHelper(leadAdapter));
@@ -75,13 +87,9 @@ public class LeadActivity extends DrawerBaseActivity {
     }
 
     private void setupLeadRecyclerView() {
-        Query query = db.collection(Constants.KEY_COLLECTION_USERS)
-                .document(preferenceManager.getString(Constants.KEY_USER_ID))
-                .collection(Constants.KEY_COLLECTION_LEADS)
-                .orderBy("createdAt", Query.Direction.DESCENDING);
+        Query query = db.collection(Constants.KEY_COLLECTION_USERS).document(preferenceManager.getString(Constants.KEY_USER_ID)).collection(Constants.KEY_COLLECTION_LEADS).orderBy("createdAt", Query.Direction.DESCENDING);
 
-        FirestoreRecyclerOptions<Lead> options = new FirestoreRecyclerOptions.Builder<Lead>()
-                .setQuery(query, Lead.class).build();
+        FirestoreRecyclerOptions<Lead> options = new FirestoreRecyclerOptions.Builder<Lead>().setQuery(query, Lead.class).build();
 
         checkIfListEmpty(query);
 
@@ -91,6 +99,7 @@ public class LeadActivity extends DrawerBaseActivity {
         recyclerView.setAdapter(leadAdapter);
         leadAdapter.startListening();
     }
+
     private void checkIfListEmpty(Query query) {
         query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
@@ -112,7 +121,7 @@ public class LeadActivity extends DrawerBaseActivity {
     protected void onResume() {
         super.onResume();
         navigationView.setCheckedItem(R.id.nav_leads);
-        if (leadAdapter != null)  {
+        if (leadAdapter != null) {
             leadAdapter.startListening();
             leadAdapter.notifyDataSetChanged();
         }
@@ -121,24 +130,64 @@ public class LeadActivity extends DrawerBaseActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        if (leadAdapter != null)
-            leadAdapter.startListening();
+        if (leadAdapter != null) leadAdapter.startListening();
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        if (leadAdapter != null)
-            leadAdapter.stopListening();
+        if (leadAdapter != null) leadAdapter.stopListening();
     }
 
     private void setListeners() {
-        binding.fab.setOnClickListener(new View.OnClickListener() {
+        binding.manualButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 startActivity(new Intent(LeadActivity.this, AddNewLeadActivity.class));
             }
         });
+        binding.scanButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(LeadActivity.this, ScanBusinessCardActivity.class));
+            }
+        });
+        binding.fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onAddButtonClicked();
+            }
+        });
+    }
+
+    private void onAddButtonClicked() {
+        setVisibility(clicked);
+        setAnimation(clicked);
+        clicked = !clicked;
+    }
+
+    private void setVisibility(boolean clicked) {
+        if (!clicked) {
+            binding.manualButton.setVisibility(View.VISIBLE);
+            binding.scanButton.setVisibility(View.VISIBLE);
+        } else {
+            binding.manualButton.setVisibility(View.INVISIBLE);
+            binding.scanButton.setVisibility(View.INVISIBLE);
+        }
+
+    }
+
+    private void setAnimation(boolean clicked) {
+        if (!clicked){
+            binding.manualButton.startAnimation(fromBottom);
+            binding.scanButton.startAnimation(fromBottom);
+            binding.fab.startAnimation(rotateOpen);
+        }else{
+            binding.manualButton.startAnimation(toBottom);
+            binding.scanButton.startAnimation(toBottom);
+            binding.fab.startAnimation(rotateClose);
+
+        }
     }
 
 
