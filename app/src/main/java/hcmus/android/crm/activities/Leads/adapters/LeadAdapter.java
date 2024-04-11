@@ -1,6 +1,7 @@
 package hcmus.android.crm.activities.Leads.adapters;
 
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -10,6 +11,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -22,28 +25,39 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.makeramen.roundedimageview.RoundedImageView;
 
+//import java.util.ArrayList;
+import java.util.ArrayList;
+import java.util.List;
+
 import hcmus.android.crm.R;
 import hcmus.android.crm.activities.Leads.LeadDetailActivity;
 import hcmus.android.crm.models.Lead;
 import hcmus.android.crm.utilities.Constants;
 
-public class LeadAdapter extends FirestoreRecyclerAdapter<Lead, LeadAdapter.LeadViewHolder> {
+public class LeadAdapter extends FirestoreRecyclerAdapter<Lead, LeadAdapter.LeadViewHolder> implements Filterable {
     Context context;
     String leadId;
+    private List<Lead> leadList;
+    private List<Lead> leadListFiltered;
+
 
     public LeadAdapter(@NonNull FirestoreRecyclerOptions<Lead> options, Context context) {
         super(options);
         this.context = context;
+        this.leadList = options.getSnapshots();
+        this.leadListFiltered = leadList;
     }
 
     @Override
     protected void onBindViewHolder(@NonNull LeadAdapter.LeadViewHolder holder, int position, @NonNull Lead model) {
-        holder.leadName.setText(model.getName());
-        holder.leadPhone.setText(model.getPhone());
+        Lead lead = leadListFiltered.get(position);
+
+        holder.leadName.setText(lead.getName());
+        holder.leadPhone.setText(lead.getPhone());
 
 
-        if (model.getImage() != null) {
-            byte[] bytes = Base64.decode(model.getImage(), Base64.DEFAULT);
+        if (lead.getImage() != null) {
+            byte[] bytes = Base64.decode(lead.getImage(), Base64.DEFAULT);
             Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
             holder.leadImage.setImageBitmap(bitmap);
         }
@@ -80,6 +94,51 @@ public class LeadAdapter extends FirestoreRecyclerAdapter<Lead, LeadAdapter.Lead
         notifyItemRemoved(position);
     }
 
+    @Override
+    public Filter getFilter() {
+        return new Filter() {
+            @Override
+            protected FilterResults performFiltering(CharSequence charSequence) {
+                String charString = charSequence.toString().toLowerCase();
+                FilterResults filterResults = new FilterResults();
+
+                if (charString.isEmpty()) {
+                } else {
+                    List<Lead> filteredList = new ArrayList<>();
+
+                    int count = 0;
+                    for (Lead lead : leadList) {
+                        if (lead.getName().toLowerCase().contains(charString)
+                                || lead.getPhone().toLowerCase().contains(charString)
+                                || lead.getCompany().toLowerCase().contains(charString)) {
+                            filteredList.add(lead);
+                            count++;
+                            if (count >= 5) // Limiting to 10 results
+                                break;
+                        }
+                    }
+
+                    leadListFiltered = filteredList;
+                }
+
+                filterResults.values = leadListFiltered;
+
+                return filterResults;
+            }
+
+            @SuppressLint("NotifyDataSetChanged")
+            @Override
+            protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
+                leadListFiltered = (ArrayList<Lead>) filterResults.values;
+
+                for (Lead lead : leadListFiltered) {
+                    Log.d("NAME", lead.getName());
+                }
+                notifyDataSetChanged();
+            }
+        };
+    }
+
     public static class LeadViewHolder extends RecyclerView.ViewHolder {
         TextView leadName, leadPhone;
         RoundedImageView leadImage;
@@ -91,5 +150,10 @@ public class LeadAdapter extends FirestoreRecyclerAdapter<Lead, LeadAdapter.Lead
             leadPhone = itemView.findViewById(R.id.phoneLabel);
             leadImage = itemView.findViewById(R.id.imageIcon);
         }
+    }
+
+    @Override
+    public int getItemCount() {
+        return leadListFiltered.size();
     }
 }

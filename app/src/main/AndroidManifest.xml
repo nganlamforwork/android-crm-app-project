@@ -26,6 +26,9 @@
         android:theme="@style/Theme.CRM"
         tools:targetApi="31">
         <activity
+            android:name=".activities.Search.SearchActivity"
+            android:exported="false" />
+        <activity
             android:name=".activities.BusinessCard.AddNewBusinessCardActivity"
             android:exported="false" />
         <activity
@@ -73,8 +76,7 @@
             android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".activities.Leads.LeadActivity"
-            android:exported="false"
-            >
+            android:exported="false">
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />
             </intent-filter>

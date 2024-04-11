@@ -38,6 +38,7 @@ import java.util.Locale;
 import hcmus.android.crm.R;
 import hcmus.android.crm.activities.DrawerBaseActivity;
 import hcmus.android.crm.activities.Leads.adapters.LeadAdapter;
+import hcmus.android.crm.activities.Search.SearchActivity;
 import hcmus.android.crm.activities.User.adapters.UserAdapter;
 import hcmus.android.crm.databinding.ActivityLeadBinding;
 import hcmus.android.crm.models.Lead;
@@ -153,6 +154,9 @@ public class LeadActivity extends DrawerBaseActivity {
         int id = item.getItemId();
 
         if (id == R.id.action_search) {
+            Intent intent = new Intent(this, SearchActivity.class);
+            startActivity(intent);
+
             return true;
         }
 
