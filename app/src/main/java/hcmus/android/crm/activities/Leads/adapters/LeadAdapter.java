@@ -64,7 +64,7 @@ public class LeadAdapter extends FirestoreRecyclerAdapter<Lead, LeadAdapter.Lead
         holder.itemView.setOnClickListener(v -> {
             DocumentSnapshot snapshot = getSnapshots()
                     .getSnapshot(holder.getAbsoluteAdapterPosition());
-            String leadId = snapshot.getId();
+            leadId = snapshot.getId();
 
             Intent intent = new Intent(context, LeadDetailActivity.class);
             intent.putExtra("leadDetails", model);

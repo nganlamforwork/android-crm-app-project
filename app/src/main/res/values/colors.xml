@@ -3,6 +3,7 @@
     <color name="primary">#1C2E46</color>
     <color name="primary_dark">#142232</color>
     <color name="primary_text">#212121</color>
+    <color name="secondary_dark">#92AED3</color>
     <color name="secondary_text">#757575</color>
     <color name="white">#FFFFFF</color>
     <color name="input_background">#ECECEC</color>
@@ -10,6 +11,8 @@
     <color name="error">#B00020</color>
     <color name="red">#ff2e2c</color>
     <color name="blue">#3186EE</color>
+    <color name="success">#28a745</color>
+    <color name="warning">#e59103</color>
     <color name="black">#000000</color>
     <color name="dark_blue">#1C2E46</color>
     <color name="gray">#8e97a3</color>

@@ -7,21 +7,31 @@ import android.os.Bundle;
 
 import java.util.ArrayList;
 
+import hcmus.android.crm.activities.Calendar.EventUpdateWorker;
 import hcmus.android.crm.activities.Calendar.WeekViewActivity;
 import hcmus.android.crm.activities.DrawerBaseActivity;
 import hcmus.android.crm.activities.Main.adapters.Calendar.CalendarAdapter;
 import hcmus.android.crm.databinding.ActivityMainBinding;
 import hcmus.android.crm.utilities.CalendarUtils;
+import hcmus.android.crm.utilities.Constants;
 
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.work.PeriodicWorkRequest;
+import androidx.work.WorkManager;
 
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
 import java.time.LocalDate;
+import java.util.concurrent.TimeUnit;
+
 import static hcmus.android.crm.utilities.CalendarUtils.daysInMonthArray;
 import static hcmus.android.crm.utilities.CalendarUtils.monthYearFromDate;
+
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 public class MainActivity extends DrawerBaseActivity implements CalendarAdapter.OnItemListener {
     private ActivityMainBinding binding;
@@ -41,6 +51,17 @@ public class MainActivity extends DrawerBaseActivity implements CalendarAdapter.
         CalendarUtils.selectedDate = LocalDate.now();
 
         setMonthView();
+        getFCMToken();
+        scheduleEventUpdate();
+    }
+    private void scheduleEventUpdate() {
+        PeriodicWorkRequest periodicWorkRequest = new PeriodicWorkRequest.Builder(
+                EventUpdateWorker.class,
+                1, // Repeat interval in days
+                TimeUnit.DAYS
+        ).build();
+
+        WorkManager.getInstance(this).enqueue(periodicWorkRequest);
     }
 
     @Override
@@ -51,8 +72,7 @@ public class MainActivity extends DrawerBaseActivity implements CalendarAdapter.
         setMonthView();
     }
 
-    private void setMonthView()
-    {
+    private void setMonthView() {
         monthYearText.setText(monthYearFromDate(CalendarUtils.selectedDate));
         ArrayList<LocalDate> daysInMonth = daysInMonthArray(CalendarUtils.selectedDate);
 
@@ -61,29 +81,37 @@ public class MainActivity extends DrawerBaseActivity implements CalendarAdapter.
         calendarRecyclerView.setLayoutManager(layoutManager);
         calendarRecyclerView.setAdapter(calendarAdapter);
     }
-    public void previousMonthAction(View view)
-    {
+
+    public void previousMonthAction(View view) {
         CalendarUtils.selectedDate = CalendarUtils.selectedDate.minusMonths(1);
         setMonthView();
     }
 
-    public void nextMonthAction(View view)
-    {
+    public void nextMonthAction(View view) {
         CalendarUtils.selectedDate = CalendarUtils.selectedDate.plusMonths(1);
         setMonthView();
     }
 
     @Override
-    public void onItemClick(int position, LocalDate date)
-    {
-        if(date != null)
-        {
+    public void onItemClick(int position, LocalDate date) {
+        if (date != null) {
             CalendarUtils.selectedDate = date;
             setMonthView();
         }
     }
-    public void weeklyAction(View view)
-    {
+
+    public void weeklyAction(View view) {
         startActivity(new Intent(this, WeekViewActivity.class));
+    }
+
+    void getFCMToken() {
+        FirebaseMessaging.getInstance().getToken().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                String token = task.getResult();
+                FirebaseFirestore.getInstance().collection(Constants.KEY_COLLECTION_USERS)
+                        .document(preferenceManager.getString(Constants.KEY_USER_ID))
+                        .update(Constants.KEY_FCM_TOKEN, token);
+            }
+        });
     }
 }

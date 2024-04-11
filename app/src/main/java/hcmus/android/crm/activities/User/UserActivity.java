@@ -41,7 +41,6 @@ public class UserActivity extends DrawerBaseActivity {
 
         db = FirebaseFirestore.getInstance();
 
-        recyclerView = binding.userRecyclerView;
         setupUserRecyclerview();
     }
 
@@ -60,6 +59,7 @@ public class UserActivity extends DrawerBaseActivity {
     }
 
     private void setupUserRecyclerview() {
+        recyclerView = binding.userRecyclerView;
         Query query = db.collection(Constants.KEY_COLLECTION_USERS)
                 .whereNotEqualTo("userId", preferenceManager.getString(Constants.KEY_USER_ID));
 

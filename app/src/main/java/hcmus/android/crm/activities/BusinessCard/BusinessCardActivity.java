@@ -2,7 +2,10 @@ package hcmus.android.crm.activities.BusinessCard;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
@@ -91,6 +94,11 @@ public class BusinessCardActivity extends DrawerBaseActivity {
                 });
     }
 
+    // Method to decode base64 string to Bitmap
+    private Bitmap decodeBase64(String input) {
+        byte[] decodedBytes = Base64.decode(input, Base64.DEFAULT);
+        return BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.length);
+    }
     private void updateCardView(BusinessCard businessCard) {
         // Hide unnecessary views
         binding.noCardContainer.setVisibility(View.GONE);
@@ -102,6 +110,20 @@ public class BusinessCardActivity extends DrawerBaseActivity {
         binding.textViewEmail.setText(businessCard.getEmail());
         binding.textViewPhone.setText(businessCard.getPhone());
         binding.cardContainer.setVisibility(View.VISIBLE);
+
+        // Load and display QR code if it exists
+        String qrCodeString = businessCard.getQrcode();
+        if (qrCodeString != null && !qrCodeString.isEmpty()) {
+            Bitmap qrCodeBitmap = decodeBase64(qrCodeString);
+            if (qrCodeBitmap != null) {
+                binding.qrCodeImageView.setImageBitmap(qrCodeBitmap);
+                binding.qrCodeImageView.setVisibility(View.VISIBLE);
+            } else {
+                binding.qrCodeImageView.setVisibility(View.GONE);
+            }
+        } else {
+            binding.qrCodeImageView.setVisibility(View.GONE);
+        }
 
         // Find the TextView by id
         textDeleteCard = findViewById(R.id.textDeleteCard);
