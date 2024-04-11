@@ -32,6 +32,7 @@ import hcmus.android.crm.activities.Main.MainActivity;
 import hcmus.android.crm.activities.BusinessCard.BusinessCardActivity;
 import hcmus.android.crm.activities.Main.SplashActivity;
 import hcmus.android.crm.activities.Sales.SaleActivity;
+import hcmus.android.crm.activities.Search.SearchActivity;
 import hcmus.android.crm.activities.Settings.SettingActivity;
 import hcmus.android.crm.activities.User.UserActivity;
 import hcmus.android.crm.utilities.Constants;

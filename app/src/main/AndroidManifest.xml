@@ -36,6 +36,9 @@
         android:theme="@style/Theme.CRM"
         tools:targetApi="31">
         <activity
+            android:name=".activities.Search.SearchActivity"
+            android:exported="false" />
+        <activity
             android:name=".activities.Leads.ScanBusinessCardActivity"
             android:exported="false" />
         <activity
