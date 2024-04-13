@@ -19,7 +19,6 @@ import androidx.appcompat.widget.PopupMenu;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
-
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -49,9 +48,8 @@ public class EventAdapter extends FirestoreRecyclerAdapter<Event, EventAdapter.E
         holder.textViewDate.setText(model.getDate());
         holder.textViewName.setText(model.getName());
         holder.textViewDescription.setText(model.getDescription());
-        holder.textViewTime.setText("Time: " + model.getTime());
+        holder.textViewTime.setText(model.getTime());
         holder.textViewLocation.setText(model.getLocation());
-        Log.d("PASSED", String.valueOf(model.isPassed()));
 
         // Check if event is passed
         if (model.isPassed()) {

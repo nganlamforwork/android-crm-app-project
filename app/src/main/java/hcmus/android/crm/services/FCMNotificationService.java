@@ -1,4 +1,4 @@
-package hcmus.android.crm.services.FCM;
+package hcmus.android.crm.services;
 
 import androidx.annotation.NonNull;
 

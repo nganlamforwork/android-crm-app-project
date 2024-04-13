@@ -8,8 +8,7 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission
-        android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.VIBRATE" />
 
     <uses-feature
@@ -44,7 +43,7 @@
         <activity
             android:name="com.journeyapps.barcodescanner.CaptureActivity"
             android:screenOrientation="fullSensor"
-            tools:replace="android:screenOrientation"/>
+            tools:replace="android:screenOrientation" />
         <activity
             android:name=".activities.BusinessCard.AddNewBusinessCardActivity"
             android:exported="false" />
@@ -156,12 +155,16 @@
             android:parentActivityName=".activities.Settings.Information" />
 
         <service
-            android:name=".services.FCM.FCMNotificationService"
-            android:exported="false">
+            android:name=".services.FCMNotificationService"
+            android:exported="true">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
+        <service
+            android:name=".services.EventSchedulerService"
+            android:permission="android.permission.BIND_JOB_SERVICE" />
+
     </application>
 
 </manifest>

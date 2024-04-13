@@ -1,7 +1,7 @@
 package hcmus.android.crm.activities.Main.adapters.Calendar;
 
 import android.graphics.Color;
-import android.util.Log;
+import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -46,10 +46,13 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarViewHolder> {
             holder.dayOfMonth.setText("");
             holder.dayOfMonth.setBackground(null); // Reset background
         } else {
-            holder.dayOfMonth.setText(String.valueOf(date.getDayOfMonth()));
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                holder.dayOfMonth.setText(String.valueOf(date.getDayOfMonth()));
+            }
             if (date.equals(CalendarUtils.selectedDate)) {
                 holder.parentView.setBackground(ContextCompat.getDrawable(holder.itemView.getContext(), R.drawable.circular_background));
                 holder.dayOfMonth.setTextColor(Color.WHITE);
+
             } else {
                 holder.parentView.setBackground(null); // Reset background if not the current date
                 holder.dayOfMonth.setTextColor(Color.BLACK); // Set text color to black for other dates

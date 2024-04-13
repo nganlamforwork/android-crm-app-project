@@ -4,6 +4,7 @@ import static hcmus.android.crm.utilities.CalendarUtils.daysInWeekArray;
 import static hcmus.android.crm.utilities.CalendarUtils.monthYearFromDate;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
@@ -117,12 +118,16 @@ public class WeekViewActivity extends DrawerBaseActivity implements CalendarAdap
     }
 
     public void previousWeekAction(View view) {
-        CalendarUtils.selectedDate = CalendarUtils.selectedDate.minusWeeks(1);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            CalendarUtils.selectedDate = CalendarUtils.selectedDate.minusWeeks(1);
+        }
         setWeekView();
     }
 
     public void nextWeekAction(View view) {
-        CalendarUtils.selectedDate = CalendarUtils.selectedDate.plusWeeks(1);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            CalendarUtils.selectedDate = CalendarUtils.selectedDate.plusWeeks(1);
+        }
         setWeekView();
     }
 
@@ -161,52 +166,6 @@ public class WeekViewActivity extends DrawerBaseActivity implements CalendarAdap
         if (eventAdapter != null)
             eventAdapter.stopListening();
     }
-
-    /*private void showData() {
-        query = db.collection(Constants.KEY_COLLECTION_USERS)
-                .document(preferenceManager.getString(Constants.KEY_USER_ID))
-                .collection(Constants.KEY_COLLECTION_EVENTS)
-                .whereEqualTo("date", CalendarUtils.selectedDate.toString())
-                .orderBy("createdAt", Query.Direction.DESCENDING);
-        listenerRegistration = query.addSnapshotListener(new EventListener<QuerySnapshot>() {
-            @SuppressLint("NotifyDataSetChanged")
-            @Override
-            public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
-                if (error != null) {
-                    Log.e("Firestore", "Error fetching events: " + error.getMessage());
-                    return;
-                }
-                if (value == null || value.isEmpty()) {
-                    Log.d("Firestore", "No events found.");
-                    eventAdapter.clear();
-                    eventAdapter.notifyDataSetChanged();
-                    return;
-                }
-                // Clear the eventAdapter before adding new events
-                eventAdapter.clear();
-
-                LocalDate currentDate = LocalDate.now(); // Get current date
-                for (DocumentChange documentChange : value.getDocumentChanges()) {
-                    String id = documentChange.getDocument().getId();
-                    Event event = documentChange.getDocument().toObject(Event.class).withId(id);
-
-                    // Compare event date with current date
-                    LocalDate eventDate = LocalDate.parse(event.getDate());
-                    if (eventDate.isBefore(currentDate)) {
-                        // Event date has passed
-                        event.setPassed(true);
-                    } else {
-                        // Event date is in the future
-                        event.setPassed(false);
-                    }
-
-                    eventAdapter.add(event);
-                }
-                eventAdapter.notifyDataSetChanged();
-                listenerRegistration.remove();
-            }
-        });
-    }*/
 
     public void newEventAction(View view) {
         Intent intent = new Intent(this, EventEditActivity.class);

@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -35,6 +36,7 @@ import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 
+import hcmus.android.crm.R;
 import hcmus.android.crm.activities.Chat.adapters.ChatAdapter;
 import hcmus.android.crm.activities.DrawerBaseActivity;
 import hcmus.android.crm.models.ChatMessage;
@@ -111,6 +113,7 @@ public class ChatActivity extends DrawerBaseActivity {
     }
 
     private void initialize() {
+        getSupportActionBar().hide();
         // Get id
         messageInput = binding.chatMessageInput;
         sendMessageBtn = binding.messageSendBtn;
@@ -221,21 +224,12 @@ public class ChatActivity extends DrawerBaseActivity {
                 });
     }
 
-    private static String getAccessToken() throws IOException {
-        String serviceAccountJson = "{\n" +
-                "  \"type\": \"service_account\",\n" +
-                "  \"project_id\": \"android-crm-group-10\",\n" +
-                "  \"private_key_id\": \"9b9d1c103da65a0e39a068db4909816efb390798\",\n" +
-                "  \"private_key\": \"-----BEGIN PRIVATE KEY-----\\nMIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQC85gW5Kga5KgEi\\nSWGHv8/aEWDc3t30pc5KunyTNdhQdK9UkUXlfTCKs2LKkyCI2PK+qnZuBTKu7vsX\\nUFhGsop/ufARmJxAOB5MDLYYs52Ndc3+tU3a7CDRbmTcv1ASSx23Z28/9YbCgEE6\\n7B4EZu0rYJxahVhSvnG73ZepUVBhhK0ivUb9C8zGQsfm4rwj6pKc2xTSohFYvAMZ\\n0DXRoFeinvnMCLrmFQobrER5SlEbCaGaByXM/sxvkWlr64PxBSsnSJY6ZJSDgJyP\\nfiSwHMSHw/W8WtYtVsnQcn2Cs5lbx6GPh5IW4gzAdrHsYm6MCoNADdWN7Q7MX+i+\\npYxDfraNAgMBAAECggEABnpPNxoV7cV0ZqqvCvLHi9zIM6gl4uTztdQpf6UwpD5Y\\nITWJI3/0npuyYdbZSQVtj58fXWcAEF0sJFDHnNxfC6xtQIvj9yolfyn5baVChs5u\\nexNYa+STPIiwB0eSlUoDpx2HhGE6VuhYiaQoDwfA5C8ANZ94glU7Embx3jx7s0ME\\naj0hns+Fj/bOKUHK9yS/Yj3UB1OX3GrUMntbBbU+74P1JNtAhvUu3Wyvxckq/IdG\\nbq6aGDBbkNgR2pg6kuy6yY0X4AsqFzdZOe0mmmISbbrmvm/RQ6lFwFv/QFUyXFt/\\nlYLmVcnJMDuaPL8hIzi0p0BOLkrw0xc/Eg1NsIdFMQKBgQD0pD0euVJS0uxcx4kA\\n810mK/sA3NGZY1GSoAl3/5mTs/WjO81AnlXNIqoc+RSQZz26F9mPMFzCnhdK93Mj\\nj12YPWwGXzNZh65db7jsUx9UBYZI8tc7UtOkicZKPG3hUdSGVZ3R9/mU51kw06BB\\ns5hComkmuE/FDR9cxdD0ByHb3QKBgQDFqzug/FqnCA428ftv4mV5/02lbqq752cC\\nUbZlJ4NCs6P5y+w6wwdyqxbOZiQkT95wG9Y6GC6GaUhgFeXQXVRW6w1e42/J89hY\\n5KC801cMzeogQH58DZ/jlVE0BljaO9axXbhen0ARBkZ8fbmiv5M707ngr81JhAL4\\nZd/QzRGycQKBgB02p53Nn4kIavVBVpjods0iH10hAV6Bv7H0rmzH9vzuVnzhnUcE\\nIVbXttyy2cPMsFBSnMY+jjUnT7zCA9vROOn/G7E/GRCt5SJ/PuPpoSoVZs27Qfxx\\njZhuY2FmCfEIJorMGoaCSCmB3uK3wsFVwu7iGhBnng733DDl5mfdmit5AoGAMH8d\\nZxbi6t4YFrTx2nZyLSdNFox7SRSx+iiwFktGcgP+9BdrAtO8rQ56zvLSZTJPQbQi\\nsCgkqgeEoUZeFuv++EA9DI3CbIruBok5QnqbfeG7UmRgY/E3zC9jN99ix1AtEWEM\\nDfMGVebzPjHebKaR6fi9PvoC5MmFrQnZirH1aJECgYB6k7cxGU/R1zLufdkbvY9S\\nKbZyoe1fajn/HdOiuhmlT9JEMs4aFJYNIdeAHkSQSV7OXb1MW6wTEqSDVTU7omzl\\nnp1zjRIZ8pvChD/89Y5hsXslKnnE+UziAAEOILyG9rZ8SHo/7ZiesG04bmlnFkoG\\nr3QEUnoBvufNjuY6bSLRKA==\\n-----END PRIVATE KEY-----\\n\",\n" +
-                "  \"client_email\": \"firebase-adminsdk-53wpi@android-crm-group-10.iam.gserviceaccount.com\",\n" +
-                "  \"client_id\": \"115090666800304679638\",\n" +
-                "  \"auth_uri\": \"https://accounts.google.com/o/oauth2/auth\",\n" +
-                "  \"token_uri\": \"https://oauth2.googleapis.com/token\",\n" +
-                "  \"auth_provider_x509_cert_url\": \"https://www.googleapis.com/oauth2/v1/certs\",\n" +
-                "  \"client_x509_cert_url\": \"https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-53wpi%40android-crm-group-10.iam.gserviceaccount.com\",\n" +
-                "  \"universe_domain\": \"googleapis.com\"\n" +
-                "}\n";
-        InputStream inputStream = new ByteArrayInputStream(serviceAccountJson.getBytes(StandardCharsets.UTF_8));
+    private String getAccessToken() throws IOException {
+        // Access the file from the raw folder
+        Resources resources = getResources();
+        InputStream inputStream = resources.openRawResource(R.raw.service_account);
+
+        //InputStream inputStream = new ByteArrayInputStream(serviceAccountJson.getBytes(StandardCharsets.UTF_8));
         GoogleCredentials googleCredentials = GoogleCredentials
                 .fromStream(inputStream)
                 .createScoped(Arrays.asList(Constants.SCOPES));
@@ -253,7 +247,7 @@ public class ChatActivity extends DrawerBaseActivity {
             }
 
             new Handler(Looper.getMainLooper()).post(() -> {
-                if(token != null) {
+                if (token != null) {
                     Log.d("Access Token", token);
 
                     MediaType JSON = MediaType.get("application/json; charset=utf-8");
@@ -271,7 +265,6 @@ public class ChatActivity extends DrawerBaseActivity {
                         @Override
                         public void onFailure(@NonNull Call call, @NonNull IOException e) {
                             Log.d("Failed", e.getMessage());
-
                         }
 
                         @Override
