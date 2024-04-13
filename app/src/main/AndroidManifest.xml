@@ -28,7 +28,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.CRM"
-        tools:targetApi="31">
+        tools:targetApi="31"
+        android:usesCleartextTraffic="true"
+        >
         <activity
             android:name=".activities.BusinessCard.AddNewBusinessCardActivity"
             android:exported="false" />
@@ -146,9 +148,7 @@
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
-        <meta-data
-            android:name="CLOUD_MESSAGE_API_KEY"
-            android:value="${CLOUD_MESSAGE_API_KEY}" />
     </application>
+
 
 </manifest>
