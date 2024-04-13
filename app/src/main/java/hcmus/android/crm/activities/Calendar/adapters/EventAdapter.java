@@ -88,8 +88,7 @@ public class EventAdapter extends FirestoreRecyclerAdapter<Event, EventAdapter.E
     }
 
     private void showSettingsMenu(View anchorView, String eventId, Event event, EventAdapter.EventViewHolder holder) {
-        Context wrapper = new ContextThemeWrapper(context, R.style.PopupMenuStyle);
-        PopupMenu popupMenu = new PopupMenu(wrapper, anchorView);
+        PopupMenu popupMenu = new PopupMenu(anchorView.getContext(), anchorView);
         popupMenu.inflate(R.menu.event_menu_settings);
 
 
@@ -154,7 +153,6 @@ public class EventAdapter extends FirestoreRecyclerAdapter<Event, EventAdapter.E
     }
 
     public void deleteEvent(String eventId) {
-        Log.d("EventId", eventId);
         FirebaseFirestore.getInstance().collection(Constants.KEY_COLLECTION_USERS)
                 .document(FirebaseUtils.currentUserId())
                 .collection(Constants.KEY_COLLECTION_EVENTS)

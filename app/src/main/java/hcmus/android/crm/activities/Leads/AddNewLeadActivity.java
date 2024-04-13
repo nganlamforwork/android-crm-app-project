@@ -414,7 +414,6 @@ public class AddNewLeadActivity extends DrawerBaseActivity {
                     Intent intent = new Intent(this, LeadActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivity(intent);
-                    finish();
                 })
                 .addOnFailureListener(e -> {
                     // Handle failure, e.g., show error message
