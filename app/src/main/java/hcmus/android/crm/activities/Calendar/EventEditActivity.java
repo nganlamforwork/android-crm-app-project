@@ -1,5 +1,6 @@
 package hcmus.android.crm.activities.Calendar;
 
+import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
@@ -236,7 +237,7 @@ public class EventEditActivity extends DrawerBaseActivity {
                     public void onDateSet(DatePicker view, int year, int month, int day) {
                         Calendar calendar = Calendar.getInstance();
                         calendar.set(year, month, day);
-                        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+                        @SuppressLint("SimpleDateFormat") SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
                         String selectedDate = dateFormat.format(calendar.getTime());
 
                         eventDate.setText(selectedDate);
