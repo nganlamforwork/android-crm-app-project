@@ -91,4 +91,7 @@ dependencies {
 
     // Worker
     implementation("androidx.work:work-runtime:2.9.0")
+
+    // CSV Reader
+    implementation("com.opencsv:opencsv:5.6")
 }
