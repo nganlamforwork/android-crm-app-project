@@ -1,6 +1,7 @@
 package hcmus.android.crm.activities.Contacts.adapters;
 
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -10,6 +11,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -22,30 +25,42 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.makeramen.roundedimageview.RoundedImageView;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import hcmus.android.crm.R;
 import hcmus.android.crm.activities.Contacts.ContactDetailActivity;
 import hcmus.android.crm.models.Contact;
 import hcmus.android.crm.utilities.Constants;
 
-public class ContactAdapter extends FirestoreRecyclerAdapter<Contact, ContactAdapter.ContactViewHolder> {
+public class ContactAdapter extends FirestoreRecyclerAdapter<Contact, ContactAdapter.ContactViewHolder> implements Filterable {
     Context context;
     String contactId;
+    private List<Contact> contactList;
+    private List<Contact> contactListFiltered;
+
 
     public ContactAdapter(@NonNull FirestoreRecyclerOptions<Contact> options, Context context) {
         super(options);
         this.context = context;
+        this.contactList = options.getSnapshots();
+        this.contactListFiltered = contactList;
     }
 
     @Override
     protected void onBindViewHolder(@NonNull ContactAdapter.ContactViewHolder holder, int position, @NonNull Contact model) {
+        Contact contact = contactListFiltered.get(position);
+
         holder.contactName.setText(model.getName());
         holder.contactPhone.setText(model.getPhone());
 
 
-        if (model.getImage() != null) {
-            byte[] bytes = Base64.decode(model.getImage(), Base64.DEFAULT);
+        if (contact.getImage() != null && !contact.getImage().isEmpty()) {
+            byte[] bytes = Base64.decode(contact.getImage(), Base64.DEFAULT);
             Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
             holder.contactImage.setImageBitmap(bitmap);
+        } else {
+            holder.contactImage.setImageResource(R.drawable.avatar);
         }
         holder.itemView.setOnClickListener(v -> {
             DocumentSnapshot snapshot = getSnapshots()
@@ -72,12 +87,54 @@ public class ContactAdapter extends FirestoreRecyclerAdapter<Contact, ContactAda
     }
 
     public void deleteContact(int position) {
+        DocumentSnapshot snapshot = getSnapshots()
+                .getSnapshot(position);
+        contactId = snapshot.getId();
+
         String currentUserId = FirebaseAuth.getInstance().getUid();
         FirebaseFirestore.getInstance().collection(Constants.KEY_COLLECTION_USERS)
                 .document(currentUserId)
                 .collection(Constants.KEY_COLLECTION_CONTACTS)
                 .document(contactId).delete();
-        notifyItemRemoved(position);
+        notifyDataSetChanged();
+    }
+
+    @Override
+    public Filter getFilter() {
+        return new Filter() {
+            @Override
+            protected FilterResults performFiltering(CharSequence charSequence) {
+                String charString = charSequence.toString().toLowerCase();
+                FilterResults filterResults = new FilterResults();
+
+                if (charString.isEmpty()) {
+                    // If the filter query is empty, restore the original list
+                    filterResults.values = contactList;
+                } else {
+                    List<Contact> filteredList = new ArrayList<>();
+
+                    // Filter the list based on the query
+                    for (Contact contact : contactList) {
+                        if (contact.getName().toLowerCase().contains(charString) ||
+                                contact.getPhone().toLowerCase().contains(charString) ||
+                                contact.getCompany().toLowerCase().contains(charString)) {
+                            filteredList.add(contact);
+                        }
+                    }
+
+                    filterResults.values = filteredList;
+                }
+
+                return filterResults;
+            }
+
+            @SuppressLint("NotifyDataSetChanged")
+            @Override
+            protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
+                contactListFiltered = (List<Contact>) filterResults.values;
+                notifyDataSetChanged();
+            }
+        };
     }
 
     public static class ContactViewHolder extends RecyclerView.ViewHolder {
@@ -91,5 +148,10 @@ public class ContactAdapter extends FirestoreRecyclerAdapter<Contact, ContactAda
             contactPhone = itemView.findViewById(R.id.phoneLabel);
             contactImage = itemView.findViewById(R.id.imageIcon);
         }
+    }
+
+    @Override
+    public int getItemCount() {
+        return contactListFiltered.size();
     }
 }
