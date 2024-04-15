@@ -31,7 +31,6 @@ import hcmus.android.crm.R;
 import hcmus.android.crm.activities.Chat.ChatActivity;
 import hcmus.android.crm.activities.Notes.CreateNoteActivity;
 import hcmus.android.crm.models.Note;
-import hcmus.android.crm.utilities.CalendarUtils;
 import hcmus.android.crm.utilities.Constants;
 import hcmus.android.crm.utilities.FirebaseUtils;
 import hcmus.android.crm.utilities.PreferenceManager;
@@ -110,7 +109,7 @@ public class NoteAdapter extends FirestoreRecyclerAdapter<Note, NoteAdapter.Note
                         .collection(Constants.KEY_COLLECTION_NOTES)
                         .document(noteId).delete();
                 notifyDataSetChanged();
-                Toast.makeText(context, "Note is deleted successfully", Toast.LENGTH_SHORT);
+                Toast.makeText(context, "Note is deleted successfully", Toast.LENGTH_SHORT).show();
             }
         });
         builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {

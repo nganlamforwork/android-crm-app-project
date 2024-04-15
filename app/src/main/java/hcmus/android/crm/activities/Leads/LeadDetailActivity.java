@@ -39,7 +39,7 @@ public class LeadDetailActivity extends DrawerBaseActivity {
 
     private Lead lead;
     private String leadId;
-        private FirebaseFirestore db;
+    private FirebaseFirestore db;
 
     private final ActivityResultLauncher<Intent> activityResultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
         @SuppressLint("NotifyDataSetChanged")
@@ -93,10 +93,12 @@ public class LeadDetailActivity extends DrawerBaseActivity {
         binding.leadAddress.setText(updatedLead.getAddress());
         binding.leadNotes.setText(updatedLead.getNotes());
 
-        if (lead.getImage() != null) {
+        if (lead.getImage() != null && !lead.getImage().isEmpty()) {
             byte[] bytes = Base64.decode(lead.getImage(), Base64.DEFAULT);
             Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
             binding.avatar.setImageBitmap(bitmap);
+        } else {
+            binding.avatar.setImageResource(R.drawable.avatar);
         }
     }
 

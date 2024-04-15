@@ -1,23 +1,18 @@
 package hcmus.android.crm.activities.Search;
 
-// Android and androidx imports
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.widget.SearchView;
+import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 
-// Firebase imports
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 
-// Project specific imports
-import hcmus.android.crm.R;
-import hcmus.android.crm.activities.Contacts.adapters.ContactAdapter;
 import hcmus.android.crm.activities.DrawerBaseActivity;
 import hcmus.android.crm.activities.Leads.adapters.LeadAdapter;
 import hcmus.android.crm.databinding.ActivitySearchBinding;
@@ -46,7 +41,16 @@ public class SearchActivity extends DrawerBaseActivity {
         setupLeadRecyclerView();
 
         searchView = searchBinding.searchView;
+        Toolbar toolbar = searchBinding.appBar.toolbar;
+        setSupportActionBar(toolbar);
 
+        // Enable the back button in the action bar or toolbar
+        ActionBar actionBar = getSupportActionBar();
+
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setDisplayShowHomeEnabled(true);
+        }
         listenerSearching();
     }
 
@@ -87,6 +91,12 @@ public class SearchActivity extends DrawerBaseActivity {
                 return false;
             }
         });
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        getOnBackPressedDispatcher().onBackPressed();
+        return true;
     }
 
 }
