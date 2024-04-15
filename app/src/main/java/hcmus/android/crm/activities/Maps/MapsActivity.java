@@ -14,6 +14,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import hcmus.android.crm.R;
@@ -23,8 +24,10 @@ import hcmus.android.crm.databinding.ActivityMapsBinding;
 public class MapsActivity extends DrawerBaseActivity implements OnMapReadyCallback {
     private ActivityMapsBinding binding;
     private GoogleMap myMap;
+    private Marker marker;
     private double latitude, longitude;
-    private String name;
+    private String name, address;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,12 +53,14 @@ public class MapsActivity extends DrawerBaseActivity implements OnMapReadyCallba
             latitude = Double.parseDouble(intent.getStringExtra("latitude"));
             longitude = Double.parseDouble(intent.getStringExtra("longitude"));
             name = intent.getStringExtra("name");
+            address = intent.getStringExtra("address");
         }
 
         Log.d("LAT", String.valueOf(latitude));
         Log.d("LONG", String.valueOf(longitude));
 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
+        assert mapFragment != null;
         mapFragment.getMapAsync(this);
     }
 
@@ -63,13 +68,23 @@ public class MapsActivity extends DrawerBaseActivity implements OnMapReadyCallba
     public void onMapReady(@NonNull GoogleMap googleMap) {
         myMap = googleMap;
 
+        // Create a LatLng object for the marker position
         LatLng location = new LatLng(latitude, longitude);
-        myMap.addMarker(new MarkerOptions().position(location).title(name));
+
+        // Create and add a marker at the specified location with title and snippet
+        marker = myMap.addMarker(new MarkerOptions()
+                .position(location)
+                .title(name)
+                .snippet(address));
+        // Move the camera to the location and set the zoom level
         myMap.moveCamera(CameraUpdateFactory.newLatLngZoom(location, 15));
     }
+
+
     @Override
     public boolean onSupportNavigateUp() {
         getOnBackPressedDispatcher().onBackPressed();
         return true;
     }
+
 }
