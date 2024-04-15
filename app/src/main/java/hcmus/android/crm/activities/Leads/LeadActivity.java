@@ -38,6 +38,9 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
 import hcmus.android.crm.R;
 import hcmus.android.crm.activities.DrawerBaseActivity;
@@ -70,7 +73,6 @@ public class LeadActivity extends DrawerBaseActivity {
         binding = ActivityLeadBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         db = FirebaseFirestore.getInstance();
-
 
         rotateOpen = AnimationUtils.loadAnimation(this, R.anim.rotate_open_anim);
         rotateClose = AnimationUtils.loadAnimation(this, R.anim.rotate_close_anim);
@@ -143,23 +145,18 @@ public class LeadActivity extends DrawerBaseActivity {
     }
 
     private void exportLeadsToCsv() {
-        // Kiểm tra xem có quyền ghi vào bộ nhớ ngoài không
         if (!isExternalStorageWritable()) {
             Toast.makeText(this, "Không thể ghi tệp CSV. Vui lòng kiểm tra quyền truy cập bộ nhớ.", Toast.LENGTH_SHORT).show();
             return;
         }
-
-        // Tạo tệp CSV
         File csvFile = createCsvFile();
-
         if (csvFile == null) {
             Toast.makeText(this, "Lỗi khi tạo tệp CSV.", Toast.LENGTH_SHORT).show();
             return;
         }
-
-        // Xuất dữ liệu
         exportToCsv(csvFile);
-        Toast.makeText(this, "Xuất danh sách Lead ra file CSV thành công.", Toast.LENGTH_SHORT).show();
+        String message = "Xuất danh sách Lead ra file CSV thành công. Đường dẫn: " + csvFile.getAbsolutePath();
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -170,14 +167,11 @@ public class LeadActivity extends DrawerBaseActivity {
             if (data != null) {
                 Uri uri = data.getData();
                 if (uri != null) {
-                    // Get the file path from the URI
                     String filePath = getPathFromUri(uri);
                     if (filePath != null) {
-                        // Create a File object using the file path
                         File file = new File(filePath);
                         importLeadsFromCsv(file);
                     } else {
-                        // Handle the case where the file path is null
                         Toast.makeText(this, "File path is null.", Toast.LENGTH_SHORT).show();
                     }
                 }
@@ -187,17 +181,13 @@ public class LeadActivity extends DrawerBaseActivity {
 
     private String getPathFromUri(Uri uri) {
         if (uri == null) return null;
-
         String filePath = null;
 
         if (DocumentsContract.isDocumentUri(this, uri)) {
-            // Handle document URI
             String documentId = DocumentsContract.getDocumentId(uri);
             if (documentId.startsWith("raw:")) {
-                // Handle "raw" type document URI
                 filePath = documentId.replaceFirst("raw:", "");
             } else {
-                // Handle other document types
                 String[] split = documentId.split(":");
                 if (split.length > 1) {
                     String type = split[0];
@@ -209,7 +199,6 @@ public class LeadActivity extends DrawerBaseActivity {
                 }
             }
         } else {
-            // Handle content URI
             String[] projection = {MediaStore.Images.Media.DATA};
             Cursor cursor = getContentResolver().query(uri, projection, null, null, null);
             if (cursor != null && cursor.moveToFirst()) {
@@ -228,8 +217,15 @@ public class LeadActivity extends DrawerBaseActivity {
     }
 
     private File createCsvFile() {
+        long timestamp = System.currentTimeMillis();
+        Date currentDate = new Date(timestamp);
+
+        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy_HH-mm-ss", Locale.getDefault());
+        String formattedDate = sdf.format(currentDate);
+
         File directory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
-        String fileName = "leads2.csv";
+        String fileName = "crm_lead_" + formattedDate + ".csv";
+
         return new File(directory, fileName);
     }
 
@@ -262,7 +258,7 @@ public class LeadActivity extends DrawerBaseActivity {
             // Launch the file picker if permission is granted
             Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
             intent.addCategory(Intent.CATEGORY_OPENABLE);
-            intent.setType("*/*"); // Use "*/*" for all file types (optional)
+            intent.setType("*/*"); // Use "*/*" for all file types
             startActivityForResult(intent, REQUEST_CODE_FILE_PICKER);
         }
     }
@@ -284,14 +280,10 @@ public class LeadActivity extends DrawerBaseActivity {
 
     private void exportToCsv(File file) {
         try (FileWriter writer = new FileWriter(file)) {
-            // Write header
-            writer.append("Name,Phone,Email,Address,Notes\n");
-
-            // Write data
+            writer.append("Name,Phone,Email,Address,Notes,Job,Company,Latitude,Longitude\n");
             for (int i = 0; i < leadAdapter.getItemCount(); i++) {
                 Lead lead = leadAdapter.getItem(i);
-                // Enclose each field in double quotes to handle commas within the data
-                String line = "\"" + lead.getName() + "\",\"" + lead.getPhone() + "\",\"" + lead.getEmail() + "\",\"" + lead.getAddress() + "\",\"" + lead.getNotes() + "\"\n";
+                String line = "\"" + lead.getName() + "\",\"" + lead.getPhone() + "\",\"" + lead.getEmail() + "\",\"" + lead.getAddress() + "\",\"" + lead.getNotes() + "\",\"" + lead.getJob() + "\",\"" + lead.getCompany() + "\",\"" + lead.getLatitude() + "\",\"" + lead.getLongitude() + "\"\n";
                 writer.append(line);
             }
 
@@ -303,23 +295,13 @@ public class LeadActivity extends DrawerBaseActivity {
 
 
     private void importLeadsFromCsv(File file) {
-        if (file != null && file.exists()) { // Check if the file is not null and exists
+        if (file != null && file.exists()) {
             try (BufferedReader br = new BufferedReader(new FileReader(file))) {
                 CSVReader reader = new CSVReader(br);
                 String[] line;
-                // Assuming CSV format: Name,Phone,Email,Address,Notes
-                line = reader.readNext(); // Remove first line
+                line = reader.readNext();
                 while ((line = reader.readNext()) != null) {
-                    String name = line[0];
-                    String phone = line[1];
-                    String email = line[2];
-                    String address = line[3];
-                    String notes = line[4];
-
-                    // Create Lead object
-                    Lead lead = new Lead(name, email, phone, address, "", "", notes, "", "", "");
-
-                    // Add Lead to Firestore
+                    Lead lead = getLead(line);
                     addLeadToFirestore(lead);
                 }
             } catch (IOException e) {
@@ -329,9 +311,25 @@ public class LeadActivity extends DrawerBaseActivity {
                 throw new RuntimeException(e);
             }
         } else {
-            // Handle the case where the file is null or does not exist
             Toast.makeText(this, "Selected file does not exist.", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    @NonNull
+    private static Lead getLead(String[] line) {
+        String name = line[0];
+        String phone = line[1];
+        String email = line[2];
+        String address = line[3];
+        String notes = line[4];
+        String job = line[5];
+        String company = line[6];
+        String latitude = line[7];
+        String longitude = line[8];
+
+        // Create Lead object
+        Lead lead = new Lead(name, email, phone, address, job, company, notes, "", latitude, longitude);
+        return lead;
     }
 
 
@@ -382,7 +380,7 @@ public class LeadActivity extends DrawerBaseActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.search, menu);
+        getMenuInflater().inflate(R.menu.search_w_options, menu);
 
         return true;
     }
