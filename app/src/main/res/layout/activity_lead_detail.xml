@@ -238,11 +238,11 @@
             android:layout_marginTop="16dp">
 
         <TextView
-            android:id="@+id/textAddNewNotes"
+            android:id="@+id/textViewAllNotes"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:text="Add new notes"
+            android:text="View all notes"
             android:textColor="@color/blue"
             android:textSize="16sp" />
         <TextView

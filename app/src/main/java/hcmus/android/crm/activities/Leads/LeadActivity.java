@@ -71,9 +71,6 @@ public class LeadActivity extends DrawerBaseActivity {
         setContentView(binding.getRoot());
         db = FirebaseFirestore.getInstance();
 
-        recyclerView = binding.leadRecyclerView;
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         rotateOpen = AnimationUtils.loadAnimation(this, R.anim.rotate_open_anim);
         rotateClose = AnimationUtils.loadAnimation(this, R.anim.rotate_close_anim);
@@ -89,7 +86,11 @@ public class LeadActivity extends DrawerBaseActivity {
     }
 
     private void setupLeadRecyclerView() {
-        Query query = db.collection(Constants.KEY_COLLECTION_USERS).document(preferenceManager.getString(Constants.KEY_USER_ID)).collection(Constants.KEY_COLLECTION_LEADS).orderBy("createdAt", Query.Direction.DESCENDING);
+        recyclerView = binding.leadRecyclerView;
+        Query query = db.collection(Constants.KEY_COLLECTION_USERS)
+                .document(preferenceManager.getString(Constants.KEY_USER_ID))
+                .collection(Constants.KEY_COLLECTION_LEADS)
+                .orderBy("createdAt", Query.Direction.DESCENDING);
 
         FirestoreRecyclerOptions<Lead> options = new FirestoreRecyclerOptions.Builder<Lead>().setQuery(query, Lead.class).build();
 

@@ -9,7 +9,6 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Base64;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.Manifest;
@@ -27,9 +26,9 @@ import androidx.core.content.ContextCompat;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import hcmus.android.crm.R;
-import hcmus.android.crm.activities.Chat.ChatActivity;
 import hcmus.android.crm.activities.DrawerBaseActivity;
 import hcmus.android.crm.activities.Maps.MapsActivity;
+import hcmus.android.crm.activities.Notes.NoteActivity;
 import hcmus.android.crm.databinding.ActivityLeadDetailBinding;
 import hcmus.android.crm.models.Lead;
 import hcmus.android.crm.utilities.Constants;
@@ -94,10 +93,12 @@ public class LeadDetailActivity extends DrawerBaseActivity {
         binding.leadAddress.setText(updatedLead.getAddress());
         binding.leadNotes.setText(updatedLead.getNotes());
 
-        if (lead.getImage() != null) {
+        if (lead.getImage() != null && !lead.getImage().isEmpty()) {
             byte[] bytes = Base64.decode(lead.getImage(), Base64.DEFAULT);
             Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
             binding.avatar.setImageBitmap(bitmap);
+        } else {
+            binding.avatar.setImageResource(R.drawable.avatar);
         }
     }
 
@@ -150,9 +151,14 @@ public class LeadDetailActivity extends DrawerBaseActivity {
         binding.textDeleteLead.setOnClickListener(v -> {
             showDeleteConfirmationDialog();
         });
+
+        binding.textViewAllNotes.setOnClickListener(v -> {
+            Intent intent = new Intent(this, NoteActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            preferenceManager.putString("selectedLead", leadId);
+            startActivity(intent);
+        });
     }
-
-
 
     private void showDeleteConfirmationDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -178,9 +184,6 @@ public class LeadDetailActivity extends DrawerBaseActivity {
                 .document(preferenceManager.getString(Constants.KEY_USER_ID))
                 .collection(Constants.KEY_COLLECTION_LEADS)
                 .document(leadId).delete();
-       /* Intent intent = new Intent(this, LeadActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        startActivity(intent);*/
         finish();
     }
 

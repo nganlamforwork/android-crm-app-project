@@ -65,6 +65,8 @@ public class SettingActivity extends DrawerBaseActivity {
             byte[] bytes = Base64.decode(preferenceManager.getString(Constants.KEY_IMAGE), Base64.DEFAULT);
             Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
             binding.avatar.setImageBitmap(bitmap);
+        } else {
+            binding.avatar.setImageResource(R.drawable.avatar);
         }
     }
 

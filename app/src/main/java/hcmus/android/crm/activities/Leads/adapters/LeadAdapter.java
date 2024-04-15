@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Base64;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,7 +24,6 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.makeramen.roundedimageview.RoundedImageView;
 
-//import java.util.ArrayList;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -55,12 +53,14 @@ public class LeadAdapter extends FirestoreRecyclerAdapter<Lead, LeadAdapter.Lead
         holder.leadName.setText(lead.getName());
         holder.leadPhone.setText(lead.getPhone());
 
-
-        if (lead.getImage() != null) {
+        if (lead.getImage() != null && !lead.getImage().isEmpty()) {
             byte[] bytes = Base64.decode(lead.getImage(), Base64.DEFAULT);
             Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
             holder.leadImage.setImageBitmap(bitmap);
+        } else {
+            holder.leadImage.setImageResource(R.drawable.avatar);
         }
+
         holder.itemView.setOnClickListener(v -> {
             DocumentSnapshot snapshot = getSnapshots()
                     .getSnapshot(holder.getAbsoluteAdapterPosition());
@@ -86,12 +86,16 @@ public class LeadAdapter extends FirestoreRecyclerAdapter<Lead, LeadAdapter.Lead
     }
 
     public void deleteLead(int position) {
+        DocumentSnapshot snapshot = getSnapshots()
+                .getSnapshot(position);
+        leadId = snapshot.getId();
+
         String currentUserId = FirebaseAuth.getInstance().getUid();
         FirebaseFirestore.getInstance().collection(Constants.KEY_COLLECTION_USERS)
                 .document(currentUserId)
                 .collection(Constants.KEY_COLLECTION_LEADS)
                 .document(leadId).delete();
-        notifyItemRemoved(position);
+        notifyDataSetChanged();
     }
 
     @Override
@@ -103,25 +107,22 @@ public class LeadAdapter extends FirestoreRecyclerAdapter<Lead, LeadAdapter.Lead
                 FilterResults filterResults = new FilterResults();
 
                 if (charString.isEmpty()) {
+                    // If the filter query is empty, restore the original list
+                    filterResults.values = leadList;
                 } else {
                     List<Lead> filteredList = new ArrayList<>();
 
-                    int count = 0;
+                    // Filter the list based on the query
                     for (Lead lead : leadList) {
-                        if (lead.getName().toLowerCase().contains(charString)
-                                || lead.getPhone().toLowerCase().contains(charString)
-                                || lead.getCompany().toLowerCase().contains(charString)) {
+                        if (lead.getName().toLowerCase().contains(charString) ||
+                                lead.getPhone().toLowerCase().contains(charString) ||
+                                lead.getCompany().toLowerCase().contains(charString)) {
                             filteredList.add(lead);
-                            count++;
-                            if (count >= 5) // Limiting to 10 results
-                                break;
                         }
                     }
 
-                    leadListFiltered = filteredList;
+                    filterResults.values = filteredList;
                 }
-
-                filterResults.values = leadListFiltered;
 
                 return filterResults;
             }
@@ -129,15 +130,12 @@ public class LeadAdapter extends FirestoreRecyclerAdapter<Lead, LeadAdapter.Lead
             @SuppressLint("NotifyDataSetChanged")
             @Override
             protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
-                leadListFiltered = (ArrayList<Lead>) filterResults.values;
-
-                for (Lead lead : leadListFiltered) {
-                    Log.d("NAME", lead.getName());
-                }
+                leadListFiltered = (List<Lead>) filterResults.values;
                 notifyDataSetChanged();
             }
         };
     }
+
 
     public static class LeadViewHolder extends RecyclerView.ViewHolder {
         TextView leadName, leadPhone;
