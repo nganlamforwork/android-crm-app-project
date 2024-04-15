@@ -14,4 +14,9 @@
         android:icon="@android:drawable/ic_menu_search"
         android:title="@string/search"
         app:showAsAction="ifRoom|collapseActionView"/>
+    <item
+        android:id="@+id/action_overflow"
+        android:icon="@drawable/baseline_more_vert_24"
+        android:title="Overflow"
+        app:showAsAction="ifRoom" />
 </menu>
