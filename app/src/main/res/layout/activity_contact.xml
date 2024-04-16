@@ -20,6 +20,16 @@
             android:layout_marginTop="?attr/actionBarSize"
             android:divider="@drawable/list_divider"
             android:dividerHeight="20dp" />
+
+        <TextView
+            android:id="@+id/emptyView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:text="No Contacts available"
+            android:textSize="18sp"
+            android:visibility="visible" />
     </LinearLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
