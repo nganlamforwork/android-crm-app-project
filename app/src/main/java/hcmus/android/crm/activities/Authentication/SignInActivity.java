@@ -35,7 +35,6 @@ public class SignInActivity extends AppCompatActivity {
 
     private ActivitySignInBinding binding;
     private PreferenceManager preferenceManager;
-
     private FirebaseAuth auth;
     private static final String TAG = "SignInActivity";
 

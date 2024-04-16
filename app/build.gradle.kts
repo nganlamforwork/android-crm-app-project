@@ -57,6 +57,8 @@ dependencies {
     // Scan QR
     implementation ("com.google.zxing:core:3.4.1")
     implementation ("com.journeyapps:zxing-android-embedded:4.3.0")
+    implementation("com.google.firebase:firebase-database:20.3.1")
+    implementation("org.jetbrains:annotations:15.0")
 
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
