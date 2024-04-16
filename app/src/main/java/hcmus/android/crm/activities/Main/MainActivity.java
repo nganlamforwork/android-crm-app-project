@@ -7,6 +7,8 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import java.util.ArrayList;
+
+import hcmus.android.crm.R;
 import hcmus.android.crm.activities.Calendar.WeekViewActivity;
 import hcmus.android.crm.activities.DrawerBaseActivity;
 import hcmus.android.crm.activities.Main.adapters.Calendar.CalendarAdapter;
@@ -16,6 +18,8 @@ import hcmus.android.crm.utilities.CalendarUtils;
 import hcmus.android.crm.utilities.Constants;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import android.view.Menu;
 import android.view.View;
 import android.widget.TextView;
 import java.time.LocalDate;
@@ -67,6 +71,13 @@ public class MainActivity extends DrawerBaseActivity implements CalendarAdapter.
                 showToast("An error occured and failed to start event jobs scheduler", 0);
             }
         }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.search, menu);
+
+        return true;
     }
 
     @Override

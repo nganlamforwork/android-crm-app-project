@@ -8,7 +8,6 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Base64;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.Manifest;
@@ -23,11 +22,9 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import hcmus.android.crm.R;
 import hcmus.android.crm.activities.DrawerBaseActivity;
-import hcmus.android.crm.activities.Maps.MapsActivity;
 import hcmus.android.crm.databinding.ActivityContactDetailBinding;
 import hcmus.android.crm.models.Contact;
 import hcmus.android.crm.utilities.Constants;
-import hcmus.android.crm.utilities.Utils;
 
 public class ContactDetailActivity extends DrawerBaseActivity {
     private ActivityContactDetailBinding binding;
@@ -61,9 +58,14 @@ public class ContactDetailActivity extends DrawerBaseActivity {
         if (intent != null) {
             contact = intent.getParcelableExtra("contactDetails");
             contactId = intent.getStringExtra("contactId");
-            byte[] bytes = Base64.decode(contact.getImage(), Base64.DEFAULT);
-            Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-            binding.avatar.setImageBitmap(bitmap);
+
+            if (contact.getImage() != null && !contact.getImage().isEmpty()) {
+                byte[] bytes = Base64.decode(contact.getImage(), Base64.DEFAULT);
+                Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                binding.avatar.setImageBitmap(bitmap);
+            } else {
+                binding.avatar.setImageResource(R.drawable.avatar);
+            }
 
             binding.contactName.setText(contact.getName());
             binding.contactPhone.setText(contact.getPhone());
@@ -125,7 +127,9 @@ public class ContactDetailActivity extends DrawerBaseActivity {
     }
 
     private void deleteContact() {
-        db.collection(Constants.KEY_COLLECTION_CONTACTS).document(contactId).delete();
+        db.collection(Constants.KEY_COLLECTION_USERS)
+                .document(preferenceManager.getString(Constants.KEY_USER_ID))
+                .collection(Constants.KEY_COLLECTION_CONTACTS).document(contactId).delete();
         startActivity(new Intent(this, ContactActivity.class));
         finish();
     }

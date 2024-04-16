@@ -30,6 +30,7 @@ import java.util.List;
 
 import hcmus.android.crm.R;
 import hcmus.android.crm.activities.Leads.LeadDetailActivity;
+import hcmus.android.crm.activities.Search.SearchActivity;
 import hcmus.android.crm.models.Lead;
 import hcmus.android.crm.utilities.Constants;
 
@@ -105,22 +106,18 @@ public class LeadAdapter extends FirestoreRecyclerAdapter<Lead, LeadAdapter.Lead
             @Override
             protected FilterResults performFiltering(CharSequence charSequence) {
                 String charString = charSequence.toString().toLowerCase();
+                String selectedFilter = SearchActivity.selectedFilter;
                 FilterResults filterResults = new FilterResults();
 
                 if (charString.isEmpty()) {
-                    // If the filter query is empty, restore the original list
                     filterResults.values = leadList;
                     for(Lead index:leadList){
                         Log.d("buggg","chat");
                     }
                 } else {
                     List<Lead> filteredList = new ArrayList<>();
-
-                    // Filter the list based on the query
                     for (Lead lead : leadList) {
-                        if (lead.getName().toLowerCase().contains(charString) ||
-                                lead.getPhone().toLowerCase().contains(charString) ||
-                                lead.getCompany().toLowerCase().contains(charString)) {
+                        if (leadMatchesFilter(lead, charString, selectedFilter)) {
                             filteredList.add(lead);
                         }
                     }
@@ -131,7 +128,6 @@ public class LeadAdapter extends FirestoreRecyclerAdapter<Lead, LeadAdapter.Lead
                 return filterResults;
             }
 
-            @SuppressLint("NotifyDataSetChanged")
             @Override
             protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
                 leadListFiltered = (List<Lead>) filterResults.values;
@@ -140,6 +136,25 @@ public class LeadAdapter extends FirestoreRecyclerAdapter<Lead, LeadAdapter.Lead
         };
     }
 
+    private boolean leadMatchesFilter(Lead lead, String filterText, String selectedFilter) {
+        // Check if the lead attribute matches the filter text based on the selected filter option
+        switch (selectedFilter) {
+            case "Name":
+                return lead.getName().toLowerCase().contains(filterText);
+            case "Phone":
+                return lead.getPhone().toLowerCase().contains(filterText);
+            case "Company":
+                return lead.getCompany().toLowerCase().contains(filterText);
+            case "Job":
+                return lead.getJob().toLowerCase().contains(filterText);
+            case "Email":
+                return lead.getEmail().toLowerCase().contains(filterText);
+            case "Address":
+                return lead.getAddress().toLowerCase().contains(filterText);
+            default:
+                return false;
+        }
+    }
 
     public static class LeadViewHolder extends RecyclerView.ViewHolder {
         TextView leadName, leadPhone;
