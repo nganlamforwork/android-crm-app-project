@@ -50,7 +50,7 @@ public class MainActivity extends DrawerBaseActivity implements CalendarAdapter.
 
         setMonthView();
         getFCMToken();
-        scheduleEventUpdate();
+       // scheduleEventUpdate();
     }
     private void scheduleEventUpdate() {
         JobScheduler jobScheduler = getSystemService(JobScheduler.class);
