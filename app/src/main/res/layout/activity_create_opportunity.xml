@@ -27,92 +27,120 @@
             android:gravity="center_horizontal"
             android:orientation="vertical">
 
-            <EditText
-                android:id="@+id/opportunityName"
+            <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/_35sdp"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
-                android:background="@drawable/border"
-                android:hint="Opportunity Name"
-                android:inputType="text"
-                android:paddingStart="@dimen/_16sdp"
-                android:paddingEnd="10dp"
-                android:textColor="@color/primary_dark"
-                android:textColorHint="@color/secondary_text"
-                android:textSize="@dimen/_13ssp" />
+                android:scrollbarSize="25dp">
+
+                <EditText
+                    android:id="@+id/opportunityName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Opportunity Name"
+                    android:inputType="text"
+                    android:paddingStart="@dimen/_16sdp"
+                    android:paddingEnd="10dp"
+                    android:textColor="@color/primary_dark"
+                    android:textColorHint="@color/secondary_text"
+                    android:textSize="@dimen/_13ssp" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
 
             <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
+
                 <Spinner
                     android:id="@+id/opportunityStatus"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/_35sdp"
                     android:layout_marginTop="20dp"
-                    android:paddingEnd="10dp"
                     android:paddingStart="14dp"
+                    android:paddingEnd="10dp"
+                    android:background="@drawable/border"
                     android:textColor="@color/primary_dark"
                     android:textColorHint="@color/secondary_text"
                     android:textSize="@dimen/_13ssp"
-                    android:background="@drawable/border"
                     android:tooltipText="Status" />
 
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="end|bottom"
-                    android:layout_marginBottom="10dp"
                     android:layout_marginEnd="10dp"
+                    android:layout_marginBottom="10dp"
                     android:contentDescription="@null"
                     android:src="@drawable/baseline_arrow_drop_down_24" />
             </FrameLayout>
 
-            <EditText
-                android:id="@+id/opportunityPrice"
+            <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/_35sdp"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="15dp"
-                android:background="@drawable/border"
-                android:drawableEnd="@drawable/baseline_attach_money_24"
-                android:hint="Estimated Price"
-                android:inputType="numberDecimal"
-                android:paddingStart="@dimen/_16sdp"
-                android:paddingEnd="10dp"
-                android:textColor="@color/primary_dark"
-                android:textColorHint="@color/secondary_text"
-                android:textSize="@dimen/_13ssp" />
+                android:scrollbarSize="25dp">
 
-            <EditText
-                android:id="@+id/opportunityPossibility"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/_35sdp"
-                android:layout_marginTop="15dp"
-                android:background="@drawable/border"
-                android:drawableEnd="@drawable/baseline_data_exploration_24"
-                android:hint="Possibility 80%"
-                android:inputType="numberDecimal"
-                android:paddingStart="@dimen/_16sdp"
-                android:paddingEnd="10dp"
-                android:textColor="@color/primary_dark"
-                android:textColorHint="@color/secondary_text"
-                android:textSize="@dimen/_13ssp" />
+                <EditText
+                    android:id="@+id/opportunityPrice"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:drawableEnd="@drawable/baseline_attach_money_24"
+                    android:hint="Estimated Price"
+                    android:inputType="numberDecimal"
+                    android:paddingStart="@dimen/_16sdp"
+                    android:paddingEnd="10dp"
+                    android:textColor="@color/primary_dark"
+                    android:textColorHint="@color/secondary_text"
+                    android:textSize="@dimen/_13ssp" />
 
-            <EditText
-                android:id="@+id/expectedDate"
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/_35sdp"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="15dp"
-                android:background="@drawable/border"
-                android:drawableEnd="@drawable/ic_calendar"
-                android:focusable="false"
-                android:focusableInTouchMode="false"
-                android:hint="Expected Date"
-                android:inputType="date"
-                android:paddingStart="@dimen/_16sdp"
-                android:paddingEnd="10dp"
-                android:textColor="@color/primary_dark"
-                android:textColorHint="@color/secondary_text"
-                android:textSize="@dimen/_13ssp" />
+                android:scrollbarSize="25dp">
+
+                <EditText
+                    android:id="@+id/opportunityPossibility"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:drawableEnd="@drawable/baseline_data_exploration_24"
+                    android:hint="Possibility 80%"
+                    android:inputType="numberDecimal"
+                    android:paddingStart="@dimen/_16sdp"
+                    android:paddingEnd="10dp"
+                    android:maxLength="3"
+                    android:textColor="@color/primary_dark"
+                    android:textColorHint="@color/secondary_text"
+                    android:textSize="@dimen/_13ssp" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:scrollbarSize="25dp">
+
+                <EditText
+                    android:id="@+id/expectedDate"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:drawableEnd="@drawable/ic_calendar"
+                    android:focusable="false"
+                    android:focusableInTouchMode="false"
+                    android:hint="Expected Date"
+                    android:inputType="date"
+                    android:paddingStart="@dimen/_16sdp"
+                    android:paddingEnd="10dp"
+                    android:textColor="@color/primary_dark"
+                    android:textColorHint="@color/secondary_text"
+                    android:textSize="@dimen/_13ssp" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
 
             <FrameLayout
                 android:layout_width="match_parent"

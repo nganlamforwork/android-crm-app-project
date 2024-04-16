@@ -93,173 +93,168 @@
 
             </androidx.cardview.widget.CardView>
 
-            <TextView
+            <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
-                android:text="Full Name *"
-                android:textColor="@android:color/black" />
+                android:scrollbarSize="25dp">
 
-            <EditText
-                android:id="@+id/fullName"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/_35sdp"
-                android:layout_marginTop="10dp"
-                android:background="@drawable/border"
-                android:inputType="text"
-                android:paddingStart="@dimen/_16sdp"
-                android:textColor="@color/primary_dark"
-                android:textColorHint="@color/secondary_text"
-                android:textSize="@dimen/_10ssp" />
+                <EditText
+                    android:id="@+id/fullName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Your full name"
+                    android:inputType="text"
+                    android:paddingStart="@dimen/_16sdp"
+                    android:textColor="@color/primary_dark"
+                    android:textColorHint="@color/secondary_text"
+                    android:textSize="@dimen/_10ssp" />
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:text="About Me"
-                android:textColor="@android:color/black" />
+            </com.google.android.material.textfield.TextInputLayout>
 
-            <EditText
-                android:id="@+id/aboutMe"
+            <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:background="@drawable/border"
-                android:gravity="top|start"
-                android:hint="A few sentences about yourself"
-                android:inputType="textMultiLine"
-                android:lines="5"
-                android:paddingStart="@dimen/_16sdp"
-                android:paddingTop="@dimen/_10sdp"
-                android:scrollbars="vertical"
-                android:textColor="@color/primary_dark"
-                android:textColorHint="@color/secondary_text"
-                android:textSize="@dimen/_10ssp" />
+                android:layout_marginTop="15dp"
+                android:scrollbarSize="25dp">
 
-            <TextView
+                <EditText
+                    android:id="@+id/aboutMe"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="top|start"
+                    android:hint="A few sentences about yourself"
+                    android:inputType="textMultiLine"
+                    android:lines="5"
+                    android:paddingStart="@dimen/_16sdp"
+                    android:paddingTop="@dimen/_10sdp"
+                    android:scrollbars="vertical"
+                    android:textColor="@color/primary_dark"
+                    android:textColorHint="@color/secondary_text"
+                    android:textSize="@dimen/_10ssp" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+
+            <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:text="Company *"
-                android:textColor="@android:color/black" />
+                android:layout_marginTop="15dp"
+                android:scrollbarSize="25dp">
 
-            <EditText
-                android:id="@+id/company"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/_35sdp"
-                android:layout_marginTop="10dp"
-                android:background="@drawable/border"
-                android:hint="e.g. Grab, Shopee, etc."
-                android:inputType="text"
-                android:paddingStart="@dimen/_16sdp"
-                android:textColor="@color/primary_dark"
-                android:textColorHint="@color/secondary_text"
-                android:textSize="@dimen/_10ssp" />
+                <EditText
+                    android:id="@+id/company"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="e.g. Grab, Shopee, etc."
+                    android:inputType="text"
+                    android:paddingStart="@dimen/_16sdp"
+                    android:textColor="@color/primary_dark"
+                    android:textColorHint="@color/secondary_text"
+                    android:textSize="@dimen/_10ssp" />
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:text="Job Title *"
-                android:textColor="@android:color/black" />
+            </com.google.android.material.textfield.TextInputLayout>
 
-            <EditText
-                android:id="@+id/jobTitle"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/_35sdp"
-                android:layout_marginTop="10dp"
-                android:background="@drawable/border"
-                android:hint="Job Title"
-                android:inputType="text"
-                android:paddingStart="@dimen/_16sdp"
-                android:textColor="@color/primary_dark"
-                android:textColorHint="@color/secondary_text"
-                android:textSize="@dimen/_10ssp" />
 
-            <TextView
+            <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:text="Email *"
-                android:textColor="@android:color/black" />
+                android:layout_marginTop="15dp"
+                android:scrollbarSize="25dp">
 
-            <EditText
-                android:id="@+id/email"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/_35sdp"
-                android:layout_marginTop="10dp"
-                android:background="@drawable/border"
-                android:hint="Email"
-                android:inputType="text"
-                android:paddingStart="@dimen/_16sdp"
-                android:textColor="@color/primary_dark"
-                android:textColorHint="@color/secondary_text"
-                android:textSize="@dimen/_10ssp" />
+                <EditText
+                    android:id="@+id/jobTitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/_35sdp"
+                    android:hint="Job Title"
+                    android:inputType="text"
+                    android:paddingStart="@dimen/_16sdp"
+                    android:textColor="@color/primary_dark"
+                    android:textColorHint="@color/secondary_text"
+                    android:textSize="@dimen/_10ssp" />
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:text="Phone *"
-                android:textColor="@android:color/black" />
+            </com.google.android.material.textfield.TextInputLayout>
 
-            <EditText
-                android:id="@+id/phone"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/_35sdp"
-                android:layout_marginTop="10dp"
-                android:background="@drawable/border"
-                android:hint="Phone"
-                android:inputType="text"
-                android:paddingStart="@dimen/_16sdp"
-                android:textColor="@color/primary_dark"
-                android:textColorHint="@color/secondary_text"
-                android:textSize="@dimen/_10ssp" />
-
-            <TextView
+            <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:text="Note"
-                android:textColor="@android:color/black" />
+                android:layout_marginTop="15dp"
+                android:scrollbarSize="25dp">
 
-            <EditText
-                android:id="@+id/notes"
+                <EditText
+                    android:id="@+id/email"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Email"
+                    android:inputType="text"
+                    android:paddingStart="@dimen/_16sdp"
+                    android:textColor="@color/primary_dark"
+                    android:textColorHint="@color/secondary_text"
+                    android:textSize="@dimen/_10ssp" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:background="@drawable/border"
-                android:gravity="top|start"
-                android:hint="e.g. Salutation, family, hobbies, etc."
-                android:inputType="textMultiLine"
-                android:lines="5"
-                android:paddingStart="@dimen/_16sdp"
-                android:paddingTop="@dimen/_10sdp"
-                android:scrollbars="vertical"
-                android:textColor="@color/primary_dark"
-                android:textColorHint="@color/secondary_text"
-                android:textSize="@dimen/_10ssp" />
+                android:layout_marginTop="15dp"
+                android:scrollbarSize="25dp">
 
-            <TextView
+                <EditText
+                    android:id="@+id/phone"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Phone"
+                    android:inputType="text"
+                    android:paddingStart="@dimen/_16sdp"
+                    android:textColor="@color/primary_dark"
+                    android:textColorHint="@color/secondary_text"
+                    android:textSize="@dimen/_10ssp" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:text="Card Name *"
-                android:textColor="@android:color/black" />
+                android:layout_marginTop="15dp"
+                android:scrollbarSize="25dp">
 
-            <EditText
-                android:id="@+id/cardName"
+                <EditText
+                    android:id="@+id/notes"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="top|start"
+                    android:hint="e.g. Salutation, family, hobbies, etc."
+                    android:inputType="textMultiLine"
+                    android:lines="5"
+                    android:paddingStart="@dimen/_16sdp"
+                    android:paddingTop="@dimen/_10sdp"
+                    android:scrollbars="vertical"
+                    android:textColor="@color/primary_dark"
+                    android:textColorHint="@color/secondary_text"
+                    android:textSize="@dimen/_10ssp" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/_35sdp"
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="50dp"
-                android:background="@drawable/border"
-                android:hint="e.g. Teaching Card, Front-end Developer Card, etc."
-                android:inputType="text"
-                android:paddingStart="@dimen/_16sdp"
-                android:textColor="@color/primary_dark"
-                android:textColorHint="@color/secondary_text"
-                android:textSize="@dimen/_10ssp" />
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:scrollbarSize="25dp">
+
+                <EditText
+                    android:id="@+id/cardName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="100dp"
+                    android:hint="e.g. Teaching Card, Front-end Developer Card, etc."
+                    android:inputType="text"
+                    android:paddingStart="@dimen/_16sdp"
+                    android:textColor="@color/primary_dark"
+                    android:textColorHint="@color/secondary_text"
+                    android:textSize="@dimen/_10ssp" />
+
+            </com.google.android.material.textfield.TextInputLayout>
 
 
         </LinearLayout>

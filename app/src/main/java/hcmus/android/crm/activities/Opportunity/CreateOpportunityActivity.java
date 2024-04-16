@@ -5,6 +5,8 @@ import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.InputFilter;
+import android.text.Spanned;
 import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -40,6 +42,7 @@ public class CreateOpportunityActivity extends DrawerBaseActivity {
     );
 
     private ArrayAdapter<String> statusAdapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -63,7 +66,7 @@ public class CreateOpportunityActivity extends DrawerBaseActivity {
         opportunityId = getIntent().getStringExtra("opportunityId");
         opportunity = getIntent().getParcelableExtra("opportunity");
         setupSpinnerStatus();
-
+        setupFilterPossibility();
         if (opportunityId != null) {
             isEditMode = true;
             setTitle("Edit opportunity");
@@ -71,6 +74,28 @@ public class CreateOpportunityActivity extends DrawerBaseActivity {
         }
         setListeners();
 
+    }
+
+    private void setupFilterPossibility() {
+        InputFilter maxInputFilter = new InputFilter() {
+            @Override
+            public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
+                // Concatenate the current input and the new input
+                String input = dest.subSequence(0, dstart).toString() + source.subSequence(start, end) + dest.subSequence(dend, dest.length());
+                // Parse the input as a double
+                double value;
+                try {
+                    value = Double.parseDouble(input);
+                } catch (NumberFormatException e) {
+                    // Return null if the input cannot be parsed as a double
+                    return null;
+                }
+                // Return the input as-is if it is less than or equal to 100, else return an empty string to reject the new input
+                return (value <= 100) ? null : "";
+            }
+        };
+
+        binding.opportunityPossibility.setFilters(new InputFilter[]{maxInputFilter});
     }
 
     private void populateEventData() {

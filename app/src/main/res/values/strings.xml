@@ -89,5 +89,6 @@
     <string name="add_new_contact">AddNewContact</string>
     <string name="coworkers">Coworkers</string>
     <string name="dashboard">Dashboard</string>
+    <string name="don_t_have_an_account">Don\'t have an account?</string>
 
 </resources>

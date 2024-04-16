@@ -44,66 +44,18 @@
 
             </FrameLayout>
 
-            <EditText
-                android:id="@+id/leadName"
+            <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/_35sdp"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
-                android:background="@drawable/border"
-                android:hint="Name"
-                android:inputType="text"
-                android:paddingStart="@dimen/_16sdp"
-                android:paddingEnd="50dp"
-                android:scrollHorizontally="true"
-                android:singleLine="true"
-                android:textColor="@color/primary_dark"
-                android:textColorHint="@color/secondary_text"
-                android:textSize="@dimen/_13ssp" />
-
-            <EditText
-                android:id="@+id/leadEmail"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/_35sdp"
-                android:layout_marginTop="15dp"
-                android:background="@drawable/border"
-                android:hint="Email"
-                android:inputType="textEmailAddress"
-                android:paddingStart="@dimen/_16sdp"
-                android:paddingEnd="50dp"
-                android:scrollHorizontally="true"
-                android:singleLine="true"
-                android:textColor="@color/primary_dark"
-                android:textColorHint="@color/secondary_text"
-                android:textSize="@dimen/_13ssp" />
-
-            <EditText
-                android:id="@+id/leadPhone"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/_35sdp"
-                android:layout_marginTop="15dp"
-                android:background="@drawable/border"
-                android:hint="Phone"
-                android:inputType="phone"
-                android:maxLength="10"
-                android:paddingStart="@dimen/_16sdp"
-                android:paddingEnd="50dp"
-                android:scrollHorizontally="true"
-                android:singleLine="true"
-                android:textColor="@color/primary_dark"
-                android:textColorHint="@color/secondary_text"
-                android:textSize="@dimen/_13ssp" />
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="45dp"
-                android:layout_marginTop="10dp">
+                android:scrollbarSize="25dp">
 
                 <EditText
-                    android:id="@+id/leadlocation"
+                    android:id="@+id/leadName"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:background="@drawable/border"
-                    android:hint="Addresses"
+                    android:layout_height="wrap_content"
+                    android:hint="Name"
+                    android:inputType="text"
                     android:paddingStart="@dimen/_16sdp"
                     android:paddingEnd="50dp"
                     android:scrollHorizontally="true"
@@ -112,64 +64,158 @@
                     android:textColorHint="@color/secondary_text"
                     android:textSize="@dimen/_13ssp" />
 
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:scrollbarSize="25dp">
+
+                <EditText
+                    android:id="@+id/leadEmail"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Email"
+                    android:inputType="textEmailAddress"
+                    android:paddingStart="@dimen/_16sdp"
+                    android:paddingEnd="50dp"
+                    android:scrollHorizontally="true"
+                    android:singleLine="true"
+                    android:textColor="@color/primary_dark"
+                    android:textColorHint="@color/secondary_text"
+                    android:textSize="@dimen/_13ssp" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:scrollbarSize="25dp">
+
+                <EditText
+                    android:id="@+id/leadPhone"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Phone"
+                    android:inputType="phone"
+                    android:maxLength="10"
+                    android:paddingStart="@dimen/_16sdp"
+                    android:paddingEnd="50dp"
+                    android:scrollHorizontally="true"
+                    android:singleLine="true"
+                    android:textColor="@color/primary_dark"
+                    android:textColorHint="@color/secondary_text"
+                    android:textSize="@dimen/_13ssp" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp">
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:scrollbarSize="25dp">
+
+                    <EditText
+                        android:id="@+id/leadlocation"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Addresses"
+                        android:paddingStart="@dimen/_16sdp"
+                        android:paddingEnd="60dp"
+                        android:scrollHorizontally="true"
+                        android:singleLine="true"
+                        android:textColor="@color/primary_dark"
+                        android:textColorHint="@color/secondary_text"
+                        android:textSize="@dimen/_13ssp" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+
                 <com.google.android.material.switchmaterial.SwitchMaterial
                     android:id="@+id/getLeadLocation"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginRight="10dp"
                     android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
                     android:layout_gravity="center_vertical" />
 
             </RelativeLayout>
 
-            <EditText
-                android:id="@+id/leadJob"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/_35sdp"
-                android:layout_marginTop="15dp"
-                android:background="@drawable/border"
-                android:hint="Ex: CEO Vinamilk"
-                android:inputType="text"
-                android:paddingStart="@dimen/_16sdp"
-                android:paddingEnd="50dp"
-                android:scrollHorizontally="true"
-                android:singleLine="true"
-                android:textColor="@color/primary_dark"
-                android:textColorHint="@color/secondary_text"
-                android:textSize="@dimen/_13ssp" />
-
-            <EditText
-                android:id="@+id/leadCompany"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/_35sdp"
-                android:layout_marginTop="15dp"
-                android:background="@drawable/border"
-                android:hint="Add a company"
-                android:inputType="text"
-                android:paddingStart="@dimen/_16sdp"
-                android:paddingEnd="50dp"
-                android:scrollHorizontally="true"
-                android:singleLine="true"
-                android:textColor="@color/primary_dark"
-                android:textColorHint="@color/secondary_text"
-                android:textSize="@dimen/_13ssp" />
-
-            <EditText
-                android:id="@+id/leadNotes"
+            <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="15dp"
-                android:background="@drawable/border"
-                android:gravity="top|start"
-                android:hint="Add a note"
-                android:inputType="textMultiLine"
-                android:lines="5"
-                android:paddingStart="@dimen/_16sdp"
-                android:paddingTop="@dimen/_10sdp"
-                android:scrollbars="vertical"
-                android:textColor="@color/primary_dark"
-                android:textColorHint="@color/secondary_text"
-                android:textSize="@dimen/_13ssp" />
+                android:scrollbarSize="25dp">
+
+                <EditText
+                    android:id="@+id/leadJob"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Ex: CEO Vinamilk"
+                    android:inputType="text"
+                    android:paddingStart="@dimen/_16sdp"
+                    android:paddingEnd="50dp"
+                    android:scrollHorizontally="true"
+                    android:singleLine="true"
+                    android:textColor="@color/primary_dark"
+                    android:textColorHint="@color/secondary_text"
+                    android:textSize="@dimen/_13ssp" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:scrollbarSize="25dp">
+
+                <EditText
+                    android:id="@+id/leadCompany"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Add a company"
+                    android:inputType="text"
+                    android:paddingStart="@dimen/_16sdp"
+                    android:paddingEnd="50dp"
+                    android:scrollHorizontally="true"
+                    android:singleLine="true"
+                    android:textColor="@color/primary_dark"
+                    android:textColorHint="@color/secondary_text"
+                    android:textSize="@dimen/_13ssp" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:scrollbarSize="25dp">
+
+                <EditText
+                    android:id="@+id/leadNotes"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="top|start"
+                    android:hint="Add a note"
+                    android:inputType="textMultiLine"
+                    android:lines="5"
+                    android:paddingStart="@dimen/_16sdp"
+                    android:paddingTop="@dimen/_10sdp"
+                    android:scrollbars="vertical"
+                    android:textColor="@color/primary_dark"
+                    android:textColorHint="@color/secondary_text"
+                    android:textSize="@dimen/_13ssp" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
 
             <FrameLayout
                 android:layout_width="match_parent"
