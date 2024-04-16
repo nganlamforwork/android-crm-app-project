@@ -115,7 +115,6 @@ public class ContactActivity extends DrawerBaseActivity {
         FirestoreRecyclerOptions<Contact> options = new FirestoreRecyclerOptions.Builder<Contact>()
                 .setQuery(query, Contact.class).build();
 
-        Log.d("BUGGGGGGGGGGGGG",query.toString());
         checkIfListEmpty(query);
 
         query.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
@@ -153,10 +152,10 @@ public class ContactActivity extends DrawerBaseActivity {
                 if (task.isSuccessful()) {
                     if (task.getResult().getDocuments().size() > 0) {
                         recyclerView.setVisibility(View.VISIBLE);
-//                        binding.emptyView.setVisibility(View.GONE);
+                        binding.emptyView.setVisibility(View.GONE);
                     } else {
                         recyclerView.setVisibility(View.GONE);
-//                        binding.emptyView.setVisibility(View.VISIBLE);
+                        binding.emptyView.setVisibility(View.VISIBLE);
                     }
                 }
             }
