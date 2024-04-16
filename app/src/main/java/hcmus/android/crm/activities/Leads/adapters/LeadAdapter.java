@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Base64;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -109,6 +110,9 @@ public class LeadAdapter extends FirestoreRecyclerAdapter<Lead, LeadAdapter.Lead
                 if (charString.isEmpty()) {
                     // If the filter query is empty, restore the original list
                     filterResults.values = leadList;
+                    for(Lead index:leadList){
+                        Log.d("buggg","chat");
+                    }
                 } else {
                     List<Lead> filteredList = new ArrayList<>();
 

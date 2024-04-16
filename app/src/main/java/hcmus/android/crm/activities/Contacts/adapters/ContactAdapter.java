@@ -51,9 +51,8 @@ public class ContactAdapter extends FirestoreRecyclerAdapter<Contact, ContactAda
     protected void onBindViewHolder(@NonNull ContactAdapter.ContactViewHolder holder, int position, @NonNull Contact model) {
         Contact contact = contactListFiltered.get(position);
 
-        holder.contactName.setText(model.getName());
-        holder.contactPhone.setText(model.getPhone());
-
+        holder.contactName.setText(contact.getName());
+        holder.contactPhone.setText(contact.getPhone());
 
         if (contact.getImage() != null && !contact.getImage().isEmpty()) {
             byte[] bytes = Base64.decode(contact.getImage(), Base64.DEFAULT);
@@ -62,10 +61,11 @@ public class ContactAdapter extends FirestoreRecyclerAdapter<Contact, ContactAda
         } else {
             holder.contactImage.setImageResource(R.drawable.avatar);
         }
+
         holder.itemView.setOnClickListener(v -> {
             DocumentSnapshot snapshot = getSnapshots()
                     .getSnapshot(holder.getAbsoluteAdapterPosition());
-            String contactId = snapshot.getId();
+            contactId = snapshot.getId();
 
             Intent intent = new Intent(context, ContactDetailActivity.class);
             intent.putExtra("contactDetails", model);
@@ -108,16 +108,13 @@ public class ContactAdapter extends FirestoreRecyclerAdapter<Contact, ContactAda
                 FilterResults filterResults = new FilterResults();
 
                 if (charString.isEmpty()) {
-                    // If the filter query is empty, restore the original list
                     filterResults.values = contactList;
                 } else {
                     List<Contact> filteredList = new ArrayList<>();
 
-                    // Filter the list based on the query
                     for (Contact contact : contactList) {
-                        if (contact.getName().toLowerCase().contains(charString) ||
-                                contact.getPhone().toLowerCase().contains(charString) ||
-                                contact.getCompany().toLowerCase().contains(charString)) {
+                        if (contact.getName() != null && contact.getName().toLowerCase().contains(charString) ||
+                                contact.getPhone() != null && contact.getPhone().toLowerCase().contains(charString)) {
                             filteredList.add(contact);
                         }
                     }
@@ -128,6 +125,7 @@ public class ContactAdapter extends FirestoreRecyclerAdapter<Contact, ContactAda
                 return filterResults;
             }
 
+
             @SuppressLint("NotifyDataSetChanged")
             @Override
             protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
@@ -136,6 +134,7 @@ public class ContactAdapter extends FirestoreRecyclerAdapter<Contact, ContactAda
             }
         };
     }
+
 
     public static class ContactViewHolder extends RecyclerView.ViewHolder {
         TextView contactName, contactPhone;
@@ -152,6 +151,10 @@ public class ContactAdapter extends FirestoreRecyclerAdapter<Contact, ContactAda
 
     @Override
     public int getItemCount() {
-        return contactListFiltered.size();
+        if (contactListFiltered != null) {
+            return contactListFiltered.size();
+        } else {
+            return 0; // or return a default value, depending on your logic
+        }
     }
 }
