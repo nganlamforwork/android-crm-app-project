@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".activities.Calendar.EventEditActivity">
+    tools:context=".activities.Opportunity.CreateOpportunityActivity">
 
     <include
         android:id="@+id/app_bar"
@@ -28,12 +28,12 @@
             android:orientation="vertical">
 
             <EditText
-                android:id="@+id/eventName"
+                android:id="@+id/opportunityName"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_35sdp"
                 android:layout_marginTop="20dp"
                 android:background="@drawable/border"
-                android:hint="Event Name"
+                android:hint="Opportunity Name"
                 android:inputType="text"
                 android:paddingStart="@dimen/_16sdp"
                 android:paddingEnd="10dp"
@@ -41,14 +41,41 @@
                 android:textColorHint="@color/secondary_text"
                 android:textSize="@dimen/_13ssp" />
 
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <Spinner
+                    android:id="@+id/opportunityStatus"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/_35sdp"
+                    android:layout_marginTop="20dp"
+                    android:paddingEnd="10dp"
+                    android:paddingStart="14dp"
+                    android:textColor="@color/primary_dark"
+                    android:textColorHint="@color/secondary_text"
+                    android:textSize="@dimen/_13ssp"
+                    android:background="@drawable/border"
+                    android:tooltipText="Status" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end|bottom"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginEnd="10dp"
+                    android:contentDescription="@null"
+                    android:src="@drawable/baseline_arrow_drop_down_24" />
+            </FrameLayout>
+
             <EditText
-                android:id="@+id/eventLocation"
+                android:id="@+id/opportunityPrice"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_35sdp"
                 android:layout_marginTop="15dp"
                 android:background="@drawable/border"
-                android:hint="Event Location"
-                android:inputType="text"
+                android:drawableEnd="@drawable/baseline_attach_money_24"
+                android:hint="Estimated Price"
+                android:inputType="numberDecimal"
                 android:paddingStart="@dimen/_16sdp"
                 android:paddingEnd="10dp"
                 android:textColor="@color/primary_dark"
@@ -56,13 +83,14 @@
                 android:textSize="@dimen/_13ssp" />
 
             <EditText
-                android:id="@+id/eventDescription"
+                android:id="@+id/opportunityPossibility"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_35sdp"
                 android:layout_marginTop="15dp"
                 android:background="@drawable/border"
-                android:hint="Event Description"
-                android:inputType="text"
+                android:drawableEnd="@drawable/baseline_data_exploration_24"
+                android:hint="Possibility 80%"
+                android:inputType="numberDecimal"
                 android:paddingStart="@dimen/_16sdp"
                 android:paddingEnd="10dp"
                 android:textColor="@color/primary_dark"
@@ -70,7 +98,7 @@
                 android:textSize="@dimen/_13ssp" />
 
             <EditText
-                android:id="@+id/eventDate"
+                android:id="@+id/expectedDate"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_35sdp"
                 android:layout_marginTop="15dp"
@@ -78,25 +106,8 @@
                 android:drawableEnd="@drawable/ic_calendar"
                 android:focusable="false"
                 android:focusableInTouchMode="false"
-                android:hint="Event Date"
+                android:hint="Expected Date"
                 android:inputType="date"
-                android:paddingStart="@dimen/_16sdp"
-                android:paddingEnd="10dp"
-                android:textColor="@color/primary_dark"
-                android:textColorHint="@color/secondary_text"
-                android:textSize="@dimen/_13ssp" />
-
-            <EditText
-                android:id="@+id/eventTime"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/_35sdp"
-                android:layout_marginTop="15dp"
-                android:background="@drawable/border"
-                android:drawableEnd="@drawable/ic_access_time"
-                android:focusable="false"
-                android:focusableInTouchMode="false"
-                android:hint="Event Time"
-                android:inputType="time"
                 android:paddingStart="@dimen/_16sdp"
                 android:paddingEnd="10dp"
                 android:textColor="@color/primary_dark"
@@ -110,10 +121,10 @@
                 android:animateLayoutChanges="true">
 
                 <com.google.android.material.button.MaterialButton
-                    android:id="@+id/buttonSaveEvent"
+                    android:id="@+id/buttonSaveOpportunity"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/_50sdp"
-                    android:text="Save Event"
+                    android:text="Save"
                     android:textColor="@color/white"
                     android:textSize="@dimen/_13sdp"
                     android:textStyle="bold"

@@ -20,6 +20,8 @@ import android.provider.MediaStore;
 import android.provider.Settings;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Base64;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
@@ -46,13 +48,17 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.makeramen.roundedimageview.RoundedImageView;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 import java.util.Locale;
 
+import hcmus.android.crm.activities.Contacts.ContactActivity;
 import hcmus.android.crm.activities.DrawerBaseActivity;
 import hcmus.android.crm.databinding.ActivityAddNewContactBinding;
+import hcmus.android.crm.databinding.ActivityAddNewLeadBinding;
 import hcmus.android.crm.models.Contact;
+import hcmus.android.crm.models.Lead;
 import hcmus.android.crm.utilities.Constants;
 import hcmus.android.crm.utilities.Utils;
 
@@ -61,13 +67,16 @@ public class AddNewContactActivity extends DrawerBaseActivity {
     private static final int REQUEST_LOCATION = 1;
     private ActivityAddNewContactBinding binding;
     private Contact newContact;
-    private EditText contactName, contactEmail, contactPhone, contactJob, contactCompany, contactNotes;
-//    private TextView contactLocation;
+    private EditText contactName, contactEmail, contactPhone, contactNotes;
+    private TextView contactLocation;
     private Button newContactSaveButton;
     private ProgressBar progressBar;
     private RoundedImageView contactImage;
     private FrameLayout layoutImage;
     private String encodedImage;
+    private SwitchMaterial getContactLocation;
+    private boolean isEditMode = false;
+    private String contactId;
     private FirebaseFirestore db;
 
     @Override
@@ -78,6 +87,19 @@ public class AddNewContactActivity extends DrawerBaseActivity {
         binding = ActivityAddNewContactBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
+        db = FirebaseFirestore.getInstance();
+
+
+        Toolbar toolbar = binding.appBar.toolbar;
+        setSupportActionBar(toolbar);
+
+        // Enable the back button in the action bar or toolbar
+        ActionBar actionBar = getSupportActionBar();
+
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setDisplayShowHomeEnabled(true);
+        }
         // Get element id
         contactName = binding.contactName;
         contactEmail = binding.contactEmail;
@@ -89,21 +111,32 @@ public class AddNewContactActivity extends DrawerBaseActivity {
         progressBar = binding.progressBar;
         newContactSaveButton = binding.buttonSaveContact;
 
-        // Handling logic here
-        db = FirebaseFirestore.getInstance();
+        contactId = getIntent().getStringExtra("contactId");
+        newContact = getIntent().getParcelableExtra("contact");
 
-        Toolbar toolbar = binding.toolbar;
-        setSupportActionBar(toolbar);
-
-        // Enable the back button in the action bar or toolbar
-        ActionBar actionBar = getSupportActionBar();
-
-        if (actionBar != null) {
-            actionBar.setDisplayHomeAsUpEnabled(true);
-            actionBar.setDisplayShowHomeEnabled(true);
+        if (contactId != null) {
+            isEditMode = true;
+            setTitle("Edit contact");
+            populateEventData();
         }
 
         setListeners();
+    }
+
+    private void populateEventData() {
+        contactName.setText(newContact.getName());
+        contactEmail.setText(newContact.getEmail());
+        contactPhone.setText(newContact.getPhone());
+        contactNotes.setText(newContact.getNotes());
+
+        // Decode base64 encoded image string and set it to ImageView
+        String imageString = newContact.getImage();
+        if (imageString != null && !imageString.isEmpty()) {
+            byte[] bytes = Base64.decode(imageString, Base64.DEFAULT);
+            Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+            encodedImage = encodeImage(bitmap);
+            contactImage.setImageBitmap(bitmap);
+        }
     }
 
     private void setListeners() {
@@ -113,7 +146,6 @@ public class AddNewContactActivity extends DrawerBaseActivity {
         contactName.addTextChangedListener(new FieldTextWatcher());
         contactEmail.addTextChangedListener(new FieldTextWatcher());
         contactPhone.addTextChangedListener(new FieldTextWatcher());
-//        contactLocation.addTextChangedListener(new FieldTextWatcher());
 
         layoutImage.setOnClickListener(v -> {
             Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
@@ -121,22 +153,19 @@ public class AddNewContactActivity extends DrawerBaseActivity {
             pickImage.launch(intent);
         });
 
-        newContactSaveButton.setOnClickListener(v -> {
-            if (isFieldsFilled()) {
-                // Show loading state
+        if (isEditMode) {
+            newContactSaveButton.setText("Update Contact");
+            newContactSaveButton.setOnClickListener(v -> {
                 loading(true);
-
-                // Get input values
-                String name = contactName.getText().toString().trim();
-                String email = contactEmail.getText().toString().trim();
-                String phone = contactPhone.getText().toString().trim();
-                String company = contactCompany.getText().toString().trim();
-                String notes = contactNotes.getText().toString().trim();
-
-                // Add contact to Firestore
-                addContactToFirestore(name, email, phone, company, notes, encodedImage);
-            }
-        });
+                handleUpdateContact();
+            });
+        } else {
+            newContactSaveButton.setText("Save Contact");
+            newContactSaveButton.setOnClickListener(v -> {
+                loading(true);
+                handleAddNewContact();
+            });
+        }
     }
 
     private final ActivityResultLauncher<Intent> pickImage = registerForActivityResult(
@@ -183,14 +212,81 @@ public class AddNewContactActivity extends DrawerBaseActivity {
         // Check if all required fields are filled
         return !contactName.getText().toString().trim().isEmpty() &&
                 !contactEmail.getText().toString().trim().isEmpty() &&
-                !contactPhone.getText().toString().trim().isEmpty() &&
-                encodedImage != null && !encodedImage.isEmpty();
+                !contactPhone.getText().toString().trim().isEmpty();
     }
 
-    private void addContactToFirestore(String name, String email, String phone, String company, String notes, String image) {
-        // Add contact to Firestore
-        newContact = new Contact(name, email, phone, company, notes, image);
-        db.collection(Constants.KEY_COLLECTION_CONTACTS)
+    private void handleUpdateContact() {
+        // Get input values
+        String name = contactName.getText().toString().trim();
+        String email = contactEmail.getText().toString().trim();
+        String phone = contactPhone.getText().toString().trim();
+        String notes = contactNotes.getText().toString().trim();
+
+        if (!isFieldsFilled()) {
+            loading(false);
+            showToast("All field is required", 0);
+            return;
+        }
+
+        Contact updatedContact = new Contact();
+        updatedContact.setName(name);
+        updatedContact.setEmail(email);
+        updatedContact.setPhone(phone);
+        updatedContact.setNotes(notes);
+        updatedContact.setImage(encodedImage);
+
+
+        db.collection(Constants.KEY_COLLECTION_USERS)
+                .document(preferenceManager.getString(Constants.KEY_USER_ID))
+                .collection(Constants.KEY_COLLECTION_CONTACTS)
+                .document(contactId)
+                .set(updatedContact)
+                .addOnSuccessListener(documentReference -> {
+                    // Reset fields
+                    resetFields();
+
+                    // Hide loading state
+                    loading(false);
+                    showToast("Contact updated successful", 0);
+
+                    // Send back the new contact data to ContactDetailActivity
+                    Intent resultIntent = new Intent();
+                    resultIntent.putExtra("updatedContact", updatedContact);
+                    setResult(Activity.RESULT_OK, resultIntent);
+
+                    finish();
+                })
+                .addOnFailureListener(e -> {
+                    // Handle failure, e.g., show error message
+                    loading(false);
+                    showToast("Failed to update contact", 0);
+                });
+    }
+
+    private void handleAddNewContact() {
+        // Get input values
+        String name = contactName.getText().toString().trim();
+        String email = contactEmail.getText().toString().trim();
+        String phone = contactPhone.getText().toString().trim();
+        String notes = contactNotes.getText().toString().trim();
+
+        if (!isFieldsFilled()) {
+            loading(false);
+            showToast("All field is required", 0);
+            return;
+        }
+
+        newContact = new Contact();
+        newContact.setName(name);
+        newContact.setEmail(email);
+        newContact.setPhone(phone);
+        newContact.setNotes(notes);
+        newContact.setImage(encodedImage);
+
+
+        db.collection(Constants.KEY_COLLECTION_USERS)
+                .document(preferenceManager.getString(Constants.KEY_USER_ID))
+                .collection(Constants.KEY_COLLECTION_CONTACTS)
                 .add(newContact)
                 .addOnSuccessListener(documentReference -> {
                     // Reset fields
@@ -199,13 +295,9 @@ public class AddNewContactActivity extends DrawerBaseActivity {
                     // Hide loading state
                     loading(false);
                     showToast("New contact added successful", 0);
-
-                    // Send back the new contact data to ContactActivity
-                    Intent resultIntent = new Intent();
-                    resultIntent.putExtra("newContact", newContact);
-                    setResult(Activity.RESULT_OK, resultIntent);
-
-                    finish();
+                    Intent intent = new Intent(this, ContactActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivity(intent);
                 })
                 .addOnFailureListener(e -> {
                     // Handle failure, e.g., show error message
@@ -214,12 +306,12 @@ public class AddNewContactActivity extends DrawerBaseActivity {
                 });
     }
 
+
     private void resetFields() {
         // Reset input fields
         contactName.setText("");
         contactEmail.setText("");
         contactPhone.setText("");
-        contactCompany.setText("");
         contactNotes.setText("");
         // Reset the image view
         contactImage.setImageResource(android.R.color.transparent);

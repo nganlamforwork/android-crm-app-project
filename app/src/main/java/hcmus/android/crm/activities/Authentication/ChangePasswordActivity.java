@@ -1,40 +1,32 @@
 package hcmus.android.crm.activities.Authentication;
 
+import static android.content.ContentValues.TAG;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
 import com.google.firebase.auth.FirebaseUser;
 
-import hcmus.android.crm.activities.Settings.Information;
+import hcmus.android.crm.activities.DrawerBaseActivity;
 import hcmus.android.crm.databinding.ActivityChangePasswordBinding;
 import hcmus.android.crm.utilities.Constants;
 import hcmus.android.crm.utilities.HashHelper;
 import hcmus.android.crm.utilities.PreferenceManager;
 import hcmus.android.crm.utilities.Utils;
 
-public class ChangePasswordActivity extends AppCompatActivity {
+public class ChangePasswordActivity extends DrawerBaseActivity {
     private ActivityChangePasswordBinding binding;
-
     private FirebaseAuth auth;
-
-    private static final String TAG = "ChangePasswordActivity";
-    private PreferenceManager preferenceManager;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,8 +34,6 @@ public class ChangePasswordActivity extends AppCompatActivity {
 
         binding = ActivityChangePasswordBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-
-        preferenceManager = (PreferenceManager) getIntent().getSerializableExtra("preferenceManager");
 
         Toolbar toolbar = binding.toolbar;
         setSupportActionBar(toolbar);
@@ -60,6 +50,7 @@ public class ChangePasswordActivity extends AppCompatActivity {
         auth = FirebaseAuth.getInstance();
         setListeners();
     }
+
     @Override
     public boolean onSupportNavigateUp() {
         finish();
@@ -74,36 +65,51 @@ public class ChangePasswordActivity extends AppCompatActivity {
         });
     }
 
-    private void showToast(String message, int length) {
+    public void showToast(String message, int length) {
         Utils.showToast(getApplicationContext(), message, length);
     }
 
     private void changePassword() {
         loading(true);
-        String hashedPassword = HashHelper.hashPassword(binding.inputPassword.getText().toString());
-        assert hashedPassword != null;
+        String newPassword = binding.inputPassword.getText().toString();
+        String oldPassword = binding.inputOldPassword.getText().toString();
+        String email = preferenceManager.getString(Constants.KEY_EMAIL); // Retrieve email
+
+        if (email == null || oldPassword == null) {
+            showToast("Email not found in preferences.", Toast.LENGTH_SHORT);
+            loading(false);
+            return;
+        }
+
+        String hashedOldPassword = HashHelper.hashPassword(oldPassword);
+        String hashedNewPassword = HashHelper.hashPassword(newPassword);
 
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user == null) {
+            showToast("User not authenticated.", Toast.LENGTH_SHORT);
+            loading(false);
+            return;
+        }
 
-        auth.signInWithEmailAndPassword(preferenceManager.getString(Constants.KEY_EMAIL), hashedPassword).addOnCompleteListener(task -> {
-                if (task.isSuccessful()) {
-                    String newPassword = binding.inputPassword.getText().toString();
-                    user.updatePassword(newPassword).addOnCompleteListener(updateTask -> {
-                        if (updateTask.isSuccessful()) {
-                            loading(false);
-                            showToast("Password changed successfully.", Toast.LENGTH_SHORT);
-                            logout();
-                        } else {
-                            loading(false);
-                            Log.e(TAG, "Error updating password: " + updateTask.getException().getMessage());
-                            showToast("Failed to update password. Please try again later.", Toast.LENGTH_SHORT);
-                        }
-                    });
-                } else {
+        AuthCredential credential = EmailAuthProvider.getCredential(email, hashedOldPassword); // Use retrieved email
+
+        user.reauthenticate(credential).addOnCompleteListener(reauthTask -> {
+            if (reauthTask.isSuccessful()) {
+                user.updatePassword(hashedNewPassword).addOnCompleteListener(updateTask -> {
                     loading(false);
-                    showToast("Authentication failed. Please enter your correct old password.", Toast.LENGTH_SHORT);
-                }
-            });
+                    if (updateTask.isSuccessful()) {
+                        showToast("Password changed successfully.", Toast.LENGTH_SHORT);
+                        logout();
+                    } else {
+                        Log.e(TAG, "Error updating password: " + updateTask.getException().getMessage());
+                        showToast("Failed to update password. Please try again later.", Toast.LENGTH_SHORT);
+                    }
+                });
+            } else {
+                loading(false);
+                showToast("Authentication failed. Please enter your correct old password.", Toast.LENGTH_SHORT);
+            }
+        });
     }
 
     private Boolean isValidChangePasswordDetails() {

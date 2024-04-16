@@ -107,6 +107,7 @@ public class LeadDetailActivity extends DrawerBaseActivity {
             String latitude = lead.getLatitude();
             String longitude = lead.getLongitude();
             String leadName = lead.getName();
+            String leadAddress = lead.getAddress();
             // Create intent to start MapActivity
             Intent intent = new Intent(this, MapsActivity.class);
 
@@ -114,7 +115,7 @@ public class LeadDetailActivity extends DrawerBaseActivity {
             intent.putExtra("latitude", latitude);
             intent.putExtra("longitude", longitude);
             intent.putExtra("name", leadName);
-
+            intent.putExtra("address", leadAddress);
 
             startActivity(intent);
         });

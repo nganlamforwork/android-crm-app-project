@@ -12,6 +12,7 @@ import hcmus.android.crm.R;
 import hcmus.android.crm.activities.Calendar.WeekViewActivity;
 import hcmus.android.crm.activities.DrawerBaseActivity;
 import hcmus.android.crm.activities.Main.adapters.Calendar.CalendarAdapter;
+import hcmus.android.crm.activities.Search.SearchActivity;
 import hcmus.android.crm.databinding.ActivityMainBinding;
 import hcmus.android.crm.services.EventSchedulerService;
 import hcmus.android.crm.utilities.CalendarUtils;
@@ -20,6 +21,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 import java.time.LocalDate;
@@ -68,7 +70,7 @@ public class MainActivity extends DrawerBaseActivity implements CalendarAdapter.
             if(result == JobScheduler.RESULT_SUCCESS) {
                 showToast("Event is updated", 0);
             } else {
-                showToast("An error occured and failed to start event jobs scheduler", 0);
+                showToast("An error occurred and failed to start event jobs scheduler", 0);
             }
         }
     }
@@ -135,5 +137,19 @@ public class MainActivity extends DrawerBaseActivity implements CalendarAdapter.
                         .update(Constants.KEY_FCM_TOKEN, token);
             }
         });
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        if (id == R.id.action_search) {
+            Intent intent = new Intent(this, SearchActivity.class);
+            startActivity(intent);
+
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 }

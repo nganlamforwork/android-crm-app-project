@@ -19,10 +19,12 @@ import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 
+import hcmus.android.crm.activities.Contacts.adapters.ContactAdapter;
 import hcmus.android.crm.R;
 import hcmus.android.crm.activities.DrawerBaseActivity;
 import hcmus.android.crm.activities.Leads.adapters.LeadAdapter;
 import hcmus.android.crm.databinding.ActivitySearchBinding;
+import hcmus.android.crm.models.Contact;
 import hcmus.android.crm.models.Lead;
 import hcmus.android.crm.utilities.Constants;
 import hcmus.android.crm.utilities.PreferenceManager;
@@ -31,6 +33,8 @@ public class SearchActivity extends DrawerBaseActivity {
     private ActivitySearchBinding searchBinding;
     private RecyclerView leadRecyclerView;
     private LeadAdapter leadAdapter;
+    private RecyclerView contactRecyclerView;
+    private ContactAdapter contactAdapter;
     private FirebaseFirestore db;
     private PreferenceManager preferenceManager;
     private EditText searchInput;
@@ -49,8 +53,10 @@ public class SearchActivity extends DrawerBaseActivity {
         preferenceManager = new PreferenceManager(getApplicationContext());
 
         leadRecyclerView = searchBinding.leadRecyclerView;
+        contactRecyclerView = searchBinding.contactRecyclerView;
         db = FirebaseFirestore.getInstance();
         setupLeadRecyclerView();
+        setupContactRecyclerView();
 
         searchInput = searchBinding.searchInput;
         Toolbar toolbar = searchBinding.appBar.toolbar;
@@ -102,6 +108,21 @@ public class SearchActivity extends DrawerBaseActivity {
         leadAdapter.startListening(); // Start listening for data changes
     }
 
+    private void setupContactRecyclerView() {
+        Query query = db.collection(Constants.KEY_COLLECTION_USERS)
+                .document(preferenceManager.getString(Constants.KEY_USER_ID))
+                .collection(Constants.KEY_COLLECTION_CONTACTS)
+                .orderBy("createdAt", Query.Direction.DESCENDING);
+
+        FirestoreRecyclerOptions<Contact> options = new FirestoreRecyclerOptions.Builder<Contact>()
+                .setQuery(query, Contact.class).build();
+
+        contactRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        contactAdapter = new ContactAdapter(options, this);
+        contactRecyclerView.setAdapter(contactAdapter);
+        contactAdapter.startListening(); // Start listening for data changes
+    }
+
     private void listenerSearching() {
         searchInput.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -117,6 +138,7 @@ public class SearchActivity extends DrawerBaseActivity {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 leadAdapter.getFilter().filter(s.toString());
+                contactAdapter.getFilter().filter(s.toString());
                 Log.d("SearchActivity", s.toString());
             }
 

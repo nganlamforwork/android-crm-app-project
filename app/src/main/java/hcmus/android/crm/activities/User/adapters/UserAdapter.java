@@ -43,6 +43,8 @@ public class UserAdapter extends FirestoreRecyclerAdapter<User, UserAdapter.User
             byte[] bytes = Base64.decode(model.getImage(), Base64.DEFAULT);
             Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
             holder.userImage.setImageBitmap(bitmap);
+        } else {
+            holder.userImage.setImageResource(R.drawable.avatar);
         }
 
         holder.itemView.setOnClickListener(v -> {
