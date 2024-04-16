@@ -138,6 +138,7 @@ public class SearchActivity extends DrawerBaseActivity {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 leadAdapter.getFilter().filter(s.toString());
+                contactAdapter.getFilter().filter(s.toString());
                 Log.d("SearchActivity", s.toString());
             }
 

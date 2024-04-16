@@ -23,6 +23,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.provider.ContactsContract;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -145,6 +146,7 @@ public class ContactActivity extends DrawerBaseActivity {
         recyclerView.setAdapter(contactAdapter);
         contactAdapter.startListening();
     }
+
     private void checkIfListEmpty(Query query) {
         query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
@@ -166,7 +168,7 @@ public class ContactActivity extends DrawerBaseActivity {
     protected void onResume() {
         super.onResume();
         navigationView.setCheckedItem(R.id.nav_contact);
-        if (contactAdapter != null)  {
+        if (contactAdapter != null) {
             contactAdapter.notifyDataSetChanged();
         }
     }
@@ -250,7 +252,7 @@ public class ContactActivity extends DrawerBaseActivity {
             //After this point you wait for callback in onRequestPermissionsResult(int, String[], int[]) overriden method
         } else {
             // Android version is lesser than 6.0 or the permission is already granted.
-            List<Contact> contacts = getContactNames();
+            List<Contact> contacts = getContactFromPhone();
 
             for (Contact column : contacts) {
                 db.collection(Constants.KEY_COLLECTION_USERS)
@@ -285,76 +287,113 @@ public class ContactActivity extends DrawerBaseActivity {
         }
     }
 
-    private List<Contact> getContactNames() {
-        String[] projection = {
-                ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME,
-                ContactsContract.CommonDataKinds.Phone.NUMBER,
-                ContactsContract.CommonDataKinds.Phone.PHOTO_URI
+    @SuppressLint("Range")
+    private List<Contact> getContactFromPhone() {
+        String DISPLAY_NAME = Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB ?
+                ContactsContract.Contacts.DISPLAY_NAME_PRIMARY : ContactsContract.Contacts.DISPLAY_NAME;
+
+        String FILTER = DISPLAY_NAME + " NOT LIKE '%@%'";
+
+        String ORDER = String.format("%1$s COLLATE NOCASE", DISPLAY_NAME);
+
+        String[] PROJECTION = {
+                ContactsContract.Contacts._ID,
+                DISPLAY_NAME,
+                ContactsContract.Contacts.HAS_PHONE_NUMBER
         };
-        List<Contact> contacts = new ArrayList<>();
 
-        // Get the ContentResolver
-        ContentResolver cr = getContentResolver();
+        try {
+            ArrayList<Contact> contacts = new ArrayList<>();
 
-        // Get the Cursor of all the contacts
-        Cursor cursor = cr.query(
-                ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
-                projection,
-                null,
-                null,
-                null
-        );
+            ContentResolver cr = getContentResolver();
+            Cursor cursor = cr.query(ContactsContract.Contacts.CONTENT_URI, PROJECTION, FILTER, null, ORDER);
+            if (cursor != null && cursor.moveToFirst()) {
 
-        // Move the cursor to the first item
-        if (cursor != null && cursor.moveToFirst()) {
-            // Iterate through the cursor
-            do {
-                // Get the contact's name, phone, and image URI
-                @SuppressLint("Range") String name = cursor.getString(cursor.getColumnIndex(projection[0]));
-                @SuppressLint("Range") String phone = cursor.getString(cursor.getColumnIndex(projection[1]));
-                @SuppressLint("Range") String img = cursor.getString(cursor.getColumnIndex(projection[2]));
+                do {
+                    // get the contact's information
+                    @SuppressLint("Range") String id = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts._ID));
+                    @SuppressLint("Range") String name = cursor.getString(cursor.getColumnIndex(DISPLAY_NAME));
+                    @SuppressLint("Range") Integer hasPhone = cursor.getInt(cursor.getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER));
 
-                String encodedImage;
-
-                // Check if image URI is not null
-                if (img != null) {
-                    try {
-                        // Open an input stream from the image URI
-                        InputStream inputStream = getContentResolver().openInputStream(Uri.parse(img));
-
-                        // Decode the input stream into a Bitmap
-                        Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
-
-                        // Encode the bitmap to a base64 string (if needed)
-                        encodedImage = encodeImage(bitmap);
-
-                        System.out.println(encodedImage);
-                    } catch (FileNotFoundException e) {
-                        // Handle FileNotFoundException appropriately
-                        e.printStackTrace();
-                        continue; // Move to the next iteration
+                    // get the user's email address
+                    String email = null;
+                    Cursor ce = cr.query(ContactsContract.CommonDataKinds.Email.CONTENT_URI, null,
+                            ContactsContract.CommonDataKinds.Email.CONTACT_ID + " = ?", new String[]{id}, null);
+                    if (ce != null && ce.moveToFirst()) {
+                        email = ce.getString(ce.getColumnIndex(ContactsContract.CommonDataKinds.Email.DATA));
+                        ce.close();
                     }
-                } else {
-                    // Handle case where image URI is null
-                    encodedImage = ""; // Or handle this according to your requirements
-                }
 
-                // Update the ImageView with the selected image
-                Contact newContact = new Contact();
-                newContact.setName(name);
-                newContact.setPhone(phone);
-                newContact.setImage(encodedImage);
+                    // get the user's phone number
+                    String phone = null;
+                    if (hasPhone > 0) {
+                        Cursor cp = cr.query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null,
+                                ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = ?", new String[]{id}, null);
+                        if (cp != null && cp.moveToFirst()) {
+                            phone = cp.getString(cp.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
+                            cp.close();
+                        }
+                    }
 
-                if (!checkPhoneExist(newContact)) {
-                    // Add the name to the list of contacts
-                    contacts.add(newContact);
-                }
-            } while (cursor.moveToNext());
-            // Close the cursor
-            cursor.close();
+                    String img = null;
+                    if (hasPhone > 0) {
+                        Cursor ci = cr.query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null,
+                                ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = ?", new String[]{id}, null);
+                        if (ci != null && ci.moveToFirst()) {
+                            img = ci.getString(ci.getColumnIndex(ContactsContract.CommonDataKinds.Phone.PHOTO_URI));
+                            ci.close();
+                        }
+                    }
+
+                    String encodedImage;
+
+                    // Check if image URI is not null
+                    if (img != null) {
+                        try {
+                            // Open an input stream from the image URI
+                            InputStream inputStream = getContentResolver().openInputStream(Uri.parse(img));
+
+                            // Decode the input stream into a Bitmap
+                            Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
+
+                            // Encode the bitmap to a base64 string (if needed)
+                            encodedImage = encodeImage(bitmap);
+
+                            System.out.println(encodedImage);
+                        } catch (FileNotFoundException e) {
+                            // Handle FileNotFoundException appropriately
+                            e.printStackTrace();
+                            continue; // Move to the next iteration
+                        }
+                    } else {
+                        // Handle case where image URI is null
+                        encodedImage = ""; // Or handle this according to your requirements
+                    }
+
+
+                    // if the user user has an email or phone then add it to contacts
+                    if ((!TextUtils.isEmpty(email) && android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()
+                            && !email.equalsIgnoreCase(name)) || (!TextUtils.isEmpty(phone))) {
+                        Contact contact = new Contact();
+                        contact.setName(name);
+                        contact.setEmail(email);
+                        contact.setPhone(phone);
+                        contact.setImage(encodedImage);
+                        if (!checkPhoneExist(contact)) {
+                            contacts.add(contact);
+                        }
+                    }
+
+                } while (cursor.moveToNext());
+
+                // clean up cursor
+                cursor.close();
+            }
+
+            return contacts;
+        } catch (Exception ex) {
+            return null;
         }
-
-        return contacts;
     }
 
     private boolean checkPhoneExist(Contact newContact) {
@@ -384,11 +423,11 @@ public class ContactActivity extends DrawerBaseActivity {
     }
 
     private void setAnimation(boolean clicked) {
-        if (!clicked){
+        if (!clicked) {
             binding.manualButton.startAnimation(fromBottom);
             binding.syncButton.startAnimation(fromBottom);
             binding.fab.startAnimation(rotateOpen);
-        }else{
+        } else {
             binding.manualButton.startAnimation(toBottom);
             binding.syncButton.startAnimation(toBottom);
             binding.fab.startAnimation(rotateClose);
