@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="oval">
+
+    <!-- Set the size of the thumb -->
+    <size
+        android:width="24dp"
+        android:height="24dp" />
+
+    <!-- Define the stroke (border) -->
+    <stroke
+        android:width="2dp"
+    android:color="@color/primary" />
+
+    <!-- Set the solid color to be transparent -->
+    <solid android:color="@android:color/transparent" />
+
+</shape>

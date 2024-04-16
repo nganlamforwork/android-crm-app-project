@@ -2,52 +2,44 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     tools:showIn="navigation_view">
-    <group android:checkableBehavior="single">
-        <item
-            android:id="@+id/nav_home"
-            android:icon="@drawable/baseline_home_24"
-            android:title="@string/home" />
-        <item
-            android:id="@+id/nav_business_card"
-            android:icon="@drawable/ic_business_card"
-            android:title="@string/business" />
-        <item
-            android:id="@+id/nav_leads"
-            android:icon="@drawable/target"
-            android:title="@string/leads" />
-        <item
-            android:id="@+id/nav_contact"
-            android:icon="@drawable/baseline_contacts_24"
-            android:title="@string/contacts" />
-        <item
-            android:id="@+id/nav_organization"
-            android:icon="@drawable/organization"
-            android:title="@string/organization" />
-        <item
-            android:id="@+id/nav_coworkers"
-            android:icon="@drawable/baseline_work_24"
-            android:title="@string/coworkers" />
-        <item
-            android:id="@+id/nav_quotations"
-            android:icon="@drawable/quotation"
-            android:title="@string/quotations" />
-        <item
-            android:id="@+id/nav_sales"
-            android:icon="@drawable/sale"
-            android:title="@string/sales" />
-        <item
-            android:id="@+id/nav_territory"
-            android:icon="@drawable/territory"
-            android:title="@string/territory" />
-    </group>
+    <item android:title="@string/dashboard">
+        <menu>
+            <group android:checkableBehavior="single">
+                <item
+                    android:id="@+id/nav_home"
+                    android:icon="@drawable/baseline_home_24"
+                    android:title="@string/home" />
+                <item
+                    android:id="@+id/nav_business_card"
+                    android:icon="@drawable/ic_business_card"
+                    android:title="@string/business" />
+                <item
+                    android:id="@+id/nav_leads"
+                    android:icon="@drawable/target"
+                    android:title="@string/leads" />
+                <item
+                    android:id="@+id/nav_contact"
+                    android:icon="@drawable/baseline_contacts_24"
+                    android:title="@string/contacts" />
+                <item
+                    android:id="@+id/nav_opportunity"
+                    android:icon="@drawable/baseline_work_24"
+                    android:title="Opportunity" />
+                <item
+                    android:id="@+id/nav_sales"
+                    android:icon="@drawable/sale"
+                    android:title="@string/sales" />
+            </group>
+        </menu>
+    </item>
 
     <item android:title="@string/communicate">
         <menu>
             <group android:checkableBehavior="single">
                 <item
-                    android:id="@+id/nav_communications"
-                    android:icon="@drawable/baseline_communication_alt_24"
-                    android:title="@string/communications" />
+                    android:id="@+id/nav_coworkers"
+                    android:icon="@drawable/baseline_work_24"
+                    android:title="@string/coworkers" />
                 <item
                     android:id="@+id/nav_sales_forecast"
                     android:icon="@drawable/sale_forecast"

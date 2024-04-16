@@ -36,9 +36,20 @@
         android:theme="@style/Theme.CRM"
         tools:targetApi="31">
         <activity
+            android:name=".activities.Opportunity.OpportunityDetailActivity"
+            android:exported="false"
+            android:parentActivityName=".activities.Opportunity.OpportunityActivity" />
+        <activity
+            android:name=".activities.Opportunity.CreateOpportunityActivity"
+            android:exported="false"
+            android:parentActivityName=".activities.Opportunity.OpportunityActivity" />
+        <activity
+            android:name=".activities.Opportunity.OpportunityActivity"
+            android:exported="false" />
+        <activity
             android:name=".activities.Notes.CreateNoteActivity"
             android:exported="false"
-            android:parentActivityName=".activities.Notes.NoteActivity"/>
+            android:parentActivityName=".activities.Notes.NoteActivity" />
         <activity
             android:name=".activities.Notes.NoteActivity"
             android:exported="false"
@@ -174,6 +185,5 @@
             android:name=".services.EventSchedulerService"
             android:permission="android.permission.BIND_JOB_SERVICE" />
     </application>
-
 
 </manifest>

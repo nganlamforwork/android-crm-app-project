@@ -19,6 +19,7 @@ import android.os.Bundle;
 
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -143,6 +144,12 @@ public class ContactActivity extends DrawerBaseActivity {
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(contactAdapter);
+        recyclerView.addItemDecoration(
+                new DividerItemDecoration(
+                        recyclerView.getContext(),
+                        LinearLayoutManager.VERTICAL
+                )
+        );
         contactAdapter.startListening();
     }
     private void checkIfListEmpty(Query query) {
