@@ -71,10 +71,10 @@ dependencies {
 
     // Import the Firebase BoM
     implementation(platform("com.google.firebase:firebase-bom:32.7.3"))
-    implementation("com.google.firebase:firebase-firestore:24.11.0")
+    implementation("com.google.firebase:firebase-firestore:24.11.1")
     implementation("com.google.firebase:firebase-auth:22.3.1")
     implementation("com.firebaseui:firebase-ui-firestore:8.0.2")
-    implementation("com.google.firebase:firebase-storage-ktx:20.1.0")
+    implementation("com.google.firebase:firebase-storage-ktx:20.3.0")
     implementation("com.google.firebase:firebase-messaging:23.4.1")
 
     // MultiDex
@@ -88,9 +88,6 @@ dependencies {
     // OK http
     implementation("com.squareup.okhttp3:okhttp:4.12.0")
     implementation("com.google.auth:google-auth-library-oauth2-http:1.19.0")
-
-    // Worker
-    implementation("androidx.work:work-runtime:2.9.0")
 
     // CSV Reader
     implementation("com.opencsv:opencsv:5.6")

@@ -34,7 +34,6 @@ public class MainActivity extends DrawerBaseActivity implements CalendarAdapter.
     private RecyclerView calendarRecyclerView;
     private CalendarAdapter calendarAdapter;
 
-    private int lastClickedPosition = -1;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,7 +49,7 @@ public class MainActivity extends DrawerBaseActivity implements CalendarAdapter.
 
         setMonthView();
         getFCMToken();
-       // scheduleEventUpdate();
+        scheduleEventUpdate();
     }
     private void scheduleEventUpdate() {
         JobScheduler jobScheduler = getSystemService(JobScheduler.class);
@@ -61,7 +60,7 @@ public class MainActivity extends DrawerBaseActivity implements CalendarAdapter.
             info.setRequiresBatteryNotLow(true);
         }
         info.setRequiredNetworkType(JobInfo.NETWORK_TYPE_NONE);
-        info.setPeriodic(60 * 60 * 1000);
+        info.setPeriodic(60 * 60 * 1000); // Every 1 hour
 
         if(jobScheduler != null) {
             int result = jobScheduler.schedule(info.build());

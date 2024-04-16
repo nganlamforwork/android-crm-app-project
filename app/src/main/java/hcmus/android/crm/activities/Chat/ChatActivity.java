@@ -226,14 +226,13 @@ public class ChatActivity extends DrawerBaseActivity {
 
     private String getAccessToken() throws IOException {
         // Access the file from the raw folder
-//        Resources resources = getResources();
-//        InputStream inputStream = resources.openRawResource(R.raw.service_account);
-//
-//        //InputStream inputStream = new ByteArrayInputStream(serviceAccountJson.getBytes(StandardCharsets.UTF_8));
-//        GoogleCredentials googleCredentials = GoogleCredentials
-//                .fromStream(inputStream)
-//                .createScoped(Arrays.asList(Constants.SCOPES));
-//        googleCredentials.refresh();
+        Resources resources = getResources();
+        InputStream inputStream = resources.openRawResource(R.raw.service_account);
+
+        GoogleCredentials googleCredentials = GoogleCredentials
+                .fromStream(inputStream)
+                .createScoped(Arrays.asList(Constants.SCOPES));
+        googleCredentials.refresh();
         return" googleCredentials.getAccessToken().getTokenValue()";
     }
 
