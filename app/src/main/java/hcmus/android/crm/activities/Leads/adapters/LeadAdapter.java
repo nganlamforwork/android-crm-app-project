@@ -111,9 +111,6 @@ public class LeadAdapter extends FirestoreRecyclerAdapter<Lead, LeadAdapter.Lead
 
                 if (charString.isEmpty()) {
                     filterResults.values = leadList;
-                    for(Lead index:leadList){
-                        Log.d("buggg","chat");
-                    }
                 } else {
                     List<Lead> filteredList = new ArrayList<>();
                     for (Lead lead : leadList) {

@@ -30,7 +30,9 @@ import java.util.List;
 
 import hcmus.android.crm.R;
 import hcmus.android.crm.activities.Contacts.ContactDetailActivity;
+import hcmus.android.crm.activities.Search.SearchActivity;
 import hcmus.android.crm.models.Contact;
+import hcmus.android.crm.models.Lead;
 import hcmus.android.crm.utilities.Constants;
 
 public class ContactAdapter extends FirestoreRecyclerAdapter<Contact, ContactAdapter.ContactViewHolder> implements Filterable {
@@ -105,6 +107,7 @@ public class ContactAdapter extends FirestoreRecyclerAdapter<Contact, ContactAda
             @Override
             protected FilterResults performFiltering(CharSequence charSequence) {
                 String charString = charSequence.toString().toLowerCase();
+                String selectedFilter = SearchActivity.selectedFilter;
                 FilterResults filterResults = new FilterResults();
 
                 if (charString.isEmpty()) {
@@ -113,8 +116,7 @@ public class ContactAdapter extends FirestoreRecyclerAdapter<Contact, ContactAda
                     List<Contact> filteredList = new ArrayList<>();
 
                     for (Contact contact : contactList) {
-                        if (contact.getName() != null && contact.getName().toLowerCase().contains(charString) ||
-                                contact.getPhone() != null && contact.getPhone().toLowerCase().contains(charString)) {
+                        if (contactMatchesFilter(contact, charString, selectedFilter)) {
                             filteredList.add(contact);
                         }
                     }
@@ -155,6 +157,20 @@ public class ContactAdapter extends FirestoreRecyclerAdapter<Contact, ContactAda
             return contactListFiltered.size();
         } else {
             return 0; // or return a default value, depending on your logic
+        }
+    }
+
+    private boolean contactMatchesFilter(Contact contact, String filterText, String selectedFilter) {
+        // Check if the lead attribute matches the filter text based on the selected filter option
+        switch (selectedFilter) {
+            case "Name":
+                return contact.getName().toLowerCase().contains(filterText);
+            case "Phone":
+                return contact.getPhone().toLowerCase().contains(filterText);
+            case "Email":
+                return contact.getEmail().toLowerCase().contains(filterText);
+            default:
+                return false;
         }
     }
 }
