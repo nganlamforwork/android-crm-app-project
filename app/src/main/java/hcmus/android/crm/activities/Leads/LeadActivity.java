@@ -20,6 +20,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -102,6 +103,12 @@ public class LeadActivity extends DrawerBaseActivity {
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(leadAdapter);
+        recyclerView.addItemDecoration(
+                new DividerItemDecoration(
+                        recyclerView.getContext(),
+                        LinearLayoutManager.VERTICAL
+                )
+        );
         leadAdapter.startListening();
     }
 
