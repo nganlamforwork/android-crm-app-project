@@ -13,8 +13,6 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -32,7 +30,6 @@ import hcmus.android.crm.utilities.Constants;
 public class BusinessCardActivity extends DrawerBaseActivity {
     private ActivityBusinessCardBinding binding;
     private FirebaseFirestore db;
-    private RecyclerView recyclerView;
     private String businessCardId;
     private TextView textDeleteCard;
 
@@ -164,7 +161,33 @@ public class BusinessCardActivity extends DrawerBaseActivity {
         db.collection(Constants.KEY_COLLECTION_USERS)
                 .document(preferenceManager.getString(Constants.KEY_USER_ID))
                 .collection(Constants.KEY_COLLECTION_CARDS)
-                .document(businessCardId).delete();
+                .document(businessCardId).delete()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        showToast("Business card deleted successfully!", Toast.LENGTH_SHORT);
+                        // Call the method to update the UI
+                        updateUI();
+                    } else {
+                        showToast("Error deleting business card!", Toast.LENGTH_SHORT);
+                    }
+                });
         showToast("Business card deleted successfully!", 0);
+    }
+    private void updateUI() {
+        // Hide the business card container
+        binding.cardContainer.setVisibility(View.GONE);
+
+        // Clear all card information
+        binding.textViewFullname.setText("");
+        binding.textViewCompany.setText("");
+        binding.textViewJobTitle.setText("");
+        binding.textViewEmail.setText("");
+        binding.textViewPhone.setText("");
+
+        // Hide QR code image view
+        binding.qrCodeImageView.setVisibility(View.GONE);
+
+        // Show the no-card container
+        binding.noCardContainer.setVisibility(View.VISIBLE);
     }
 }
