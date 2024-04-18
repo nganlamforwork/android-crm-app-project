@@ -36,6 +36,12 @@
         android:theme="@style/Theme.CRM"
         tools:targetApi="31">
         <activity
+            android:name=".activities.Tags.AddNewTagActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.Tags.TagsActivity"
+            android:exported="false" />
+        <activity
             android:name=".activities.Opportunity.OpportunityDetailActivity"
             android:exported="false"
             android:parentActivityName=".activities.Opportunity.OpportunityActivity" />
