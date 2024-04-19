@@ -45,6 +45,7 @@ public class Tag implements Parcelable {
         }
     };
 
+    @Exclude
     public String getId() {
         return id;
     }

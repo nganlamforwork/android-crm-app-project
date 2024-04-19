@@ -23,6 +23,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.List;
 
 import hcmus.android.crm.R;
+import hcmus.android.crm.activities.Tags.TagDetailActivity;
 import hcmus.android.crm.models.Tag;
 import hcmus.android.crm.utilities.Constants;
 
@@ -48,11 +49,11 @@ public class TagAdapter extends FirestoreRecyclerAdapter<Tag, TagAdapter.TagView
                     .getSnapshot(holder.getAbsoluteAdapterPosition());
             tagId = snapshot.getId();
 
-//            Intent intent = new Intent(context, TagDetailActivity.class);
-//            intent.putExtra("tagDetails", model);
-//            intent.putExtra("tagId", tagId);
-//            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//            context.startActivity(intent);
+            Intent intent = new Intent(context, TagDetailActivity.class);
+            intent.putExtra("tagDetail", model);
+            intent.putExtra("tagId", tagId);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            context.startActivity(intent);
         });
     }
 
