@@ -36,6 +36,15 @@
                 android:textSize="@dimen/_13ssp" />
 
         </com.google.android.material.textfield.TextInputLayout>
+
+        <TextView
+            android:id="@+id/textDeleteTag"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="Delete this tag"
+            android:textColor="@color/error"
+            android:textSize="16sp" />
         <TextView
             android:layout_height="wrap_content"
             android:layout_width="wrap_content"

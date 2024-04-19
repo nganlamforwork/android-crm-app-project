@@ -2,6 +2,7 @@ package hcmus.android.crm.activities.Tags;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.DividerItemDecoration;
@@ -9,6 +10,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
@@ -23,6 +25,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.Map;
@@ -91,6 +94,66 @@ public class TagDetailActivity extends DrawerBaseActivity {
 
     private void setListeners() {
         tagTitle.addTextChangedListener(new TagDetailActivity.FieldTextWatcher());
+
+        binding.textDeleteTag.setOnClickListener(v -> {
+            showDeleteConfirmationDialog();
+        });
+    }
+
+    private void showDeleteConfirmationDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Delete Tag");
+        builder.setMessage("Are you sure you want to delete this tag? All leads with this tag will be affected.");
+        builder.setPositiveButton("Delete", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                deleteTag();
+            }
+        });
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        builder.create().show();
+    }
+
+    private void deleteTag() {
+        // Get all leads of this tags
+        db.collection(Constants.KEY_COLLECTION_USERS)
+                .document(preferenceManager.getString(Constants.KEY_USER_ID))
+                .collection(Constants.KEY_COLLECTION_LEADS)
+                .whereEqualTo("tagId", tagId)
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        for (QueryDocumentSnapshot document : task.getResult()) {
+                            String leadId = document.getId();
+                            // TagId = null
+                            db.collection(Constants.KEY_COLLECTION_USERS)
+                                    .document(preferenceManager.getString(Constants.KEY_USER_ID))
+                                    .collection(Constants.KEY_COLLECTION_LEADS)
+                                    .document(leadId)
+                                    .update("tagId", null)
+                                    .addOnSuccessListener(aVoid -> {
+                                    })
+                                    .addOnFailureListener(e -> {
+                                        showToast("Some leads' tags deletion failed!", 0);
+                                    });
+                        }
+                        // Delete tag after delete tag id out of leads
+                        db.collection(Constants.KEY_COLLECTION_USERS)
+                                .document(preferenceManager.getString(Constants.KEY_USER_ID))
+                                .collection(Constants.KEY_COLLECTION_TAGS)
+                                .document(tagId).delete();
+
+                        showToast("Delete tag successfully!", 0);
+                        finish();
+                    } else {
+                        showToast("Failed to fetch leads of tag", 0);
+                    }
+                });
     }
 
     private void setupLeadRecyclerView() {
