@@ -36,6 +36,10 @@
         android:theme="@style/Theme.CRM"
         tools:targetApi="31">
         <activity
+            android:name=".activities.Reminder.AddNewReminderActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.Reminder.ReminderActivity"
             android:name=".activities.Tags.TagDetailActivity"
             android:exported="false" />
         <activity
@@ -193,6 +197,9 @@
         <service
             android:name=".services.EventSchedulerService"
             android:permission="android.permission.BIND_JOB_SERVICE" />
+
+        <receiver android:name=".activities.Reminder.Receiver.ReminderAlarmReceiver"/>
+
     </application>
 
 </manifest>
