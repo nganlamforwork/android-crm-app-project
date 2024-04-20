@@ -1,5 +1,7 @@
 package hcmus.android.crm.activities.Leads;
 
+import static android.content.ContentValues.TAG;
+
 import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -9,9 +11,11 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Base64;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.Manifest;
+import android.widget.Toast;
 
 import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
@@ -23,6 +27,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import hcmus.android.crm.R;
@@ -92,6 +97,32 @@ public class LeadDetailActivity extends DrawerBaseActivity {
         binding.leadEmail.setText(updatedLead.getEmail());
         binding.leadAddress.setText(updatedLead.getAddress());
         binding.leadNotes.setText(updatedLead.getNotes());
+
+        String tagId = updatedLead.getTagId();
+
+        if (tagId != null && !tagId.isEmpty()) {
+            db.collection(Constants.KEY_COLLECTION_USERS)
+                    .document(preferenceManager.getString(Constants.KEY_USER_ID))
+                    .collection(Constants.KEY_COLLECTION_TAGS)
+                    .document(tagId)
+                    .get()
+                    .addOnCompleteListener(task -> {
+                        if (task.isSuccessful()) {
+                            DocumentSnapshot document = task.getResult();
+                            if (document.exists()) {
+                                String tagTitle = document.getString("title");
+                                binding.leadTag.setText(tagTitle);
+                            } else {
+                                binding.leadTag.setText("Not found!");
+                            }
+                        } else {
+                            Log.d(TAG, "get failed with ", task.getException());
+                            showToast("Failed to fetch tag", Toast.LENGTH_SHORT);
+                        }
+                    });
+        } else {
+            binding.leadTag.setText("None");
+        }
 
         if (lead.getImage() != null && !lead.getImage().isEmpty()) {
             byte[] bytes = Base64.decode(lead.getImage(), Base64.DEFAULT);
