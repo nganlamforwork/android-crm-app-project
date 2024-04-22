@@ -65,8 +65,8 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/leadRecyclerView"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:minHeight="200dp"
             android:dividerHeight="20dp" />
 
         <TextView
@@ -81,8 +81,8 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/contactRecyclerView"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:minHeight="200dp"
             android:dividerHeight="20dp" />
 
 

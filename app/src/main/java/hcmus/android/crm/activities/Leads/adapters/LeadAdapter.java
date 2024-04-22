@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.hardware.camera2.CaptureRequest;
 import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -16,10 +17,12 @@ import android.widget.Filterable;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.google.android.material.chip.Chip;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -27,6 +30,7 @@ import com.makeramen.roundedimageview.RoundedImageView;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import hcmus.android.crm.R;
 import hcmus.android.crm.activities.Leads.LeadDetailActivity;
@@ -74,12 +78,35 @@ public class LeadAdapter extends FirestoreRecyclerAdapter<Lead, LeadAdapter.Lead
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             context.startActivity(intent);
         });
+
+        long currentDayMillis = System.currentTimeMillis();
+        long leadCreationMillis = lead.getCreatedAt().getTime(); // Convert Date to milliseconds
+        long timeDifferenceMillis = currentDayMillis - leadCreationMillis;
+        long timeDifferenceDays = TimeUnit.MILLISECONDS.toDays(timeDifferenceMillis);
+
+        if (timeDifferenceDays <= 7) {
+            holder.chip.setText("Recently Added");
+            holder.chip.setTextColor(ContextCompat.getColor(context, R.color.recently_added_text_color));
+            holder.chip.setChipBackgroundColorResource(R.color.recently_added_chip_background_color);
+            holder.chip.setChipStrokeColorResource(R.color.recently_added_text_color);
+        } else if (timeDifferenceDays <= 30) {
+            holder.chip.setText("Over 7 days");
+            holder.chip.setTextColor(ContextCompat.getColor(context, R.color.days_ago_text_color));
+            holder.chip.setChipBackgroundColorResource(R.color.days_ago_chip_background_color);
+            holder.chip.setChipStrokeColorResource(R.color.days_ago_text_color);
+        } else {
+            holder.chip.setText("Over 30 days");
+            holder.chip.setTextColor(ContextCompat.getColor(context, R.color.over_seven_days_text_color));
+            holder.chip.setChipBackgroundColorResource(R.color.over_seven_days_chip_background_color);
+            holder.chip.setChipStrokeColorResource(R.color.over_seven_days_text_color);
+        }
+
     }
 
     @NonNull
     @Override
     public LeadViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.activity_custom_list_view, parent, false);
+        View view = LayoutInflater.from(context).inflate(R.layout.custom_list_view_w_chip, parent, false);
         return new LeadAdapter.LeadViewHolder(view);
     }
 
@@ -154,6 +181,7 @@ public class LeadAdapter extends FirestoreRecyclerAdapter<Lead, LeadAdapter.Lead
     }
 
     public static class LeadViewHolder extends RecyclerView.ViewHolder {
+        Chip chip;
         TextView leadName, leadPhone;
         RoundedImageView leadImage;
 
@@ -163,6 +191,7 @@ public class LeadAdapter extends FirestoreRecyclerAdapter<Lead, LeadAdapter.Lead
             leadName = itemView.findViewById(R.id.nameLabel);
             leadPhone = itemView.findViewById(R.id.phoneLabel);
             leadImage = itemView.findViewById(R.id.imageIcon);
+            chip = itemView.findViewById(R.id.chip);
         }
     }
 
