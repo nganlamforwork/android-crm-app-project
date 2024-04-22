@@ -3,6 +3,7 @@ package hcmus.android.crm.utilities;
 public class Constants {
     public static final String KEY_COLLECTION_USERS = "users";
     public static final String KEY_COLLECTION_LEADS = "leads";
+    public static final String KEY_COLLECTION_TAGS = "tags";
     public static final String KEY_COLLECTION_CARDS = "cards";
     public static final String KEY_COLLECTION_NOTES = "notes";
     public static final String KEY_COLLECTION_OPPORTUNITIES = "opportunities";
@@ -10,6 +11,8 @@ public class Constants {
     public static final String KEY_COLLECTION_EVENTS = "events";
     public static final String KEY_COLLECTION_CHAT_ROOMS = "chatrooms";
     public static final String KEY_COLLECTION_CHATS = "chats";
+    public static final String KEY_COLLECTION_REMINDERS = "reminders";
+
     public static final String KEY_FCM_TOKEN = "fcmToken";
 
     public static final String KEY_NAME = "name";
