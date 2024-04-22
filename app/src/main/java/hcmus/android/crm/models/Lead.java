@@ -41,6 +41,8 @@ public class Lead  implements Parcelable {
     @PropertyName("longitude")
     private String longitude;
 
+    @PropertyName("tagId")
+    private String tagId;
     @PropertyName("createdAt")
     @ServerTimestamp
     private Date createdAt;
@@ -61,6 +63,21 @@ public class Lead  implements Parcelable {
         this.notes = notes;
         this.latitude = latitude;
         this.longitude = longitude;
+        this.tagId = null;
+    }
+
+    public Lead(String name, String email, String phone, String address, String job, String company, String notes, String image, String latitude, String longitude, String tagId) {
+        this.name = name;
+        this.image = image;
+        this.email = email;
+        this.phone = phone;
+        this.address = address;
+        this.job = job;
+        this.company = company;
+        this.notes = notes;
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.tagId = tagId;
     }
 
     // Parcelable implementation
@@ -75,6 +92,7 @@ public class Lead  implements Parcelable {
         notes = in.readString();
         latitude = in.readString();
         longitude = in.readString();
+        tagId = in.readString();
         long tmpCreatedAt = in.readLong();
         createdAt = tmpCreatedAt == -1 ? null : new Date(tmpCreatedAt);
     }
@@ -175,7 +193,13 @@ public class Lead  implements Parcelable {
     public void setLongitude(String longitude) {
         this.longitude = longitude;
     }
+    public String getTagId() {
+        return tagId;
+    }
 
+    public void setTagId(String tagId) {
+        this.tagId = tagId;
+    }
     public Date getCreatedAt() {
         return createdAt;
     }
@@ -196,6 +220,7 @@ public class Lead  implements Parcelable {
         dest.writeString(notes);
         dest.writeString(latitude);
         dest.writeString(longitude);
+        dest.writeString(tagId);
         dest.writeLong(createdAt != null ? createdAt.getTime() : -1);
     }
 }

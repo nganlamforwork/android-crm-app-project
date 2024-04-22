@@ -39,7 +39,7 @@ public class SaleActivity extends DrawerBaseActivity {
     }
 
     private void showCharts() {
-        combinedChart = binding.combinedChart;
+
         combinedChart.getDescription().setEnabled(false);
         combinedChart.setDrawGridBackground(false);
         combinedChart.setDrawBarShadow(false);

@@ -74,6 +74,7 @@
     <string name="personal">Personal</string>
     <string name="business">Your Business Card</string>
     <string name="leads">Leads</string>
+    <string name="tags">Tags</string>
     <string name="organization">Organization</string>
     <string name="opportunity">Opportunity</string>
     <string name="quotations">Quotations</string>
@@ -90,24 +91,6 @@
     <string name="coworkers">Coworkers</string>
     <string name="dashboard">Dashboard</string>
     <string name="don_t_have_an_account">Don\'t have an account?</string>
-    <string-array name="years_array">
-        <item>2022</item>
-        <item>2023</item>
-        <item>2024</item>
-        <!-- Add more years as needed -->
-    </string-array>
-    <string-array name="months_array">
-        <item>January</item>
-        <item>February</item>
-        <item>March</item>
-        <item>April</item>
-        <item>May</item>
-        <item>June</item>
-        <item>July</item>
-        <item>August</item>
-        <item>September</item>
-        <item>October</item>
-        <item>November</item>
-        <item>December</item>
-    </string-array>
+    <string name="reminder">Reminder</string>
+
 </resources>

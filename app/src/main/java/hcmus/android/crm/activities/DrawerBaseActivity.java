@@ -25,14 +25,16 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.messaging.FirebaseMessaging;
 
 import hcmus.android.crm.R;
-import hcmus.android.crm.activities.BusinessCard.BusinessCardActivity;
 import hcmus.android.crm.activities.Contacts.ContactActivity;
 import hcmus.android.crm.activities.Leads.LeadActivity;
 import hcmus.android.crm.activities.Main.MainActivity;
+import hcmus.android.crm.activities.BusinessCard.BusinessCardActivity;
 import hcmus.android.crm.activities.Main.SplashActivity;
 import hcmus.android.crm.activities.Opportunity.OpportunityActivity;
-import hcmus.android.crm.activities.Sales.SalesActivity;
+import hcmus.android.crm.activities.Reminder.ReminderActivity;
+import hcmus.android.crm.activities.Sales.SaleActivity;
 import hcmus.android.crm.activities.Settings.SettingActivity;
+import hcmus.android.crm.activities.Tags.TagsActivity;
 import hcmus.android.crm.activities.User.UserActivity;
 import hcmus.android.crm.utilities.Constants;
 import hcmus.android.crm.utilities.PreferenceManager;
@@ -120,6 +122,8 @@ public class DrawerBaseActivity extends AppCompatActivity implements NavigationV
             targetActivityClass = BusinessCardActivity.class;
         } else if (id == R.id.nav_leads) {
             targetActivityClass = LeadActivity.class;
+        }  else if (id == R.id.nav_tags) {
+            targetActivityClass = TagsActivity.class;
         } else if (id == R.id.nav_contact) {
             targetActivityClass = ContactActivity.class;
         } else if (id == R.id.nav_personal) {
@@ -127,9 +131,11 @@ public class DrawerBaseActivity extends AppCompatActivity implements NavigationV
         } else if (id == R.id.nav_opportunity) {
             targetActivityClass = OpportunityActivity.class;
         } else if (id == R.id.nav_sales) {
-            targetActivityClass = SalesActivity.class;
+            targetActivityClass = SaleActivity.class;
         } else if (id == R.id.nav_coworkers) {
             targetActivityClass = UserActivity.class;
+        } else if (id == R.id.nav_reminder) {
+            targetActivityClass = ReminderActivity.class;
         } else if (id == R.id.nav_logout) {
             logout();
             return true; // Return immediately after logout

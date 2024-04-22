@@ -267,25 +267,24 @@
             android:orientation="vertical"
             android:layout_marginTop="16dp">
 
-        <TextView
-            android:id="@+id/textViewAllNotes"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:text="View all notes"
-            android:textColor="@color/blue"
-            android:textSize="16sp" />
-        <TextView
-            android:id="@+id/textDeleteLead"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:text="Delete this lead"
-            android:textColor="@color/error"
-            android:textSize="16sp" />
+            <TextView
+                android:id="@+id/textViewAllNotes"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="View all notes"
+                android:textColor="@color/blue"
+                android:textSize="16sp" />
+            <TextView
+                android:id="@+id/textDeleteLead"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="Delete this lead"
+                android:textColor="@color/error"
+                android:textSize="16sp" />
         </LinearLayout>
 
     </LinearLayout>
 </LinearLayout>
-
 
