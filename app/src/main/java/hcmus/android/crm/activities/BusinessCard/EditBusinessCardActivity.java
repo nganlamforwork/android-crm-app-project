@@ -10,8 +10,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
-import android.widget.FrameLayout;
-import android.widget.Toast;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.widget.Toolbar;
@@ -25,25 +23,25 @@ import androidmads.library.qrgenearator.QRGContents;
 import androidmads.library.qrgenearator.QRGEncoder;
 import hcmus.android.crm.R;
 import hcmus.android.crm.activities.DrawerBaseActivity;
-import hcmus.android.crm.databinding.ActivityAddNewBussinessCardAcitivityBinding;
+import hcmus.android.crm.databinding.ActivityEditBusinessCardBinding;
 import hcmus.android.crm.models.BusinessCard;
 import hcmus.android.crm.utilities.Constants;
 
-public class AddNewBusinessCardActivity extends DrawerBaseActivity {
-    private ActivityAddNewBussinessCardAcitivityBinding binding;
+public class EditBusinessCardActivity extends DrawerBaseActivity {
+    private ActivityEditBusinessCardBinding binding;
     private EditText fullName, aboutMe, company, jobTitle, email, phone, note, cardName;
-    private MenuItem createMenuItem;
-    private FrameLayout logoImage;
-
+    private MenuItem saveMenuItem;
     private FirebaseFirestore db;
-    private QRGEncoder qrgEncoder;
+
+    private String businessCardId;
+    private BusinessCard businessCard;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setTitle("Add Business Card");
+        setTitle("Edit Business Card");
 
-        binding = ActivityAddNewBussinessCardAcitivityBinding.inflate(getLayoutInflater());
+        binding = ActivityEditBusinessCardBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
         Toolbar toolbar = binding.appBar.toolbar;
@@ -56,22 +54,30 @@ public class AddNewBusinessCardActivity extends DrawerBaseActivity {
         ActionBar actionBar = getSupportActionBar();
 
         if (actionBar != null) {
-            actionBar.setTitle("Add Business Card");
+            actionBar.setTitle("Edit Business Card");
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setDisplayShowHomeEnabled(true);
         }
-        setListeners();
 
+        Intent intent = this.getIntent();
+        if (intent != null) {
+            businessCardId = intent.getStringExtra("businessCardId");
+            businessCard = intent.getParcelableExtra("businessCard");
+
+            displayDataOnUI(businessCard);
+        }
+
+        setListeners();
     }
 
     private void setListeners() {
         // Add text change listeners to required fields
-        fullName.addTextChangedListener(new AddNewBusinessCardActivity.FieldTextWatcher());
-        email.addTextChangedListener(new AddNewBusinessCardActivity.FieldTextWatcher());
-        phone.addTextChangedListener(new AddNewBusinessCardActivity.FieldTextWatcher());
-        jobTitle.addTextChangedListener(new AddNewBusinessCardActivity.FieldTextWatcher());
-        company.addTextChangedListener(new AddNewBusinessCardActivity.FieldTextWatcher());
-        cardName.addTextChangedListener(new AddNewBusinessCardActivity.FieldTextWatcher());
+        fullName.addTextChangedListener(new EditBusinessCardActivity.FieldTextWatcher());
+        email.addTextChangedListener(new EditBusinessCardActivity.FieldTextWatcher());
+        phone.addTextChangedListener(new EditBusinessCardActivity.FieldTextWatcher());
+        jobTitle.addTextChangedListener(new EditBusinessCardActivity.FieldTextWatcher());
+        company.addTextChangedListener(new EditBusinessCardActivity.FieldTextWatcher());
+        cardName.addTextChangedListener(new EditBusinessCardActivity.FieldTextWatcher());
     }
 
     private void getElementsById() {
@@ -84,6 +90,19 @@ public class AddNewBusinessCardActivity extends DrawerBaseActivity {
         phone = binding.phone;
         note = binding.notes;
         cardName = binding.cardName;
+    }
+
+    private void displayDataOnUI(BusinessCard businessCard) {
+        if (businessCard != null) {
+            fullName.setText(businessCard.getFullname());
+            aboutMe.setText(businessCard.getAboutme());
+            company.setText(businessCard.getCompany());
+            jobTitle.setText(businessCard.getJobTitle());
+            email.setText(businessCard.getEmail());
+            phone.setText(businessCard.getPhone());
+            note.setText(businessCard.getNote());
+            cardName.setText(businessCard.getCardname());
+        }
     }
 
     protected void onResume() {
@@ -99,9 +118,9 @@ public class AddNewBusinessCardActivity extends DrawerBaseActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.create, menu);
-        createMenuItem = menu.findItem(R.id.action_create);
-        createMenuItem.setEnabled(false);
+        getMenuInflater().inflate(R.menu.save, menu);
+        saveMenuItem = menu.findItem(R.id.action_save);
+        saveMenuItem.setEnabled(false);
         return true;
     }
 
@@ -110,20 +129,20 @@ public class AddNewBusinessCardActivity extends DrawerBaseActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_create) {
-            addBusinessCardToFirestore();
-            return true;
+        if (id == R.id.action_save) {
+            if (isFieldsFilled()) {
+                updateBusinessCard();
+                return true;
+            } else {
+                showToast("Please fill in all required fields", 0);
+                return false;
+            }
         }
 
         return super.onOptionsItemSelected(item);
     }
-    public static String bitmapToBase64(Bitmap bitmap) {
-        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
-        byte[] byteArray = byteArrayOutputStream.toByteArray();
-        return Base64.encodeToString(byteArray, Base64.DEFAULT);
-    }
-    private void addBusinessCardToFirestore() {
+
+    private void updateBusinessCard() {
         String name = fullName.getText().toString().trim();
         String aboutMe = this.aboutMe.getText().toString().trim();
         String email = this.email.getText().toString().trim();
@@ -133,68 +152,51 @@ public class AddNewBusinessCardActivity extends DrawerBaseActivity {
         String note = this.note.getText().toString().trim();
         String cardName = this.cardName.getText().toString().trim();
 
-        BusinessCard newCard = new BusinessCard(name, aboutMe, companyName, job, email, phoneNumber, note, cardName);
+        businessCard.setFullname(name);
+        businessCard.setAboutme(aboutMe);
+        businessCard.setEmail(email);
+        businessCard.setPhone(phoneNumber);
+        businessCard.setJobTitle(job);
+        businessCard.setCompany(companyName);
+        businessCard.setNote(note);
+        businessCard.setCardname(cardName);
+        businessCard.setQrcode(null);
 
         // Object to Json
         Gson gson = new Gson();
-        String json = gson.toJson(newCard);
+        String json = gson.toJson(businessCard);
 
         // Get QR code for card information
-        QRGEncoder qrgEncoder = new QRGEncoder(json, null, QRGContents.Type.TEXT, 400);
-        try{
+        QRGEncoder qrgEncoder = new QRGEncoder(json, null, QRGContents.Type.TEXT, 600);
+        try {
             Bitmap bitmap = qrgEncoder.getBitmap(0);
-            if (bitmap != null){
+            if (bitmap != null) {
                 String base64String = bitmapToBase64(bitmap);
-                newCard.setQrcode(base64String);
-            }
-            else
+                businessCard.setQrcode(base64String);
+            } else
                 Log.d("Bitmap QR", "null");
-        }catch (Exception ignored){
+        } catch (Exception ignored) {
         }
 
-        // Add card to Firestore
         db.collection(Constants.KEY_COLLECTION_USERS)
                 .document(preferenceManager.getString(Constants.KEY_USER_ID))
                 .collection(Constants.KEY_COLLECTION_CARDS)
-                .add(newCard)
+                .document(businessCardId)
+                .set(businessCard)
                 .addOnSuccessListener(documentReference -> {
-                    // Reset fields
-                    resetFields();
-
-                    // Hide loading state
-                    loading(false);
-                    showToast("New business card added successful", 0);
-                    Intent intent = new Intent(this, BusinessCardActivity.class);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    startActivity(intent);
-                    finish();
+                    showToast("Business card updated successfully!", 0);
+                    onBackPressed();
                 })
                 .addOnFailureListener(e -> {
-                    // Handle failure, e.g., show error message
-                    loading(false);
-                    showToast("Failed to add new business card", 0);
+                    showToast("Failed to update business card!",0);
                 });
     }
 
-    private void resetFields() {
-        // Reset input fields
-        fullName.setText("");
-        aboutMe.setText("");
-        company.setText("");
-        jobTitle.setText("");
-        email.setText("");
-        phone.setText("");
-        note.setText("");
-        cardName.setText("");
-    }
-
-
-    private void loading(Boolean isLoading) {
-        if (isLoading) {
-            createMenuItem.setEnabled(false); // Disable createButton
-        } else {
-            createMenuItem.setEnabled(true); // Enable createButton
-        }
+    public static String bitmapToBase64(Bitmap bitmap) {
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
+        byte[] byteArray = byteArrayOutputStream.toByteArray();
+        return Base64.encodeToString(byteArray, Base64.DEFAULT);
     }
 
     private boolean isFieldsFilled() {
@@ -219,7 +221,7 @@ public class AddNewBusinessCardActivity extends DrawerBaseActivity {
         @Override
         public void afterTextChanged(Editable s) {
             // Enable/disable the button based on field content
-            createMenuItem.setEnabled(isFieldsFilled());
+            saveMenuItem.setEnabled(isFieldsFilled());
         }
     }
 }

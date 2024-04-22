@@ -20,6 +20,8 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.io.Serializable;
+
 import hcmus.android.crm.R;
 import hcmus.android.crm.activities.DrawerBaseActivity;
 import hcmus.android.crm.databinding.ActivityBusinessCardBinding;
@@ -32,6 +34,8 @@ public class BusinessCardActivity extends DrawerBaseActivity {
     private FirebaseFirestore db;
     private String businessCardId;
     private TextView textDeleteCard;
+    private BusinessCard businessCard;
+    private TextView textEditCard;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,6 +60,7 @@ public class BusinessCardActivity extends DrawerBaseActivity {
     protected void onResume() {
         super.onResume();
         navigationView.setCheckedItem(R.id.nav_business_card);
+        checkIfBusinessCardExists();
     }
 
     public void onCardViewClicked(View view) {
@@ -75,7 +80,7 @@ public class BusinessCardActivity extends DrawerBaseActivity {
                             if (task.getResult() != null && !task.getResult().isEmpty()) {
                                 DocumentSnapshot documentSnapshot = task.getResult().getDocuments().get(0);
                                 businessCardId = documentSnapshot.getId();
-                                BusinessCard businessCard = documentSnapshot.toObject(BusinessCard.class);
+                                businessCard = documentSnapshot.toObject(BusinessCard.class);
                                 if (businessCard != null) {
                                     updateCardView(businessCard);
                                 }
@@ -96,6 +101,7 @@ public class BusinessCardActivity extends DrawerBaseActivity {
         byte[] decodedBytes = Base64.decode(input, Base64.DEFAULT);
         return BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.length);
     }
+
     private void updateCardView(BusinessCard businessCard) {
         // Hide unnecessary views
         binding.noCardContainer.setVisibility(View.GONE);
@@ -123,12 +129,24 @@ public class BusinessCardActivity extends DrawerBaseActivity {
         }
 
         // Find the TextView by id
-        textDeleteCard = findViewById(R.id.textDeleteCard);
+        textDeleteCard = binding.textDeleteCard;
         textDeleteCard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // Call the method to show delete confirmation dialog
                 showDeleteConfirmationDialog();
+            }
+        });
+        textEditCard = binding.textEditCard;
+        textEditCard.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(BusinessCardActivity.this, EditBusinessCardActivity.class);
+
+                intent.putExtra("businessCardId", businessCardId);
+                intent.putExtra("businessCard", businessCard);
+
+                startActivity(intent);
             }
         });
     }
@@ -173,6 +191,7 @@ public class BusinessCardActivity extends DrawerBaseActivity {
                 });
         showToast("Business card deleted successfully!", 0);
     }
+
     private void updateUI() {
         // Hide the business card container
         binding.cardContainer.setVisibility(View.GONE);
