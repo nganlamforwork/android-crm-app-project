@@ -26,13 +26,12 @@ import hcmus.android.crm.activities.DrawerBaseActivity;
 import hcmus.android.crm.databinding.ActivitySettingBinding;
 import hcmus.android.crm.utilities.Constants;
 import hcmus.android.crm.utilities.PreferenceManager;
-import hcmus.android.crm.utilities.Utils;
 
-public class SettingActivity extends DrawerBaseActivity {
+public class SettingsActivity extends DrawerBaseActivity {
     private ActivitySettingBinding binding;
     ListView settingsOptions;
     // The n-th row in the list will consist of [icon, label] where icon = thumbnail[n] and label=items[n]
-    String[] options = {"Information", "Devices", "Notifications", "Appearance", "Language", "Privacy & Security", "Storage"};
+    String[] options = {"Information", "Appearance", "Language"};
     private String encodedImage;
     private PreferenceManager preferenceManager;
 
@@ -80,16 +79,15 @@ public class SettingActivity extends DrawerBaseActivity {
         settingsOptions.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                // Update selected item position
                 adapter.setSelectedItemPosition(position);
-
-                // Notify the adapter that the data set has changed
                 adapter.notifyDataSetChanged();
 
-                // Handle click event for "Information" item
                 if (position == 0) {
-                    // Create an Intent to navigate to SettingInformationActivity
-                    Intent intent = new Intent(SettingActivity.this, Information.class);
+                    Intent intent = new Intent(SettingsActivity.this, SettingsInformationActivity.class);
+                    startActivity(intent);
+                }
+                else if (position == 1){
+                    Intent intent = new Intent(SettingsActivity.this, SettingsAppearanceActivity.class);
                     startActivity(intent);
                 }
             }

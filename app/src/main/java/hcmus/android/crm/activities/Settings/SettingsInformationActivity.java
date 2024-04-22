@@ -35,7 +35,7 @@ import hcmus.android.crm.databinding.SettingInformationBinding;
 import hcmus.android.crm.utilities.Constants;
 import hcmus.android.crm.utilities.Utils;
 
-public class Information extends DrawerBaseActivity {
+public class SettingsInformationActivity extends DrawerBaseActivity {
     private SettingInformationBinding binding;
     EditText timezoneEditText;
     private FirebaseFirestore db;
@@ -118,7 +118,7 @@ public class Information extends DrawerBaseActivity {
 
     private void setListeners() {
         binding.passwordIcon.setOnClickListener(v -> {
-            Intent intent = new Intent(Information.this, ChangePasswordActivity.class);
+            Intent intent = new Intent(SettingsInformationActivity.this, ChangePasswordActivity.class);
             startActivity(intent);
         });
     }
@@ -132,7 +132,7 @@ public class Information extends DrawerBaseActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         if (isEditMode) {
-            getMenuInflater().inflate(R.menu.edit_infomation, menu);
+            getMenuInflater().inflate(R.menu.edit_information, menu);
         } else {
             menu.clear();
         }
