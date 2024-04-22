@@ -162,7 +162,7 @@
             android:parentActivityName=".activities.Main.MainActivity"
             android:windowSoftInputMode="adjustResize" />
         <activity
-            android:name=".activities.Sales.SaleActivity"
+            android:name=".activities.Sales.SalesActivity"
             android:exported="false"
             android:parentActivityName=".activities.Main.MainActivity"
             android:windowSoftInputMode="adjustResize" />

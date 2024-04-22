@@ -23,16 +23,12 @@ import android.text.TextWatcher;
 import android.util.Base64;
 import android.util.Log;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -47,28 +43,19 @@ import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.Priority;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.android.material.switchmaterial.SwitchMaterial;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QuerySnapshot;
 import com.makeramen.roundedimageview.RoundedImageView;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-import hcmus.android.crm.R;
 import hcmus.android.crm.activities.DrawerBaseActivity;
-import hcmus.android.crm.activities.Tags.StringWithTag;
 import hcmus.android.crm.databinding.ActivityAddNewLeadBinding;
-import hcmus.android.crm.models.BusinessCard;
 import hcmus.android.crm.models.Lead;
-import hcmus.android.crm.models.Tag;
 import hcmus.android.crm.utilities.Constants;
 import hcmus.android.crm.utilities.Utils;
 
@@ -78,8 +65,6 @@ public class AddNewLeadActivity extends DrawerBaseActivity {
     private ActivityAddNewLeadBinding binding;
     private Lead newLead;
     private EditText leadName, leadEmail, leadPhone, leadJob, leadCompany, leadNotes;
-    private String tagId;
-    private AutoCompleteTextView tagsDropdown;
     private TextView leadLocation;
     private Button newLeadSaveButton;
     private ProgressBar progressBar;
@@ -131,11 +116,9 @@ public class AddNewLeadActivity extends DrawerBaseActivity {
         leadImage = binding.leadImage;
         layoutImage = binding.layoutImage;
         leadLocation = binding.leadlocation;
-        tagsDropdown = binding.tagsDropdown;
 
         progressBar = binding.progressBar;
         newLeadSaveButton = binding.buttonSaveLead;
-
 
         leadId = getIntent().getStringExtra("leadId");
         newLead = getIntent().getParcelableExtra("lead");
@@ -146,7 +129,6 @@ public class AddNewLeadActivity extends DrawerBaseActivity {
             populateEventData();
         }
 
-        fetchTags();
         setListeners();
     }
 
@@ -184,12 +166,6 @@ public class AddNewLeadActivity extends DrawerBaseActivity {
             pickImage.launch(intent);
         });
 
-        tagsDropdown.setOnItemClickListener((parent, view, position, id) -> {
-            StringWithTag selectedTag = (StringWithTag) parent.getItemAtPosition(position);
-            String selectedTagTitle = selectedTag.getString();
-            String selectedTagId = selectedTag.getTagId();
-            tagId = selectedTagId;
-        });
         if (isEditMode) {
             newLeadSaveButton.setText("Update Lead");
             newLeadSaveButton.setOnClickListener(v -> {
@@ -223,59 +199,6 @@ public class AddNewLeadActivity extends DrawerBaseActivity {
             getLeadLocation.setChecked(false);
         } else {
             getCurrentLocation();
-        }
-    }
-
-    // Fetch list of tags and display them in the dropdown
-    private void fetchTags() {
-        db.collection(Constants.KEY_COLLECTION_USERS)
-                .document(preferenceManager.getString(Constants.KEY_USER_ID))
-                .collection(Constants.KEY_COLLECTION_TAGS)
-                .get()
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        List<Tag> tags = new ArrayList<>();
-                        for (DocumentSnapshot document : task.getResult()) {
-                            Tag tag = document.toObject(Tag.class);
-                            tag.setId(document.getId());
-                            tags.add(tag);
-                        }
-                        // Create a list to hold both tag titles and IDs
-                        List<StringWithTag> tagList = new ArrayList<>();
-                        if (!tags.isEmpty()) {
-                            for (Tag tag : tags) {
-                                tagList.add(new StringWithTag(tag.getTitle(), tag.getId()));
-                            }
-
-                            tagList.add(new StringWithTag("None", null));
-                            // Create an ArrayAdapter with custom layout for dropdown items
-                            ArrayAdapter<StringWithTag> adapter = new ArrayAdapter<StringWithTag>(AddNewLeadActivity.this, R.layout.dropdown_item_tag, tagList);
-                            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                            tagsDropdown.setAdapter(adapter);
-
-                            // Enable dropdown
-                            tagsDropdown.setEnabled(true);
-
-                            if (isEditMode && newLead != null) {
-                                setDefaultTagForDropdown(tagsDropdown, newLead.getTagId());
-                            }
-
-                        } else {
-                            tagList.add(new StringWithTag("None", null));
-                        }
-                    } else {
-                        showToast("Failed to fetch tags: " + task.getException().getMessage(), Toast.LENGTH_SHORT);
-                    }
-                });
-    }
-
-    private void setDefaultTagForDropdown(AutoCompleteTextView dropdown, String defaultTagId) {
-        for (int i = 0; i < dropdown.getAdapter().getCount(); i++) {
-            StringWithTag item = (StringWithTag) dropdown.getAdapter().getItem(i);
-            if (item.getTagId() != null && item.getTagId().equals(defaultTagId)) {
-                dropdown.setText(item.getString(), false);
-                return;
-            }
         }
     }
 
@@ -427,7 +350,7 @@ public class AddNewLeadActivity extends DrawerBaseActivity {
             return;
         }
 
-        Lead updatedLead = new Lead(name, email, phone, address, job, company, notes, encodedImage, leadLat, leadLong, tagId);
+        Lead updatedLead = new Lead(name, email, phone, address, job, company, notes, encodedImage, leadLat, leadLong);
 
         db.collection(Constants.KEY_COLLECTION_USERS)
                 .document(preferenceManager.getString(Constants.KEY_USER_ID))
@@ -476,7 +399,7 @@ public class AddNewLeadActivity extends DrawerBaseActivity {
             return;
         }
 
-        newLead = new Lead(name, email, phone, address, job, company, notes, encodedImage, leadLat, leadLong, tagId);
+        newLead = new Lead(name, email, phone, address, job, company, notes, encodedImage, leadLat, leadLong);
         db.collection(Constants.KEY_COLLECTION_USERS)
                 .document(preferenceManager.getString(Constants.KEY_USER_ID))
                 .collection(Constants.KEY_COLLECTION_LEADS)
