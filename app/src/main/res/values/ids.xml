@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="leadName" type="id" />
+    <item name="leadImage" type="id" />
+    <item name="leadPhone" type="id" />
+    <item name="imageViewLocation" type="id" />
+</resources>

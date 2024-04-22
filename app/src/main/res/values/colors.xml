@@ -3,10 +3,35 @@
     <color name="primary">#1C2E46</color>
     <color name="primary_dark">#142232</color>
     <color name="primary_text">#212121</color>
+    <color name="secondary_dark">#92AED3</color>
     <color name="secondary_text">#757575</color>
     <color name="white">#FFFFFF</color>
     <color name="input_background">#ECECEC</color>
     <color name="icon_background">#20FFFFFF</color>
     <color name="error">#B00020</color>
+    <color name="red">#ff2e2c</color>
     <color name="blue">#3186EE</color>
+    <color name="success">#28a745</color>
+    <color name="warning">#e59103</color>
+    <color name="pre">#00BFFF</color>
+    <color name="black">#000000</color>
+    <color name="dark_blue">#1C2E46</color>
+    <color name="gray">#8e97a3</color>
+
+    <!-- Color for notes   -->
+    <color name="color1">#a7c5eb</color>
+    <color name="color2">#f3e6e3</color>
+    <color name="color3">#efbbcf</color>
+    <color name="color4">#d6b0b1</color>
+    <color name="color5">#ccf6c8</color>
+    <color name="color6">#ffe0ac</color>
+    <color name="color7">#e56fe5</color>
+    <color name="color8">#cfffa5</color>
+
+    <color name="recently_added_text_color">#11734B</color>
+    <color name="recently_added_chip_background_color">#D4EDBC</color>
+    <color name="days_ago_text_color">#A07400</color>
+    <color name="days_ago_chip_background_color">#FFE5A0</color>
+    <color name="over_seven_days_text_color">#C91600</color>
+    <color name="over_seven_days_chip_background_color">#FFCFC9</color>
 </resources>
