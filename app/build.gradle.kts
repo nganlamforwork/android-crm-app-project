@@ -34,7 +34,6 @@ android {
     }
     buildFeatures {
         viewBinding = true
-        dataBinding = true
     }
     packagingOptions {
         pickFirst("META-INF/*")
