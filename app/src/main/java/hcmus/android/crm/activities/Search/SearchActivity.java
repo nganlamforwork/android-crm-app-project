@@ -1,7 +1,9 @@
 package hcmus.android.crm.activities.Search;
 
 import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -10,6 +12,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
@@ -29,7 +32,7 @@ import hcmus.android.crm.models.Lead;
 import hcmus.android.crm.utilities.Constants;
 import hcmus.android.crm.utilities.PreferenceManager;
 
-public class SearchActivity extends DrawerBaseActivity {
+public class SearchActivity extends AppCompatActivity {
     private ActivitySearchBinding searchBinding;
     private RecyclerView leadRecyclerView;
     private LeadAdapter leadAdapter;
@@ -61,6 +64,9 @@ public class SearchActivity extends DrawerBaseActivity {
         searchInput = searchBinding.searchInput;
         Toolbar toolbar = searchBinding.appBar.toolbar;
         setSupportActionBar(toolbar);
+
+        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.primary_dark));
 
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {

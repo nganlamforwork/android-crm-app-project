@@ -40,6 +40,8 @@
             android:exported="false" />
         <activity
             android:name=".activities.Reminder.ReminderActivity"
+            android:exported="false" />
+        <activity
             android:name=".activities.Tags.TagDetailActivity"
             android:exported="false" />
         <activity
