@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.util.Log;
-import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -50,6 +49,10 @@ public class EventAdapter extends FirestoreRecyclerAdapter<Event, EventAdapter.E
         holder.textViewDescription.setText(model.getDescription());
         holder.textViewTime.setText(model.getTime());
         holder.textViewLocation.setText(model.getLocation());
+        if(model.getReminderTime()==null){
+            model.setReminderTime("0");
+        }
+        holder.textReminder.setText(model.getReminderTime());
 
         // Check if event is passed
         if (model.isPassed()) {
@@ -81,6 +84,7 @@ public class EventAdapter extends FirestoreRecyclerAdapter<Event, EventAdapter.E
             intent.putExtra("description", model.getDescription());
             intent.putExtra("time", model.getTime());
             intent.putExtra("location", model.getLocation());
+            intent.putExtra("reminder", model.getReminderTime());
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
             context.startActivity(intent);
@@ -115,7 +119,7 @@ public class EventAdapter extends FirestoreRecyclerAdapter<Event, EventAdapter.E
     }
 
     static class EventViewHolder extends RecyclerView.ViewHolder {
-        TextView textViewDate, textViewName, textViewDescription, textViewTime, textViewLocation, textViewStatus;
+        TextView textViewDate, textViewName, textViewDescription, textViewTime, textViewLocation, textViewStatus, textReminder;
 
         ImageView settingsOptionsBtn, imageViewStatus;
 
@@ -130,6 +134,7 @@ public class EventAdapter extends FirestoreRecyclerAdapter<Event, EventAdapter.E
             settingsOptionsBtn = itemView.findViewById(R.id.settingsOptionsBtn);
             textViewStatus = itemView.findViewById(R.id.textViewStatus);
             imageViewStatus = itemView.findViewById(R.id.imageViewStatus);
+            textReminder = itemView.findViewById(R.id.textViewReminder);
         }
     }
 

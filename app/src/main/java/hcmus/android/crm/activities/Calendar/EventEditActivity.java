@@ -1,14 +1,16 @@
 package hcmus.android.crm.activities.Calendar;
 
 import android.annotation.SuppressLint;
+import android.app.AlarmManager;
 import android.app.DatePickerDialog;
+import android.app.PendingIntent;
 import android.app.TimePickerDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
-import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TimePicker;
@@ -21,22 +23,22 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
-import hcmus.android.crm.R;
+import hcmus.android.crm.activities.Calendar.receivers.EventAlarmReceiver;
 import hcmus.android.crm.activities.DrawerBaseActivity;
-import hcmus.android.crm.activities.Leads.AddNewLeadActivity;
-import hcmus.android.crm.activities.Leads.LeadActivity;
+import hcmus.android.crm.activities.Reminder.Receiver.ReminderAlarmReceiver;
 import hcmus.android.crm.databinding.ActivityEventEditBinding;
 import hcmus.android.crm.models.Event;
 import hcmus.android.crm.utilities.Constants;
 
 public class EventEditActivity extends DrawerBaseActivity {
     private ActivityEventEditBinding binding;
-    private EditText eventName, eventLocation, eventDescription, eventDate, eventTime;
+    private EditText eventName, eventLocation, eventDescription, eventDate, eventTime, eventReminder;
     private FirebaseFirestore db;
     private Event newEvent;
     private boolean isEditMode = false;
     private String eventId;
     private boolean isPassed;
+    public static int count = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,6 +65,7 @@ public class EventEditActivity extends DrawerBaseActivity {
         eventLocation = binding.eventLocation;
         eventDate = binding.eventDate;
         eventTime = binding.eventTime;
+        eventReminder = binding.eventReminder;
 
         eventId = getIntent().getStringExtra("eventId");
         if (eventId != null) {
@@ -83,6 +86,7 @@ public class EventEditActivity extends DrawerBaseActivity {
         eventDate.setText(getIntent().getStringExtra("selectedDate"));
         eventTime.setText(getIntent().getStringExtra("time"));
         isPassed = getIntent().getBooleanExtra("isPassed", false);
+        eventReminder.setText(getIntent().getStringExtra("reminder"));
     }
 
     private void setListeners() {
@@ -92,6 +96,7 @@ public class EventEditActivity extends DrawerBaseActivity {
         eventTime.setOnClickListener(v -> {
             showTimePicker();
         });
+        setEditTextWatcher();
         if (isEditMode) {
             // Edit mode: Set button text to "Update Event"
             binding.buttonSaveEvent.setText("Update Event");
@@ -115,6 +120,7 @@ public class EventEditActivity extends DrawerBaseActivity {
         String location = eventLocation.getText().toString().trim();
         String date = eventDate.getText().toString().trim();
         String time = eventTime.getText().toString().trim();
+        String reminder = eventReminder.getText().toString().trim();
 
         // Get current date
         Calendar currentDate = Calendar.getInstance();
@@ -137,6 +143,7 @@ public class EventEditActivity extends DrawerBaseActivity {
             return;
         }
         newEvent = new Event(name, description, location, date, time, false);
+        newEvent.setReminderTime(reminder);
 
         db.collection(Constants.KEY_COLLECTION_USERS)
                 .document(preferenceManager.getString(Constants.KEY_USER_ID))
@@ -150,6 +157,10 @@ public class EventEditActivity extends DrawerBaseActivity {
                     Intent intent = new Intent(this, WeekViewActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivity(intent);
+                    String eventId = documentReference.getId(); // Retrieve the eventId here
+
+                    setUpNotification(eventId, name, description, date, time, reminder);
+
                     finish();
                 })
                 .addOnFailureListener(e -> {
@@ -158,12 +169,39 @@ public class EventEditActivity extends DrawerBaseActivity {
                 });
     }
 
+    private void setUpNotification(String eventId, String title, String description, String date, String time, String reminder) {
+        int hash = eventId.hashCode();
+        int positiveHash = Math.abs(hash);
+        int specificInteger = positiveHash % 1000000; // This will give you a 6-digit integer
+
+        Calendar calendar = Calendar.getInstance();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm a");
+        try {
+            calendar.setTime(dateFormat.parse(date + " " + time));
+        } catch (java.text.ParseException e) {
+            e.printStackTrace();
+        }
+
+        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+
+        Intent intent = new Intent(this, EventAlarmReceiver.class);
+        intent.putExtra("title", title);
+        intent.putExtra("description", description);
+        // Add more extras if needed
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, specificInteger, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        // Set alarm
+        long reminderMillis = Integer.parseInt(reminder) * 60000; // Convert reminder to milliseconds
+        alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis() - reminderMillis, pendingIntent);
+    }
+
     private void handleUpdateEvent() {
         String name = eventName.getText().toString().trim();
         String description = eventDescription.getText().toString().trim();
         String location = eventLocation.getText().toString().trim();
         String date = eventDate.getText().toString().trim();
         String time = eventTime.getText().toString().trim();
+        String reminder = eventReminder.getText().toString().trim();
 
         if (!isFieldsFilled()) {
             loading(false);
@@ -173,6 +211,7 @@ public class EventEditActivity extends DrawerBaseActivity {
             return;
         }
         Event updatedEvent = new Event(name, description, location, date, time, isPassed);
+        updatedEvent.setReminderTime(reminder);
 
         db.collection(Constants.KEY_COLLECTION_USERS)
                 .document(preferenceManager.getString(Constants.KEY_USER_ID))
@@ -184,6 +223,7 @@ public class EventEditActivity extends DrawerBaseActivity {
 
                     loading(false);
                     showToast("Event updated successfully", 0);
+                    setUpNotification(eventId, name, description, date, time, reminder);
                     finish();
                 })
                 .addOnFailureListener(e -> {
@@ -206,7 +246,8 @@ public class EventEditActivity extends DrawerBaseActivity {
                 !eventDescription.getText().toString().trim().isEmpty() &&
                 !eventLocation.getText().toString().trim().isEmpty() &&
                 !eventDate.getText().toString().trim().isEmpty() &&
-                !eventTime.getText().toString().trim().isEmpty();
+                !eventTime.getText().toString().trim().isEmpty() &&
+                !eventReminder.getText().toString().trim().isEmpty();
     }
 
     @Override
@@ -273,4 +314,35 @@ public class EventEditActivity extends DrawerBaseActivity {
 
         timePickerDialog.show();
     }
+
+    private void setEditTextWatcher() {
+        eventReminder.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                String input = s.toString().trim();
+
+                if (input.length() > 3) {
+                    input = input.substring(0, 3);
+                    eventReminder.setText(input);
+                    eventReminder.setSelection(input.length());
+                }
+
+                int inputValue = input.isEmpty() ? 0 : Integer.parseInt(input);
+
+                if (inputValue > 600) {
+                    eventReminder.setText("600");
+                    eventReminder.setSelection(3);
+                }
+            }
+        });
+    }
+
 }

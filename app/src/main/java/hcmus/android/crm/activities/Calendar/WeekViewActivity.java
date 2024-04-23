@@ -25,6 +25,8 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+
+import hcmus.android.crm.activities.BaseActivity;
 import hcmus.android.crm.activities.Calendar.adapters.EventAdapter;
 import hcmus.android.crm.activities.DrawerBaseActivity;
 import hcmus.android.crm.activities.Main.adapters.Calendar.CalendarAdapter;
@@ -33,7 +35,7 @@ import hcmus.android.crm.models.Event;
 import hcmus.android.crm.utilities.CalendarUtils;
 import hcmus.android.crm.utilities.Constants;
 
-public class WeekViewActivity extends DrawerBaseActivity implements CalendarAdapter.OnItemListener {
+public class WeekViewActivity extends BaseActivity implements CalendarAdapter.OnItemListener {
     private ActivityWeekViewBinding binding;
     private FirebaseFirestore db;
     private TextView monthYearText;

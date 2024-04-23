@@ -133,6 +133,40 @@
 
             </com.google.android.material.textfield.TextInputLayout>
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="15dp">
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:scrollbarSize="25dp">
+
+                    <EditText
+                        android:id="@+id/eventReminder"
+                        android:layout_width="200dp"
+                        android:layout_height="wrap_content"
+                        android:drawableEnd="@drawable/baseline_notifications_none_24"
+                        android:hint="Reminder Time"
+                        android:inputType="number"
+                        android:paddingStart="@dimen/_16sdp"
+                        android:paddingEnd="10dp"
+                        android:textColor="@color/primary_dark"
+                        android:textColorHint="@color/secondary_text"
+                        android:textSize="@dimen/_13ssp" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingHorizontal="10dp"
+                    android:text="min"
+                    android:textColor="@color/primary_dark"
+                    android:textSize="@dimen/_13ssp"/>
+            </LinearLayout>
+
 
             <FrameLayout
                 android:layout_width="match_parent"
