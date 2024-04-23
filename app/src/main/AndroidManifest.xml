@@ -213,6 +213,7 @@
             android:permission="android.permission.BIND_JOB_SERVICE" />
 
         <receiver android:name=".activities.Reminder.Receiver.ReminderAlarmReceiver" />
+        <receiver android:name=".activities.Calendar.receivers.EventAlarmReceiver"/>
     </application>
 
 </manifest>

@@ -33,6 +33,10 @@ public class Event implements Parcelable {
     @ServerTimestamp
     private Date createdAt;
 
+    @PropertyName("reminderTime")
+    private String reminderTime;
+
+
     // Constructors, getters, and setters
 
     // Empty constructor needed for Firestore
@@ -60,6 +64,7 @@ public class Event implements Parcelable {
         isPassed = in.readBoolean();
         long tmpCreatedAt = in.readLong();
         createdAt = tmpCreatedAt == -1 ? null : new Date(tmpCreatedAt);
+        reminderTime = in.readString();
     }
 
     public static final Creator<Event> CREATOR = new Creator<Event>() {
@@ -136,6 +141,15 @@ public class Event implements Parcelable {
         this.createdAt = createdAt;
     }
 
+    public String getReminderTime() {
+        return reminderTime;
+    }
+
+    public void setReminderTime(String reminderTime) {
+        this.reminderTime = reminderTime;
+    }
+
+
     @SuppressLint("NewApi")
     @Override
     public void writeToParcel(Parcel dest, int flags) {
@@ -146,5 +160,7 @@ public class Event implements Parcelable {
         dest.writeString(time);
         dest.writeBoolean(isPassed);
         dest.writeLong(createdAt != null ? createdAt.getTime() : -1);
+        dest.writeString(reminderTime);
+
     }
 }

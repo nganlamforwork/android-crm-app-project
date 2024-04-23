@@ -23,6 +23,7 @@ import android.widget.TimePicker;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.NotificationManagerCompat;
 
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -45,6 +46,7 @@ public class AddNewReminderActivity extends DrawerBaseActivity {
     private ProgressBar progressBar;
 
     private FirebaseFirestore db;
+    public static int count = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -268,7 +270,7 @@ public class AddNewReminderActivity extends DrawerBaseActivity {
                     Intent intent = new Intent(this, ReminderActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivity(intent);
-                    setUpAlarm(title, description, date, time);
+                    setUpNotification(title, description, date, time);
                 })
                 .addOnFailureListener(e -> {
                     // Handle failure, e.g., show error message
@@ -277,7 +279,7 @@ public class AddNewReminderActivity extends DrawerBaseActivity {
                 });
     }
 
-    private void setUpAlarm(String title, String description, String date, String time) {
+    private void setUpNotification(String title, String description, String date, String time) {
         // Convert date and time to milliseconds
         Calendar calendar = Calendar.getInstance();
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm a");
@@ -294,7 +296,7 @@ public class AddNewReminderActivity extends DrawerBaseActivity {
         intent.putExtra("description", description);
         // Add more extras if needed
 
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, ++count, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         // Set alarm
         alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);

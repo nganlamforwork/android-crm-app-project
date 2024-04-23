@@ -56,7 +56,7 @@
             <group android:checkableBehavior="single">
                 <item
                     android:id="@+id/nav_personal"
-                    android:icon="@drawable/baseline_communication_alt_24"
+                    android:icon="@drawable/baseline_settings_24"
                     android:title="@string/settings" />
                 <item
                     android:id="@+id/nav_reminder"
