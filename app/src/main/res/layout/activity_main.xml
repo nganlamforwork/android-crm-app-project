@@ -13,7 +13,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:text="Weekly Events"
+        android:text="Weekly View"
         android:background="@null"
         android:onClick="weeklyAction"
         android:layout_marginTop="80dp"
@@ -43,6 +43,7 @@
             android:layout_height="wrap_content"
             android:text="Feb 2021"
             android:textSize="20sp"
+            android:textStyle="bold"
             android:textAlignment="center"
             android:textColor="@color/black"/>
 
