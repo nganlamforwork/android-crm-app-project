@@ -51,7 +51,7 @@ public class AddNewReminderActivity extends DrawerBaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setTitle("Add new reminder");
+        setTitle("Add new to do list");
 
         binding = ActivityAddNewReminderBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
@@ -77,7 +77,8 @@ public class AddNewReminderActivity extends DrawerBaseActivity {
 
         if (getIntent().hasExtra("reminderId")) {
             isEditMode = true;
-            setTitle("Edit reminder");
+            setTitle("Edit to do list");
+            reminderId=getIntent().getStringExtra("reminderId");
             populateReminderData();
         }
 
@@ -220,7 +221,7 @@ public class AddNewReminderActivity extends DrawerBaseActivity {
 
                     // Hide loading state
                     loading(false);
-                    showToast("Reminder updated successful", 0);
+                    showToast("To do list updated successful", 0);
 
                     // Send back the new reminder data to ReminderDetailActivity
                     Intent resultIntent = new Intent();
@@ -228,6 +229,7 @@ public class AddNewReminderActivity extends DrawerBaseActivity {
                     setResult(Activity.RESULT_OK, resultIntent);
 
                     finish();
+                    setUpNotification(reminderId, title, description, date, time);
                 })
                 .addOnFailureListener(e -> {
                     // Handle failure, e.g., show error message
@@ -266,20 +268,27 @@ public class AddNewReminderActivity extends DrawerBaseActivity {
 
                     // Hide loading state
                     loading(false);
-                    showToast("New reminder added successful", 0);
+                    showToast("New to do list added successful", 0);
                     Intent intent = new Intent(this, ReminderActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivity(intent);
-                    setUpNotification(title, description, date, time);
+
+                    String reminderId = documentReference.getId(); // Retrieve the eventId here
+                    setUpNotification(reminderId, title, description, date, time);
                 })
                 .addOnFailureListener(e -> {
                     // Handle failure, e.g., show error message
                     loading(false);
-                    showToast("Failed to add new reminder", 0);
+                    showToast("Failed to add new to do list", 0);
                 });
     }
 
-    private void setUpNotification(String title, String description, String date, String time) {
+    private void setUpNotification(String eventId, String title, String description, String date, String time) {
+        int hash = eventId.hashCode();
+        int positiveHash = Math.abs(hash);
+        int specificInteger = positiveHash % 1000000; // This will give you a 6-digit integer
+
+
         // Convert date and time to milliseconds
         Calendar calendar = Calendar.getInstance();
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm a");
@@ -296,7 +305,7 @@ public class AddNewReminderActivity extends DrawerBaseActivity {
         intent.putExtra("description", description);
         // Add more extras if needed
 
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, ++count, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, specificInteger, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         // Set alarm
         alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
