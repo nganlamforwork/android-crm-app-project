@@ -40,7 +40,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="20dp"
-                android:text="Add a reminder"
+                android:text="Add a to do list"
                 android:textColor="@android:color/black"
                 android:textSize="22sp"
                 tools:ignore="MissingPrefix" />
@@ -54,7 +54,7 @@
 
                 <EditText
                     android:id="@+id/addReminderTitle"
-                    android:hint="Reminder Title"
+                    android:hint="To Do List Title"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="text"
@@ -74,7 +74,7 @@
 
                 <EditText
                     android:id="@+id/addReminderDescription"
-                    android:hint="Reminder Description"
+                    android:hint="To Do List Description"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="text"
@@ -100,7 +100,7 @@
                     android:drawableEnd="@drawable/ic_calendar"
                     android:focusable="false"
                     android:focusableInTouchMode="false"
-                    android:hint="Reminder Date"
+                    android:hint="To Do List Date"
                     android:inputType="date"
                     android:paddingStart="@dimen/_16sdp"
                     android:paddingEnd="10dp"
@@ -123,7 +123,7 @@
                     android:drawableEnd="@drawable/ic_access_time"
                     android:focusable="false"
                     android:focusableInTouchMode="false"
-                    android:hint="Reminder time"
+                    android:hint="To Do List Time"
                     android:inputType="date"
                     android:paddingStart="@dimen/_16sdp"
                     android:paddingEnd="10dp"
@@ -146,7 +146,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="40dp"
                     android:background="@drawable/btn_border"
-                    android:text="Add reminder"
+                    android:text="Add To Do List"
                     android:textColor="@color/white" />
 
                 <ProgressBar

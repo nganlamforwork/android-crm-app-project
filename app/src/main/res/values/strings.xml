@@ -92,5 +92,6 @@
     <string name="dashboard">Dashboard</string>
     <string name="don_t_have_an_account">Don\'t have an account?</string>
     <string name="reminder">Reminder</string>
+    <string name="to_do_list">To Do List</string>
 
 </resources>

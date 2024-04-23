@@ -33,7 +33,7 @@
                 android:layout_height="match_parent"
                 android:layout_gravity="center"
                 android:gravity="center"
-                android:text="No Reminder Available"
+                android:text="No To Do List Available"
                 android:textSize="18sp"
                 android:visibility="visible" />
 
@@ -48,7 +48,7 @@
             android:layout_weight="0.5"
             android:drawablePadding="10dp"
             android:paddingTop="10dp"
-            android:text="+ Add Reminder"
+            android:text="+ Add To Do List"
             android:textAlignment="center"
             android:textColor="@color/primary"
             android:textSize="20sp"

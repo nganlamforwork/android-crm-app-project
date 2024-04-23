@@ -42,7 +42,7 @@ public class ReminderActivity extends DrawerBaseActivity {
 
         binding = ActivityReminderBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-        setTitle("Reminder");
+        setTitle("To Do List");
 
         db = FirebaseFirestore.getInstance();
 
