@@ -304,7 +304,7 @@ public class MainActivity extends DrawerBaseActivity implements CalendarAdapter.
             JSONObject jsonObjectUserMessage = new JSONObject();
             jsonObjectUserMessage.put("role", "user");
 
-            String message = CONTEXT_DATA + stringInput;
+            String message = CONTEXT_DATA + "\n" + "USER PROMPT: " + stringInput;
             jsonObjectUserMessage.put("content", message);
             jsonArrayMessage.put(jsonObjectUserMessage);
             Log.d("MESSAGE", jsonArrayMessage.toString());
