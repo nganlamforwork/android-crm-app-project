@@ -153,16 +153,16 @@ public class LeadActivity extends DrawerBaseActivity {
 
     private void exportLeadsToCsv() {
         if (!isExternalStorageWritable()) {
-            Toast.makeText(this, "Không thể ghi tệp CSV. Vui lòng kiểm tra quyền truy cập bộ nhớ.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Cannot write CSV file. Please check storage access permission.", Toast.LENGTH_SHORT).show();
             return;
         }
         File csvFile = createCsvFile();
         if (csvFile == null) {
-            Toast.makeText(this, "Lỗi khi tạo tệp CSV.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Error creating CSV file.", Toast.LENGTH_SHORT).show();
             return;
         }
         exportToCsv(csvFile);
-        String message = "Xuất danh sách Lead ra file CSV thành công. Đường dẫn: " + csvFile.getAbsolutePath();
+        String message = "Successfully exported Lead list to CSV file. Path: " + csvFile.getAbsolutePath();
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     }
 

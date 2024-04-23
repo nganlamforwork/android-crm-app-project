@@ -41,11 +41,16 @@
         android:theme="@style/Theme.CRM"
         tools:targetApi="31">
         <activity
+            android:name=".activities.BusinessCard.EditBusinessCardActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.Settings.SettingsAppearanceActivity"
+            android:exported="false" />
+        <activity
             android:name=".activities.Reminder.AddNewReminderActivity"
             android:exported="false" />
         <activity
             android:name=".activities.Reminder.ReminderActivity"
-            android:exported="false" />
         <activity
             android:name=".activities.Tags.TagDetailActivity"
             android:exported="false"
@@ -158,12 +163,12 @@
             android:parentActivityName=".activities.Leads.AddNewLeadActivity"
             android:windowSoftInputMode="adjustResize" />
         <activity
-            android:name=".activities.Settings.SettingActivity"
+            android:name=".activities.Settings.SettingsActivity"
             android:exported="false"
             android:parentActivityName=".activities.Main.MainActivity"
             android:windowSoftInputMode="adjustResize" />
         <activity
-            android:name=".activities.Sales.SaleActivity"
+            android:name=".activities.Sales.SalesActivity"
             android:exported="false"
             android:parentActivityName=".activities.Main.MainActivity"
             android:windowSoftInputMode="adjustResize" />
@@ -185,13 +190,13 @@
             android:name=".activities.Main.MainActivity"
             android:exported="false" />
         <activity
-            android:name=".activities.Settings.Information"
+            android:name=".activities.Settings.SettingsInformationActivity"
             android:exported="false"
-            android:parentActivityName=".activities.Settings.SettingActivity" />
+            android:parentActivityName=".activities.Settings.SettingsActivity" />
         <activity
             android:name=".activities.Authentication.ChangePasswordActivity"
             android:exported="false"
-            android:parentActivityName=".activities.Settings.Information" />
+            android:parentActivityName=".activities.Settings.SettingsInformationActivity" />
 
         <service
             android:name=".services.FCMNotificationService"

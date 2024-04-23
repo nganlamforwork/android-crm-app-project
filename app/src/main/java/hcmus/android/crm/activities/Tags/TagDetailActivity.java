@@ -5,6 +5,7 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -18,6 +19,7 @@ import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.EditText;
 
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
@@ -40,8 +42,10 @@ import hcmus.android.crm.databinding.ActivityTagDetailBinding;
 import hcmus.android.crm.models.Lead;
 import hcmus.android.crm.models.Tag;
 import hcmus.android.crm.utilities.Constants;
+import hcmus.android.crm.utilities.PreferenceManager;
+import hcmus.android.crm.utilities.Utils;
 
-public class TagDetailActivity extends DrawerBaseActivity {
+public class TagDetailActivity extends AppCompatActivity {
     private ActivityTagDetailBinding binding;
     private MenuItem saveChangesMenuItem;
     private RecyclerView recyclerView;
@@ -52,6 +56,8 @@ public class TagDetailActivity extends DrawerBaseActivity {
     private boolean isLeadsChanged;
     private boolean isTagTitleChanged;
     private TagDetailAdapter tagDetailAdapter;
+    protected PreferenceManager preferenceManager;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,6 +70,10 @@ public class TagDetailActivity extends DrawerBaseActivity {
 
         Toolbar toolbar = binding.appBar.toolbar;
         setSupportActionBar(toolbar);
+        preferenceManager = new PreferenceManager(getApplicationContext());
+
+        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.primary_dark));
 
         // Enable the back button in the action bar or toolbar
         ActionBar actionBar = getSupportActionBar();
@@ -314,4 +324,9 @@ public class TagDetailActivity extends DrawerBaseActivity {
 
         }
     }
+
+    protected void showToast(String message, int length) {
+        Utils.showToast(getApplicationContext(), message, length);
+    }
+
 }

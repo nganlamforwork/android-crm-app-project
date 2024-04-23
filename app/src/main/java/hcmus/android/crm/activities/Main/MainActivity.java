@@ -15,6 +15,7 @@ import hcmus.android.crm.R;
 import hcmus.android.crm.activities.Calendar.WeekViewActivity;
 import hcmus.android.crm.activities.DrawerBaseActivity;
 import hcmus.android.crm.activities.Main.adapters.Calendar.CalendarAdapter;
+import hcmus.android.crm.activities.Search.SearchActivity;
 import hcmus.android.crm.databinding.ActivityMainBinding;
 import hcmus.android.crm.services.EventSchedulerService;
 import hcmus.android.crm.utilities.CalendarUtils;
@@ -31,6 +32,7 @@ import android.speech.SpeechRecognizer;
 import android.speech.tts.TextToSpeech;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
@@ -199,6 +201,21 @@ public class MainActivity extends DrawerBaseActivity implements CalendarAdapter.
 
         return true;
     }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        if (id == R.id.action_search) {
+            Intent intent = new Intent(this, SearchActivity.class);
+            startActivity(intent);
+
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
 
     @Override
     protected void onResume() {

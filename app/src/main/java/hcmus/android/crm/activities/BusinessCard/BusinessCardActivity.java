@@ -1,13 +1,18 @@
 package hcmus.android.crm.activities.BusinessCard;
 
+import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.util.Base64;
 import android.util.Log;
+import android.view.Menu;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -19,6 +24,10 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
+
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.Serializable;
 
 import hcmus.android.crm.R;
 import hcmus.android.crm.activities.DrawerBaseActivity;
@@ -32,6 +41,9 @@ public class BusinessCardActivity extends DrawerBaseActivity {
     private FirebaseFirestore db;
     private String businessCardId;
     private TextView textDeleteCard;
+    private BusinessCard businessCard;
+    private TextView textEditCard;
+    private Button buttonSaveToAlbum;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,6 +68,7 @@ public class BusinessCardActivity extends DrawerBaseActivity {
     protected void onResume() {
         super.onResume();
         navigationView.setCheckedItem(R.id.nav_business_card);
+        checkIfBusinessCardExists();
     }
 
     public void onCardViewClicked(View view) {
@@ -75,7 +88,7 @@ public class BusinessCardActivity extends DrawerBaseActivity {
                             if (task.getResult() != null && !task.getResult().isEmpty()) {
                                 DocumentSnapshot documentSnapshot = task.getResult().getDocuments().get(0);
                                 businessCardId = documentSnapshot.getId();
-                                BusinessCard businessCard = documentSnapshot.toObject(BusinessCard.class);
+                                businessCard = documentSnapshot.toObject(BusinessCard.class);
                                 if (businessCard != null) {
                                     updateCardView(businessCard);
                                 }
@@ -96,6 +109,7 @@ public class BusinessCardActivity extends DrawerBaseActivity {
         byte[] decodedBytes = Base64.decode(input, Base64.DEFAULT);
         return BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.length);
     }
+
     private void updateCardView(BusinessCard businessCard) {
         // Hide unnecessary views
         binding.noCardContainer.setVisibility(View.GONE);
@@ -123,7 +137,7 @@ public class BusinessCardActivity extends DrawerBaseActivity {
         }
 
         // Find the TextView by id
-        textDeleteCard = findViewById(R.id.textDeleteCard);
+        textDeleteCard = binding.textDeleteCard;
         textDeleteCard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -131,6 +145,52 @@ public class BusinessCardActivity extends DrawerBaseActivity {
                 showDeleteConfirmationDialog();
             }
         });
+        textEditCard = binding.textEditCard;
+        textEditCard.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(BusinessCardActivity.this, EditBusinessCardActivity.class);
+
+                intent.putExtra("businessCardId", businessCardId);
+                intent.putExtra("businessCard", businessCard);
+
+                startActivity(intent);
+            }
+        });
+        buttonSaveToAlbum = binding.buttonSaveToAlbum;
+        buttonSaveToAlbum.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Bitmap bitmap = getBitmapFromView(binding.cardDetailView);
+                saveImageToAlbum(bitmap);
+            }
+        });
+    }
+
+    private Bitmap getBitmapFromView(View view) {
+        view.setDrawingCacheEnabled(true);
+        Bitmap bitmap = Bitmap.createBitmap(view.getDrawingCache());
+        view.setDrawingCacheEnabled(false);
+        return bitmap;
+    }
+
+    private void saveImageToAlbum(Bitmap bitmap) {
+        String displayName = "BusinessCard_" + System.currentTimeMillis() + ".jpg";
+        String description = "Business Card Image";
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(MediaStore.Images.Media.DISPLAY_NAME, displayName);
+        contentValues.put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg");
+        contentValues.put(MediaStore.Images.Media.DESCRIPTION, description);
+        Uri imageUri = getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues);
+        try {
+            OutputStream outputStream = getContentResolver().openOutputStream(imageUri);
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
+            outputStream.close();
+            showToast("Image saved to album", Toast.LENGTH_SHORT);
+        } catch (IOException e) {
+            showToast("Failed to save image", Toast.LENGTH_SHORT);
+            e.printStackTrace();
+        }
     }
 
     private void showCreateCardView() {
@@ -166,6 +226,8 @@ public class BusinessCardActivity extends DrawerBaseActivity {
                     if (task.isSuccessful()) {
                         showToast("Business card deleted successfully!", Toast.LENGTH_SHORT);
                         // Call the method to update the UI
+                        businessCard = null;
+                        businessCardId = null;
                         updateUI();
                     } else {
                         showToast("Error deleting business card!", Toast.LENGTH_SHORT);
@@ -173,6 +235,7 @@ public class BusinessCardActivity extends DrawerBaseActivity {
                 });
         showToast("Business card deleted successfully!", 0);
     }
+
     private void updateUI() {
         // Hide the business card container
         binding.cardContainer.setVisibility(View.GONE);

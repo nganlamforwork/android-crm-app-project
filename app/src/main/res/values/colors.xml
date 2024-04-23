@@ -15,6 +15,8 @@
     <color name="warning">#e59103</color>
     <color name="pre">#00BFFF</color>
     <color name="black">#000000</color>
+    <color name="light_blue">#E2E9F3</color>
+    <color name="medium_blue">#507EB9</color>
     <color name="dark_blue">#1C2E46</color>
     <color name="gray">#8e97a3</color>
 
@@ -27,4 +29,11 @@
     <color name="color6">#ffe0ac</color>
     <color name="color7">#e56fe5</color>
     <color name="color8">#cfffa5</color>
+
+    <color name="recently_added_text_color">#11734B</color>
+    <color name="recently_added_chip_background_color">#D4EDBC</color>
+    <color name="days_ago_text_color">#A07400</color>
+    <color name="days_ago_chip_background_color">#FFE5A0</color>
+    <color name="over_seven_days_text_color">#C91600</color>
+    <color name="over_seven_days_chip_background_color">#FFCFC9</color>
 </resources>
