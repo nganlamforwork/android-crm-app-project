@@ -77,11 +77,11 @@ public class TagDetailActivity extends AppCompatActivity {
 
         // Enable the back button in the action bar or toolbar
         ActionBar actionBar = getSupportActionBar();
-
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setDisplayShowHomeEnabled(true);
         }
+
 
         Intent intent = this.getIntent();
         if (intent != null) {

@@ -6,11 +6,13 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".activities.Tags.TagDetailActivity">
+
     <include
         android:id="@+id/app_bar"
         layout="@layout/toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -60,6 +62,7 @@
             android:text="No Leads available"
             android:textSize="16sp"
             android:visibility="visible" />
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/leadsRecyclerView"
             android:layout_width="match_parent"

@@ -1,4 +1,6 @@
 import com.android.build.api.dsl.Packaging
+import java.io.FileInputStream
+import java.util.Properties
 
 plugins {
     id("com.android.application")
@@ -20,8 +22,13 @@ android {
         versionName = "1.0"
         multiDexEnabled = true
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-    }
 
+        val localPropertiesFile = rootProject.file("local.properties")
+        val localProperties = Properties()
+        localProperties.load(FileInputStream(localPropertiesFile))
+
+        buildConfigField("String", "OPENAI_API_KEY", "\"${localProperties.getProperty("OPENAI_API_KEY")}\"")
+    }
     buildTypes {
         release {
             isMinifyEnabled = false
@@ -34,6 +41,8 @@ android {
     }
     buildFeatures {
         viewBinding = true
+        buildConfig = true
+        compose = true
     }
     packagingOptions {
         pickFirst("META-INF/*")
@@ -55,8 +64,8 @@ dependencies {
     implementation("com.google.code.gson:gson:2.8.8")
 
     // Scan QR
-    implementation ("com.google.zxing:core:3.4.1")
-    implementation ("com.journeyapps:zxing-android-embedded:4.3.0")
+    implementation("com.google.zxing:core:3.4.1")
+    implementation("com.journeyapps:zxing-android-embedded:4.3.0")
     implementation("com.google.firebase:firebase-database:20.3.1")
     implementation("org.jetbrains:annotations:15.0")
 
@@ -93,4 +102,5 @@ dependencies {
 
     // CSV Reader
     implementation("com.opencsv:opencsv:5.6")
+    implementation("com.android.volley:volley:1.2.1")
 }
