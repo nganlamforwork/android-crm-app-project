@@ -32,7 +32,7 @@ import hcmus.android.crm.activities.BusinessCard.BusinessCardActivity;
 import hcmus.android.crm.activities.Main.SplashActivity;
 import hcmus.android.crm.activities.Opportunity.OpportunityActivity;
 import hcmus.android.crm.activities.Reminder.ReminderActivity;
-import hcmus.android.crm.activities.Sales.SalesActivity;
+import hcmus.android.crm.activities.Sales.ReportsActivity;
 import hcmus.android.crm.activities.Settings.SettingsActivity;
 import hcmus.android.crm.activities.Tags.TagsActivity;
 import hcmus.android.crm.activities.User.UserActivity;
@@ -130,8 +130,8 @@ public class DrawerBaseActivity extends AppCompatActivity implements NavigationV
             targetActivityClass = SettingsActivity.class;
         } else if (id == R.id.nav_opportunity) {
             targetActivityClass = OpportunityActivity.class;
-        } else if (id == R.id.nav_sales) {
-            targetActivityClass = SalesActivity.class;
+        } else if (id == R.id.nav_reports) {
+            targetActivityClass = ReportsActivity.class;
         } else if (id == R.id.nav_coworkers) {
             targetActivityClass = UserActivity.class;
         } else if (id == R.id.nav_reminder) {

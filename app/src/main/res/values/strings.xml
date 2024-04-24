@@ -21,6 +21,7 @@
     <string name="communications">Communications</string>
     <string name="sales_forecast">Sales Forecast</string>
     <string name="reports">Reports</string>
+    <string name="mails">Mails</string>
     <string name="open">Open Navigation Drawer</string>
     <string name="close">Close Navigation Drawer</string>
     <string name="title_activity_lead">LeadActivity</string>
