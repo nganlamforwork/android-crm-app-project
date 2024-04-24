@@ -54,7 +54,7 @@
 
                     <TextView
                         android:id="@+id/choosenEmails"
-                        android:layout_width="wrap_content"
+                        android:layout_width="260dp"
                         android:layout_height="wrap_content"
                         android:text="No emails selected" />
 

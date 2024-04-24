@@ -46,6 +46,8 @@ android {
     }
     packagingOptions {
         pickFirst("META-INF/*")
+        exclude("META-INF/NOTICE.md")
+        exclude("META-INF/LICENSE.md")
     }
 }
 
