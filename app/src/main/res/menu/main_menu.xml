@@ -26,31 +26,25 @@
                     android:icon="@drawable/baseline_contacts_24"
                     android:title="@string/contacts" />
                 <item
-                    android:id="@+id/nav_opportunity"
-                    android:icon="@drawable/baseline_work_24"
-                    android:title="Opportunity" />
-                <item
-                    android:id="@+id/nav_sales"
-                    android:icon="@drawable/sale"
-                    android:title="@string/sales" />
-            </group>
-        </menu>
-    </item>
-
-    <item android:title="@string/communicate">
-        <menu>
-            <group android:checkableBehavior="single">
-                <item
-                    android:id="@+id/nav_coworkers"
-                    android:icon="@drawable/baseline_work_24"
-                    android:title="@string/coworkers" />
+                    android:id="@+id/nav_mails"
+                    android:icon="@drawable/ic_mail"
+                    android:title="@string/mails" />
                 <item
                     android:id="@+id/nav_reports"
                     android:icon="@drawable/report"
                     android:title="@string/reports" />
+                <item
+                    android:id="@+id/nav_opportunity"
+                    android:icon="@drawable/ic_opportunity"
+                    android:title="Opportunity" />
+                <item
+                    android:id="@+id/nav_coworkers"
+                    android:icon="@drawable/baseline_work_24"
+                    android:title="@string/coworkers" />
             </group>
         </menu>
     </item>
+
     <item android:title="@string/personal">
         <menu>
             <group android:checkableBehavior="single">

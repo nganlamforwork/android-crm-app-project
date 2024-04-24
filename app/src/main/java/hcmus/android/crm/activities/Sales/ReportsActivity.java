@@ -44,7 +44,7 @@ import hcmus.android.crm.databinding.ActivitySalesBinding;
 import hcmus.android.crm.models.Opportunity;
 import hcmus.android.crm.utilities.Constants;
 
-public class SalesActivity extends DrawerBaseActivity {
+public class ReportsActivity extends DrawerBaseActivity {
 
     private ActivitySalesBinding binding;
     private LineChart lineChart;
@@ -56,7 +56,7 @@ public class SalesActivity extends DrawerBaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setTitle("Sales");
+        setTitle("Reports");
         binding = ActivitySalesBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
