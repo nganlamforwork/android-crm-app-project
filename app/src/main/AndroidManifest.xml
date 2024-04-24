@@ -30,6 +30,7 @@
             <action android:name="android.speech.RecognitionService" />
         </intent>
     </queries>
+
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -41,6 +42,15 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.CRM"
         tools:targetApi="31">
+        <activity
+            android:name=".activities.Mails.ChooseEmailsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.Mails.SendNewMailActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.Mails.MailsActivity"
+            android:exported="false" />
         <activity
             android:name=".activities.BusinessCard.EditBusinessCardActivity"
             android:exported="false" />
@@ -106,6 +116,7 @@
             android:theme="@style/SplashScreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -213,7 +224,7 @@
             android:permission="android.permission.BIND_JOB_SERVICE" />
 
         <receiver android:name=".activities.Reminder.Receiver.ReminderAlarmReceiver" />
-        <receiver android:name=".activities.Calendar.receivers.EventAlarmReceiver"/>
+        <receiver android:name=".activities.Calendar.receivers.EventAlarmReceiver" />
     </application>
 
 </manifest>

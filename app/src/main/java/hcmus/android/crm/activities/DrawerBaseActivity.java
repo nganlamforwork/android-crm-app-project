@@ -27,6 +27,7 @@ import com.google.firebase.messaging.FirebaseMessaging;
 import hcmus.android.crm.R;
 import hcmus.android.crm.activities.Contacts.ContactActivity;
 import hcmus.android.crm.activities.Leads.LeadActivity;
+import hcmus.android.crm.activities.Mails.MailsActivity;
 import hcmus.android.crm.activities.Main.MainActivity;
 import hcmus.android.crm.activities.BusinessCard.BusinessCardActivity;
 import hcmus.android.crm.activities.Main.SplashActivity;
@@ -128,7 +129,9 @@ public class DrawerBaseActivity extends AppCompatActivity implements NavigationV
             targetActivityClass = ContactActivity.class;
         } else if (id == R.id.nav_personal) {
             targetActivityClass = SettingsActivity.class;
-        } else if (id == R.id.nav_opportunity) {
+        } else if (id == R.id.nav_mails) {
+            targetActivityClass = MailsActivity.class;
+        }else if (id == R.id.nav_opportunity) {
             targetActivityClass = OpportunityActivity.class;
         } else if (id == R.id.nav_reports) {
             targetActivityClass = ReportsActivity.class;
