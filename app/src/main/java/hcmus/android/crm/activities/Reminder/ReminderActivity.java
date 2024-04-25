@@ -21,6 +21,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.util.ArrayList;
 import java.util.List;
 
+import hcmus.android.crm.R;
 import hcmus.android.crm.activities.DrawerBaseActivity;
 import hcmus.android.crm.activities.Reminder.adapter.ReminderAdapter;
 import hcmus.android.crm.databinding.ActivityReminderBinding;
@@ -54,7 +55,11 @@ public class ReminderActivity extends DrawerBaseActivity {
 
         setListener();
     }
-
+    @Override
+    protected void onResume() {
+        super.onResume();
+        navigationView.setCheckedItem(R.id.nav_reminder);
+    }
     private void setupReminderRecyclerView() {
         Query query = db.collection(Constants.KEY_COLLECTION_USERS)
                 .document(preferenceManager.getString(Constants.KEY_USER_ID))
