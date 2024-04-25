@@ -53,6 +53,8 @@ public class LeadDetailActivity extends DrawerBaseActivity {
                 Intent intent = result.getData();
                 assert intent != null;
                 Lead updatedLead = intent.getParcelableExtra("updatedLead");
+                String tagTitle = intent.getStringExtra("tagTitle");
+                updateUITag(tagTitle);
                 if (updatedLead != null) {
                     updateUI(updatedLead);
                 }
@@ -105,33 +107,15 @@ public class LeadDetailActivity extends DrawerBaseActivity {
             binding.avatar.setImageResource(R.drawable.avatar);
         }
 
-        if (lead.getTagId() == null) {
+    }
+    private void updateUITag(String tagTitle){
+        if (tagTitle == null) {
             binding.leadTag.setText("None");
         } else {
-            // Assume you have a method to retrieve the tag title by its id
-            getTagTitleById(lead.getTagId());
+            binding.leadTag.setText(tagTitle);
         }
     }
-    private void getTagTitleById(String tagId) {
-        DocumentReference tagRef = db.collection(Constants.KEY_COLLECTION_USERS)
-                .document(preferenceManager.getString(Constants.KEY_USER_ID))
-                .collection(Constants.KEY_COLLECTION_TAGS)
-                .document(tagId);
 
-        tagRef.get().addOnSuccessListener(documentSnapshot -> {
-            Map<String, Object> data = documentSnapshot.getData();
-            Log.d("DATA", data.toString());
-            if (!data.isEmpty()) {
-                String tagName = documentSnapshot.getString("title");
-                binding.leadTag.setText(tagName);
-            } else {
-                binding.leadTag.setText("None");
-            }
-        }).addOnFailureListener(e -> {
-            binding.leadTag.setText("Error Fetching Tag");
-            Log.e("TAG", "Error fetching tag: ", e);
-        });
-    }
     private void setListeners() {
         binding.leadLocation.setOnClickListener(v -> {
             String latitude = lead.getLatitude();
