@@ -1,4 +1,5 @@
 package hcmus.android.crm.utilities;
+import hcmus.android.crm.BuildConfig;
 
 public class Constants {
     public static final String KEY_COLLECTION_USERS = "users";
@@ -29,5 +30,8 @@ public class Constants {
 
     public static final String MESSAGING_SCOPE = "https://www.googleapis.com/auth/firebase.messaging";
     public static final String[] SCOPES = { MESSAGING_SCOPE };
+
+    public static final String OPENAI_API_KEY = BuildConfig.OPENAI_API_KEY;
+    public static final String END_POINT = "https://api.openai.com/v1/chat/completions";
 
 }
