@@ -66,7 +66,6 @@ public class ReminderActivity extends DrawerBaseActivity {
                 .collection(Constants.KEY_COLLECTION_REMINDERS)
                 .orderBy("date")
                 .orderBy("timeAlarm");
-        Log.d("TESTTT", String.valueOf(query));
 
 
         checkIfListEmpty(query);
