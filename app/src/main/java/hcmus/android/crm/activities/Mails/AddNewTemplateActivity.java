@@ -164,10 +164,8 @@ public class AddNewTemplateActivity extends DrawerBaseActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == GENERATE_AI_TEMPLATE_REQUEST_CODE) {
             if (resultCode == RESULT_OK && data != null) {
-                String generatedSubject = data.getStringExtra("generatedSubject");
                 String generatedBody = data.getStringExtra("generatedBody");
                 // Use the generated subject and body here
-                templateSubject.setText(generatedSubject);
                 templateBody.setText(generatedBody);
             }
         }

@@ -10,7 +10,6 @@ import android.os.Bundle;
 
 import java.util.ArrayList;
 
-import hcmus.android.crm.BuildConfig;
 import hcmus.android.crm.R;
 import hcmus.android.crm.activities.Calendar.WeekViewActivity;
 import hcmus.android.crm.activities.DrawerBaseActivity;
@@ -75,10 +74,6 @@ public class MainActivity extends DrawerBaseActivity implements CalendarAdapter.
     private TextView monthYearText;
     private RecyclerView calendarRecyclerView;
     private CalendarAdapter calendarAdapter;
-
-    private final String OPENAI_API_KEY = BuildConfig.OPENAI_API_KEY;
-    private final String END_POINT = "https://api.openai.com/v1/chat/completions";
-
     private String output = "";
     private TextToSpeech textToSpeech;
 
@@ -314,7 +309,7 @@ public class MainActivity extends DrawerBaseActivity implements CalendarAdapter.
         }
 
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST,
-                END_POINT, jsonObject, new Response.Listener<JSONObject>() {
+                Constants.END_POINT, jsonObject, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
 
@@ -339,7 +334,7 @@ public class MainActivity extends DrawerBaseActivity implements CalendarAdapter.
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
                 Map<String, String> mapHeader = new HashMap<>();
-                mapHeader.put("Authorization", "Bearer " + OPENAI_API_KEY);
+                mapHeader.put("Authorization", "Bearer " + Constants.OPENAI_API_KEY);
                 mapHeader.put("Content-Type", "application/json");
                 mapHeader.put("User-Agent", "Mozilla/5.0");
 
