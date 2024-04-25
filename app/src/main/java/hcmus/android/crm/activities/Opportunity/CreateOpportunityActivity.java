@@ -178,7 +178,11 @@ public class CreateOpportunityActivity extends DrawerBaseActivity {
 
                     loading(false);
                     showToast("New opportunity added successful", 0);
+                    String opportunityId = documentReference.getId();
+
                     Intent intent = new Intent(this, OpportunityDetailActivity.class);
+                    intent.putExtra("opportunityDetails", newOpportunity);
+                    intent.putExtra("opportunityId", opportunityId);
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivity(intent);
                 })

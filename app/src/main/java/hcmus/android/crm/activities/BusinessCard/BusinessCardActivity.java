@@ -253,4 +253,7 @@ public class BusinessCardActivity extends DrawerBaseActivity {
         // Show the no-card container
         binding.noCardContainer.setVisibility(View.VISIBLE);
     }
+
+    public void onCardDetailViewClicked(View view) {
+    }
 }
