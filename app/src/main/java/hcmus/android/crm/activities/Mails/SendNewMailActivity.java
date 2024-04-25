@@ -81,6 +81,31 @@ public class SendNewMailActivity extends DrawerBaseActivity {
                 startActivityForResult(intent, CHOOSE_EMAILS_REQUEST_CODE);
             }
         });
+        sendButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onSendEmail();
+            }
+        });
+    }
+    private void onSendEmail(){
+        String subject = emailSubject.getText().toString().trim();
+        String body = emailBody.getText().toString().trim();
+        StringBuilder builder = new StringBuilder();
+        if (body.equals("") || subject.equals("")){
+            showToast("All fields are required!",0);
+        }
+        for (String email : choosenEmails) {
+            builder.append(email).append(", ");
+        }
+        String emailsString = builder.substring(0, builder.length() - 2);
+
+        Intent intent = new Intent(Intent.ACTION_SEND);
+        intent.putExtra(Intent.EXTRA_EMAIL, new String[]{emailsString});
+        intent.putExtra(Intent.EXTRA_SUBJECT, subject);
+        intent.putExtra(Intent.EXTRA_TEXT, body);
+        intent.setType("message/rfc822");
+        startActivity(Intent.createChooser(intent,"Choose email client:"));
     }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
