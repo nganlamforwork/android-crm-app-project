@@ -111,4 +111,9 @@ public class TemplateDetailActivity extends DrawerBaseActivity {
                 .document(templateId).delete();
         finish();
     }
+    @Override
+    public boolean onSupportNavigateUp() {
+        getOnBackPressedDispatcher().onBackPressed();
+        return true;
+    }
 }
