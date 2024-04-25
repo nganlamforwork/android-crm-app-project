@@ -27,6 +27,8 @@ import androidx.core.content.ContextCompat;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.Map;
+
 import hcmus.android.crm.R;
 import hcmus.android.crm.activities.DrawerBaseActivity;
 import hcmus.android.crm.activities.Maps.MapsActivity;
@@ -117,7 +119,9 @@ public class LeadDetailActivity extends DrawerBaseActivity {
                 .document(tagId);
 
         tagRef.get().addOnSuccessListener(documentSnapshot -> {
-            if (documentSnapshot.exists()) {
+            Map<String, Object> data = documentSnapshot.getData();
+            Log.d("DATA", data.toString());
+            if (!data.isEmpty()) {
                 String tagName = documentSnapshot.getString("title");
                 binding.leadTag.setText(tagName);
             } else {

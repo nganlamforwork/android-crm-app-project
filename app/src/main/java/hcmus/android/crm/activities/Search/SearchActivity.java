@@ -1,7 +1,6 @@
 package hcmus.android.crm.activities.Search;
 
 import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -32,7 +31,7 @@ import hcmus.android.crm.models.Lead;
 import hcmus.android.crm.utilities.Constants;
 import hcmus.android.crm.utilities.PreferenceManager;
 
-public class SearchActivity extends AppCompatActivity {
+public class SearchActivity extends DrawerBaseActivity {
     private ActivitySearchBinding searchBinding;
     private RecyclerView leadRecyclerView;
     private LeadAdapter leadAdapter;
