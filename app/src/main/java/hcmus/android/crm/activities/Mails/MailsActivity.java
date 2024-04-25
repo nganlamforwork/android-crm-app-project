@@ -63,7 +63,7 @@ public class MailsActivity extends DrawerBaseActivity {
                     startActivity(intent);
                 }
                 else if (position == 1){
-                    Intent intent = new Intent(MailsActivity.this, SettingsAppearanceActivity.class);
+                    Intent intent = new Intent(MailsActivity.this, TemplatesActivity.class);
                     startActivity(intent);
                 }
             }
