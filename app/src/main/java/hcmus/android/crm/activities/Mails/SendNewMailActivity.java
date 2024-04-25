@@ -204,5 +204,9 @@ public class SendNewMailActivity extends DrawerBaseActivity {
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, templateNames);
         templateDropdown.setAdapter(adapter);
     }
-
+    @Override
+    public boolean onSupportNavigateUp() {
+        getOnBackPressedDispatcher().onBackPressed();
+        return true;
+    }
 }

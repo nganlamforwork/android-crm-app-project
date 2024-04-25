@@ -44,25 +44,32 @@
         tools:targetApi="31">
         <activity
             android:name=".activities.Mails.GenerateAITemplateActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:parentActivityName=".activities.Mails.AddNewTemplateActivity"/>
         <activity
             android:name=".activities.Mails.EditTemplateActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:parentActivityName=".activities.Mails.TemplateDetailActivity" />
         <activity
             android:name=".activities.Mails.TemplateDetailActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:parentActivityName=".activities.Mails.TemplatesActivity" />
         <activity
             android:name=".activities.Mails.AddNewTemplateActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:parentActivityName=".activities.Mails.TemplatesActivity" />
         <activity
             android:name=".activities.Mails.TemplatesActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:parentActivityName=".activities.Mails.MailsActivity"/>
         <activity
             android:name=".activities.Mails.ChooseEmailsActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:parentActivityName=".activities.Mails.SendNewMailActivity" />
         <activity
             android:name=".activities.Mails.SendNewMailActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:parentActivityName=".activities.Mails.MailsActivity" />
         <activity
             android:name=".activities.Mails.MailsActivity"
             android:exported="false" />
