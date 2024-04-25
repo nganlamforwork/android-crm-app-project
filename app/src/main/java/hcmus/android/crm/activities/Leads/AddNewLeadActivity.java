@@ -93,6 +93,7 @@ public class AddNewLeadActivity extends DrawerBaseActivity {
     private String selectedTagId = null;
     private FirebaseFirestore db;
     private List<Tag> tagsList;
+    private StringWithTag selectedTag = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -186,7 +187,7 @@ public class AddNewLeadActivity extends DrawerBaseActivity {
         binding.tagsDropdown.setAdapter(adapter);
 
         binding.tagsDropdown.setOnItemClickListener((parent, view, position, id) -> {
-            StringWithTag selectedTag = adapter.getItem(position);
+             selectedTag = adapter.getItem(position);
             selectedTagId = selectedTag.getTagId();
         });
 
@@ -429,6 +430,7 @@ public class AddNewLeadActivity extends DrawerBaseActivity {
                     // Send back the new lead data to LeadDetailActivity
                     Intent resultIntent = new Intent();
                     resultIntent.putExtra("updatedLead", updatedLead);
+                    resultIntent.putExtra("tagTitle", selectedTag.getString());
                     setResult(Activity.RESULT_OK, resultIntent);
 
                     finish();
