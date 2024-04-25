@@ -27,6 +27,8 @@ import androidx.core.content.ContextCompat;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.Map;
+
 import hcmus.android.crm.R;
 import hcmus.android.crm.activities.DrawerBaseActivity;
 import hcmus.android.crm.activities.Maps.MapsActivity;
@@ -113,6 +115,7 @@ public class LeadDetailActivity extends DrawerBaseActivity {
             binding.leadTag.setText(tagTitle);
         }
     }
+
     private void setListeners() {
         binding.leadLocation.setOnClickListener(v -> {
             String latitude = lead.getLatitude();
