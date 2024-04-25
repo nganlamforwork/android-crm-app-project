@@ -105,4 +105,9 @@ dependencies {
     // CSV Reader
     implementation("com.opencsv:opencsv:5.6")
     implementation("com.android.volley:volley:1.2.1")
+
+    // Gemini AI
+    implementation("com.google.ai.client.generativeai:generativeai:0.3.0")
+    implementation("com.google.guava:guava:31.0.1-android")
+    implementation("org.reactivestreams:reactive-streams:1.0.4")
 }

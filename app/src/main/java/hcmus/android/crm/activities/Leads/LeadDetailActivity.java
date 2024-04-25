@@ -9,6 +9,7 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Base64;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.Manifest;
@@ -23,6 +24,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import hcmus.android.crm.R;
@@ -100,8 +102,32 @@ public class LeadDetailActivity extends DrawerBaseActivity {
         } else {
             binding.avatar.setImageResource(R.drawable.avatar);
         }
-    }
 
+        if (lead.getTagId() == null) {
+            binding.leadTag.setText("None");
+        } else {
+            // Assume you have a method to retrieve the tag title by its id
+            getTagTitleById(lead.getTagId());
+        }
+    }
+    private void getTagTitleById(String tagId) {
+        DocumentReference tagRef = db.collection(Constants.KEY_COLLECTION_USERS)
+                .document(preferenceManager.getString(Constants.KEY_USER_ID))
+                .collection(Constants.KEY_COLLECTION_TAGS)
+                .document(tagId);
+
+        tagRef.get().addOnSuccessListener(documentSnapshot -> {
+            if (documentSnapshot.exists()) {
+                String tagName = documentSnapshot.getString("title");
+                binding.leadTag.setText(tagName);
+            } else {
+                binding.leadTag.setText("None");
+            }
+        }).addOnFailureListener(e -> {
+            binding.leadTag.setText("Error Fetching Tag");
+            Log.e("TAG", "Error fetching tag: ", e);
+        });
+    }
     private void setListeners() {
         binding.leadLocation.setOnClickListener(v -> {
             String latitude = lead.getLatitude();

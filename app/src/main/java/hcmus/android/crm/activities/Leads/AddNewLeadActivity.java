@@ -23,12 +23,15 @@ import android.text.TextWatcher;
 import android.util.Base64;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -43,19 +46,29 @@ import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.Priority;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.switchmaterial.SwitchMaterial;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.makeramen.roundedimageview.RoundedImageView;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
 import hcmus.android.crm.activities.DrawerBaseActivity;
+import hcmus.android.crm.activities.Mails.SendNewMailActivity;
+import hcmus.android.crm.activities.Tags.StringWithTag;
 import hcmus.android.crm.databinding.ActivityAddNewLeadBinding;
 import hcmus.android.crm.models.Lead;
+import hcmus.android.crm.models.Tag;
+import hcmus.android.crm.models.Template;
 import hcmus.android.crm.utilities.Constants;
 import hcmus.android.crm.utilities.Utils;
 
@@ -77,7 +90,9 @@ public class AddNewLeadActivity extends DrawerBaseActivity {
     private String leadLat, leadLong, address;
     private boolean isEditMode = false;
     private String leadId;
+    private String selectedTagId = null;
     private FirebaseFirestore db;
+    private List<Tag> tagsList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -128,8 +143,53 @@ public class AddNewLeadActivity extends DrawerBaseActivity {
             setTitle("Edit lead");
             populateEventData();
         }
+        fetchTags();
 
         setListeners();
+    }
+
+    private void fetchTags() {
+        Query query = db.collection(Constants.KEY_COLLECTION_USERS)
+                .document(preferenceManager.getString(Constants.KEY_USER_ID))
+                .collection(Constants.KEY_COLLECTION_TAGS)
+                .orderBy("createdAt", Query.Direction.ASCENDING);
+        query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    tagsList = new ArrayList<>(); // Initialize the list here
+                    for (QueryDocumentSnapshot document : task.getResult()) {
+                        Tag tag = document.toObject(Tag.class);
+                        tag.setId(document.getId());
+                        tagsList.add(tag);
+                    }
+                    // Populate the dropdown
+                    Log.d("Fetch tags", "Number of tags fetched: " + tagsList.size());
+                    if (!tagsList.isEmpty()) {
+                        populateDropdown();
+                    }
+                } else {
+                    // Handle errors
+                    Toast.makeText(AddNewLeadActivity.this, "Failed to fetch templates", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+    }
+
+    private void populateDropdown() {
+        List<StringWithTag> stringWithTagList = new ArrayList<>();
+        for (Tag tag : tagsList) {
+            stringWithTagList.add(new StringWithTag(tag.getTitle(), tag.getId()));
+        }
+
+        ArrayAdapter<StringWithTag> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, stringWithTagList);
+        binding.tagsDropdown.setAdapter(adapter);
+
+        binding.tagsDropdown.setOnItemClickListener((parent, view, position, id) -> {
+            StringWithTag selectedTag = adapter.getItem(position);
+            selectedTagId = selectedTag.getTagId();
+        });
+
     }
 
     private void populateEventData() {
@@ -339,6 +399,7 @@ public class AddNewLeadActivity extends DrawerBaseActivity {
         String company = leadCompany.getText().toString().trim();
         String notes = leadNotes.getText().toString().trim();
 
+
         if (!leadLocation.getText().toString().trim().isEmpty()) {
             address = leadLocation.getText().toString().trim();
             getLocationFromAddress(address);
@@ -350,7 +411,7 @@ public class AddNewLeadActivity extends DrawerBaseActivity {
             return;
         }
 
-        Lead updatedLead = new Lead(name, email, phone, address, job, company, notes, encodedImage, leadLat, leadLong);
+        Lead updatedLead = new Lead(name, email, phone, address, job, company, notes, encodedImage, leadLat, leadLong, selectedTagId);
 
         db.collection(Constants.KEY_COLLECTION_USERS)
                 .document(preferenceManager.getString(Constants.KEY_USER_ID))
@@ -399,7 +460,7 @@ public class AddNewLeadActivity extends DrawerBaseActivity {
             return;
         }
 
-        newLead = new Lead(name, email, phone, address, job, company, notes, encodedImage, leadLat, leadLong);
+        newLead = new Lead(name, email, phone, address, job, company, notes, encodedImage, leadLat, leadLong, selectedTagId);
         db.collection(Constants.KEY_COLLECTION_USERS)
                 .document(preferenceManager.getString(Constants.KEY_USER_ID))
                 .collection(Constants.KEY_COLLECTION_LEADS)
