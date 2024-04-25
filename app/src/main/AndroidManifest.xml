@@ -43,6 +43,21 @@
         android:theme="@style/Theme.CRM"
         tools:targetApi="31">
         <activity
+            android:name=".activities.Mails.GenerateAITemplateActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.Mails.EditTemplateActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.Mails.TemplateDetailActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.Mails.AddNewTemplateActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.Mails.TemplatesActivity"
+            android:exported="false" />
+        <activity
             android:name=".activities.Mails.ChooseEmailsActivity"
             android:exported="false" />
         <activity

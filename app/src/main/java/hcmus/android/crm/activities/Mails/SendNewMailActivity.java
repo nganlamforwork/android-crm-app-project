@@ -25,13 +25,14 @@ import hcmus.android.crm.databinding.ActivityAddNewBussinessCardAcitivityBinding
 import hcmus.android.crm.databinding.ActivitySendNewMailBinding;
 
 public class SendNewMailActivity extends DrawerBaseActivity {
+    private static final int CHOOSE_EMAILS_REQUEST_CODE = 100;
     private ActivitySendNewMailBinding binding;
     private EditText emailSubject, emailBody;
     private TextView chooseEmailsButton;
     private Button sendButton;
     private FirebaseFirestore db;
     private ArrayList<String> choosenEmails;
-    private static final int CHOOSE_EMAILS_REQUEST_CODE = 100;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,6 +56,7 @@ public class SendNewMailActivity extends DrawerBaseActivity {
         }
         setListeners();
     }
+
     @Override
     protected void onResume() {
         super.onResume();
@@ -64,6 +66,7 @@ public class SendNewMailActivity extends DrawerBaseActivity {
             sendButton.setEnabled(false);
         }
     }
+
     private void getElementsById() {
         // Basic fields
         emailSubject = binding.emailSubjectField;
@@ -73,6 +76,7 @@ public class SendNewMailActivity extends DrawerBaseActivity {
         chooseEmailsButton = binding.textChooseEmails;
         sendButton = binding.sendButton;
     }
+
     private void setListeners() {
         chooseEmailsButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -88,12 +92,13 @@ public class SendNewMailActivity extends DrawerBaseActivity {
             }
         });
     }
-    private void onSendEmail(){
+
+    private void onSendEmail() {
         String subject = emailSubject.getText().toString().trim();
         String body = emailBody.getText().toString().trim();
         StringBuilder builder = new StringBuilder();
-        if (body.equals("") || subject.equals("")){
-            showToast("All fields are required!",0);
+        if (body.equals("") || subject.equals("")) {
+            showToast("All fields are required!", 0);
         }
         for (String email : choosenEmails) {
             builder.append(email).append(", ");
@@ -105,8 +110,9 @@ public class SendNewMailActivity extends DrawerBaseActivity {
         intent.putExtra(Intent.EXTRA_SUBJECT, subject);
         intent.putExtra(Intent.EXTRA_TEXT, body);
         intent.setType("message/rfc822");
-        startActivity(Intent.createChooser(intent,"Choose email client:"));
+        startActivity(Intent.createChooser(intent, "Choose email client:"));
     }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -126,4 +132,5 @@ public class SendNewMailActivity extends DrawerBaseActivity {
             }
         }
     }
+
 }
