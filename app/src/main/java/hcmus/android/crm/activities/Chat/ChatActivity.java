@@ -247,15 +247,13 @@ public class ChatActivity extends DrawerBaseActivity {
 
             new Handler(Looper.getMainLooper()).post(() -> {
                 if (token != null) {
-                    Log.d("Access Token", token);
-
                     MediaType JSON = MediaType.get("application/json; charset=utf-8");
 
                     OkHttpClient client = new OkHttpClient();
 
                     RequestBody body = RequestBody.create(jsonObject.toString(), JSON);
                     Request request = new Request.Builder()
-                            .url("https://fcm.googleapis.com/v1/projects/android-crm-group-10/messages:send")
+                            .url(Constants.URL_FCM_API)
                             .post(body)
                             .header("Authorization", "Bearer " + token)
                             .build();

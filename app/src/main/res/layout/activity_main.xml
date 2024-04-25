@@ -40,10 +40,10 @@
             android:layout_height="wrap_content"
             android:layout_weight="2"
             android:text="Feb 2021"
-            android:textStyle="bold"
             android:textAlignment="center"
             android:textColor="@color/black"
-            android:textSize="20sp" />
+            android:textSize="20sp"
+            android:textStyle="bold" />
 
         <ImageView
             android:layout_width="0dp"
@@ -131,23 +131,39 @@
         android:id="@+id/calendarRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1" />
+        android:layout_weight="1"/>
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/voice_assistant"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|start"
-        android:layout_marginStart="@dimen/fab_margin"
-        android:layout_marginBottom="16dp"
-        android:focusable="true"
-        android:onClick="buttonAssist"
-        app:backgroundTint="@color/blue"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:shapeAppearanceOverlay="@style/ShapeAppearance.Material3.Corner.Full"
-        app:srcCompat="@drawable/baseline_assistant_24"
-        app:tint="@android:color/white"
-        app:tooltipText="CRM Assistant" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/voice_assistant"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|start"
+            android:layout_marginStart="@dimen/fab_margin"
+            android:layout_marginBottom="16dp"
+            android:focusable="true"
+            android:onClick="buttonAssist"
+            app:backgroundTint="@color/blue"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:shapeAppearanceOverlay="@style/ShapeAppearance.Material3.Corner.Full"
+            app:srcCompat="@drawable/baseline_assistant_24"
+            app:tint="@android:color/white"
+            app:tooltipText="CRM Assistant" />
+
+        <TextView
+            android:id="@+id/ai_response"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="40dp"
+            android:layout_marginBottom="10dp"
+            android:ellipsize="end"
+            android:maxLines="2" />
+    </LinearLayout>
 
 </LinearLayout>

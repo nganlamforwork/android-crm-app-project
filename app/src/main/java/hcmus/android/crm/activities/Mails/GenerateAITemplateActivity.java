@@ -128,7 +128,7 @@ public class GenerateAITemplateActivity extends DrawerBaseActivity {
             // System message
             JSONObject jsonObjectSystemMessage = new JSONObject();
             jsonObjectSystemMessage.put("role", "system");
-            jsonObjectSystemMessage.put("content", "You are a helpful AI assistant, your name is CRM G10. You are responsible for creating email template based on user requirements. Make sure to follow strictly to user requirement.");
+            jsonObjectSystemMessage.put("content", Constants.EMAIL_PROMPT);
             jsonArrayMessage.put(jsonObjectSystemMessage);
 
             // User message

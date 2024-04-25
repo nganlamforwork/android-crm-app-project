@@ -29,6 +29,7 @@ import android.speech.RecognitionListener;
 import android.speech.RecognizerIntent;
 import android.speech.SpeechRecognizer;
 import android.speech.tts.TextToSpeech;
+import android.speech.tts.UtteranceProgressListener;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -127,10 +128,12 @@ public class MainActivity extends DrawerBaseActivity implements CalendarAdapter.
 
             @Override
             public void onEndOfSpeech() {
+                binding.aiResponse.setText("");
             }
 
             @Override
             public void onError(int i) {
+                binding.aiResponse.setText("");
             }
 
             @Override
@@ -161,12 +164,11 @@ public class MainActivity extends DrawerBaseActivity implements CalendarAdapter.
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         String userId = preferenceManager.getString(Constants.KEY_USER_ID);
         // Get current date
-        Calendar calendar = Calendar.getInstance();
-        Date currentDate = calendar.getTime();
+        LocalDate currentDate = LocalDate.now();
 
         fetchEvents(db, userId, currentDate);
         fetchLeads(db, userId);
-        fetchNotes(db, userId);
+        fetchOpportunities(db, userId, currentDate);
     }
 
     private void scheduleEventUpdate() {
@@ -276,11 +278,13 @@ public class MainActivity extends DrawerBaseActivity implements CalendarAdapter.
             return;
         }
         output = "";
+        binding.aiResponse.setText("How can I help you today?");
         speechRecognizer.startListening(intent);
     }
 
     private void chatGPTModel(String stringInput) {
         textToSpeech.speak("In Progress", TextToSpeech.QUEUE_FLUSH, null, null);
+        binding.aiResponse.setText("In Progress");
         JSONObject jsonObject = new JSONObject();
         try {
             jsonObject.put("model", "gpt-3.5-turbo");
@@ -289,10 +293,7 @@ public class MainActivity extends DrawerBaseActivity implements CalendarAdapter.
             // System message
             JSONObject jsonObjectSystemMessage = new JSONObject();
             jsonObjectSystemMessage.put("role", "system");
-            jsonObjectSystemMessage.put("content", "You are a helpful AI assistant, your name is CRM G10, you are responsible for helping users with their problems. " +
-                    "You are giving full information context of user's leads, notes, upcoming events and their opportunities. " +
-                    "Try your best to assist user and do not hallucinate any information. Only get it from the provided context. " +
-                    "If no information found, reply with `INFORMATION NOT FOUND`");
+            jsonObjectSystemMessage.put("content", Constants.ASSISTANT_PROMPT);
             jsonArrayMessage.put(jsonObjectSystemMessage);
 
             // User message
@@ -324,6 +325,25 @@ public class MainActivity extends DrawerBaseActivity implements CalendarAdapter.
                 }
                 output = output + stringText;
                 textToSpeech.speak(output, TextToSpeech.QUEUE_FLUSH, null, null);
+                binding.aiResponse.setText(output);
+
+                // Reset aiResponse TextView after speaking is done
+                textToSpeech.setOnUtteranceProgressListener(new UtteranceProgressListener() {
+                    @Override
+                    public void onStart(String utteranceId) {
+                        // Not used
+                    }
+
+                    @Override
+                    public void onDone(String utteranceId) {
+                        binding.aiResponse.setText("");
+                    }
+
+                    @Override
+                    public void onError(String utteranceId) {
+                        // Not used
+                    }
+                });
             }
         }, new Response.ErrorListener() {
             @Override
@@ -356,12 +376,11 @@ public class MainActivity extends DrawerBaseActivity implements CalendarAdapter.
         Volley.newRequestQueue(getApplicationContext()).add(jsonObjectRequest);
     }
 
-    private void fetchEvents(FirebaseFirestore db, String userId, Date currentDate) {
+    private void fetchEvents(FirebaseFirestore db, String userId, LocalDate currentDate) {
         CONTEXT_DATA.append("## EVENTS INFORMATION:");
         db.collection(Constants.KEY_COLLECTION_USERS)
                 .document(userId)
                 .collection(Constants.KEY_COLLECTION_EVENTS)
-                .whereGreaterThanOrEqualTo("createdAt", currentDate)
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
@@ -370,8 +389,16 @@ public class MainActivity extends DrawerBaseActivity implements CalendarAdapter.
                             for (QueryDocumentSnapshot document : task.getResult()) {
                                 Map<String, Object> data = document.getData();
                                 data.remove("createdAt");
-                                CONTEXT_DATA.append(data.toString());
+                                LocalDate expectedDate = LocalDate.parse((String) document.get("date"));
+
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                                    if (expectedDate.isAfter(currentDate) || expectedDate.isEqual(currentDate)) {
+                                        CONTEXT_DATA.append(data.toString());
+                                    }
+                                }
                             }
+                        } else {
+                            Log.e("FETCH_EVENTS", "Error getting documents: ", task.getException());
                         }
                     }
                 });
@@ -399,13 +426,14 @@ public class MainActivity extends DrawerBaseActivity implements CalendarAdapter.
                         }
                     }
                 });
+
     }
 
-    private void fetchNotes(FirebaseFirestore db, String userId) {
-        CONTEXT_DATA.append("## NOTES OF LEADS INFORMATION:");
+    private void fetchOpportunities(FirebaseFirestore db, String userId, LocalDate currentDate) {
+        CONTEXT_DATA.append("## OPPORTUNITIES INFORMATION:");
         db.collection(Constants.KEY_COLLECTION_USERS)
                 .document(userId)
-                .collection(Constants.KEY_COLLECTION_NOTES)
+                .collection(Constants.KEY_COLLECTION_OPPORTUNITIES)
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
@@ -414,8 +442,16 @@ public class MainActivity extends DrawerBaseActivity implements CalendarAdapter.
                             for (QueryDocumentSnapshot document : task.getResult()) {
                                 Map<String, Object> data = document.getData();
                                 data.remove("createdAt");
-                                CONTEXT_DATA.append(data.toString());
+                                LocalDate expectedDate = LocalDate.parse((String) document.get("expectedDate"));
+
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                                    if (expectedDate.isAfter(currentDate) || expectedDate.isEqual(currentDate)) {
+                                        CONTEXT_DATA.append(data.toString());
+                                    }
+                                }
                             }
+                        } else {
+                            Log.e("FETCH_OPPORTUNITIES", "Error getting documents: ", task.getException());
                         }
                     }
                 });
