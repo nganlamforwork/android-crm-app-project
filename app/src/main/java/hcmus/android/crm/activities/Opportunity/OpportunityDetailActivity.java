@@ -55,24 +55,26 @@ public class OpportunityDetailActivity extends DrawerBaseActivity {
 
     @SuppressLint("SetTextI18n")
     private void updateUI(Opportunity opportunity) {
-        binding.opportunityName.setText(opportunity.getName());
-        binding.expectedDate.setText("Created On " + opportunity.getExpectedDate());
-        binding.opportunityStatus.setText("Status " + opportunity.getStatus());
-        if (opportunity.getStatus().equals("In Prospect")) {
-            binding.opportunityStatus.setTextColor(ContextCompat.getColor(this, R.color.pre));
-        } else if (opportunity.getStatus().equals("Negotiation")) {
-            binding.opportunityStatus.setTextColor(ContextCompat.getColor(this, R.color.warning));
-        } else if (opportunity.getStatus().equals("Closed Won")) {
-            binding.opportunityStatus.setTextColor(ContextCompat.getColor(this, R.color.success));
-        } else if (opportunity.getStatus().equals("Closed Lost")) {
-            binding.opportunityStatus.setTextColor(ContextCompat.getColor(this, R.color.error));
-        }
+        if (opportunity != null) {
+            binding.opportunityName.setText(opportunity.getName());
+            binding.expectedDate.setText("Created On " + opportunity.getExpectedDate());
+            binding.opportunityStatus.setText("Status " + opportunity.getStatus());
+            if (opportunity.getStatus().equals("In Prospect")) {
+                binding.opportunityStatus.setTextColor(ContextCompat.getColor(this, R.color.pre));
+            } else if (opportunity.getStatus().equals("Negotiation")) {
+                binding.opportunityStatus.setTextColor(ContextCompat.getColor(this, R.color.warning));
+            } else if (opportunity.getStatus().equals("Closed Won")) {
+                binding.opportunityStatus.setTextColor(ContextCompat.getColor(this, R.color.success));
+            } else if (opportunity.getStatus().equals("Closed Lost")) {
+                binding.opportunityStatus.setTextColor(ContextCompat.getColor(this, R.color.error));
+            }
 
-        binding.opportunityPrice.setText(opportunity.getPrice().toString());
-        binding.opportunityPossibility.setText("Posibility (" + opportunity.getPossibility().toString() + "%)");
-        double possibility = opportunity.getPossibility();
-        int roundedPossibility = (int) Math.round(possibility);
-        binding.opportunitySeekBar.setProgress(roundedPossibility);
+            binding.opportunityPrice.setText(opportunity.getPrice().toString());
+            binding.opportunityPossibility.setText("Posibility (" + opportunity.getPossibility().toString() + "%)");
+            double possibility = opportunity.getPossibility();
+            int roundedPossibility = (int) Math.round(possibility);
+            binding.opportunitySeekBar.setProgress(roundedPossibility);
+        }
     }
 
     @SuppressLint("ClickableViewAccessibility")
