@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp">
+
+    <LinearLayout
+        android:id="@+id/date_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="?attr/actionBarSize">
+
+        <TextView
+            android:id="@+id/start_date_textview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Start Date: "
+            android:textSize="18sp"/>
+
+        <TextView
+            android:id="@+id/end_date_textview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="End Date: "
+            android:textSize="18sp"
+            android:layout_marginLeft="16dp"/>
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/select_dates_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Select Dates"
+        android:layout_below="@id/date_layout"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="8dp"/>
+
+    <!-- LineChart for displaying opportunity prices -->
+    <com.github.mikephil.charting.charts.LineChart
+        android:id="@+id/line_chart"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        android:layout_below="@id/select_dates_button"
+        android:layout_marginTop="32dp"
+        android:paddingTop="24dp"
+        android:paddingBottom="16dp"/>
+
+    <!-- PieChart for displaying opportunity status -->
+    <com.github.mikephil.charting.charts.PieChart
+        android:id="@+id/pie_chart"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        android:layout_below="@id/line_chart"
+        android:layout_marginTop="32dp"
+        android:padding="16dp"/>
+
+    <TextView
+        android:id="@+id/graph_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Expected Price Analysis"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:layout_below="@id/select_dates_button"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="16dp"/>
+
+    <TextView
+        android:id="@+id/pie_chart_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Opportunity Status"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:layout_below="@id/line_chart"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="16dp"/>
+</RelativeLayout>
