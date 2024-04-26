@@ -1,5 +1,6 @@
 package hcmus.android.crm.activities.Contacts;
 
+import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -12,6 +13,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.Manifest;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.Toolbar;
@@ -22,8 +27,10 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import hcmus.android.crm.R;
 import hcmus.android.crm.activities.DrawerBaseActivity;
+import hcmus.android.crm.activities.Leads.AddNewLeadActivity;
 import hcmus.android.crm.databinding.ActivityContactDetailBinding;
 import hcmus.android.crm.models.Contact;
+import hcmus.android.crm.models.Lead;
 import hcmus.android.crm.utilities.Constants;
 
 public class ContactDetailActivity extends DrawerBaseActivity {
@@ -158,9 +165,15 @@ public class ContactDetailActivity extends DrawerBaseActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_edit) {
+            Intent intent = new Intent(getApplicationContext(), AddNewContactActivity.class);
+            intent.putExtra("contactId", contactId);
+            intent.putExtra("contact", contact);
+            startActivity(intent);
+
             return true;
         }
 
         return super.onOptionsItemSelected(item);
     }
+
 }
