@@ -173,7 +173,7 @@ public class ReminderAdapter extends FirestoreRecyclerAdapter<Reminder, Reminder
         Intent intent = new Intent(context, AddNewReminderActivity.class);
 
         intent.putExtra("reminderId", reminderId);
-        intent.putExtra("selectedDate", String.valueOf(CalendarUtils.selectedDate));
+        intent.putExtra("selectedDate", String.valueOf(model.getDate()));
         intent.putExtra("title", model.getReminderTitle());
         intent.putExtra("description", model.getReminderDescrption());
         intent.putExtra("time", model.getTimeAlarm());
