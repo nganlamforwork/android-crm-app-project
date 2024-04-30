@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -19,7 +20,11 @@ import android.view.WindowManager;
 
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -42,8 +47,11 @@ public class ChooseEmailsActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private FirebaseFirestore db;
     private LeadAdapter leadAdapter;
+    private String opportunityId;
+
     private boolean isLeadsChanged;
     protected PreferenceManager preferenceManager;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,6 +68,10 @@ public class ChooseEmailsActivity extends AppCompatActivity {
         getWindow().clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.primary_dark));
 
+        opportunityId = getIntent().getStringExtra("opportunityId");
+        if (opportunityId != null) {
+            setTitle("Choose Leads");
+        }
         // Enable the back button in the action bar or toolbar
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
@@ -69,6 +81,7 @@ public class ChooseEmailsActivity extends AppCompatActivity {
         isLeadsChanged = false;
         setupLeadRecyclerView();
     }
+
     private void setupLeadRecyclerView() {
         recyclerView = binding.leadsRecyclerView;
         Query query = db.collection(Constants.KEY_COLLECTION_USERS)
@@ -92,6 +105,7 @@ public class ChooseEmailsActivity extends AppCompatActivity {
         );
         leadAdapter.startListening();
     }
+
     private void checkIfListEmpty(Query query) {
         query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
@@ -108,6 +122,7 @@ public class ChooseEmailsActivity extends AppCompatActivity {
             }
         });
     }
+
     @Override
     public boolean onSupportNavigateUp() {
         getOnBackPressedDispatcher().onBackPressed();
@@ -126,17 +141,61 @@ public class ChooseEmailsActivity extends AppCompatActivity {
         isLeadsChanged = true;
         saveChangesMenuItem.setEnabled(true);
     }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_save) {
-            sendEmailsBackToPreviousActivity();
+            if (opportunityId == null) {
+                sendEmailsBackToPreviousActivity();
+            } else {
+                saveLeadsToOppo();
+            }
             return true;
         }
 
+
         return super.onOptionsItemSelected(item);
+    }
+
+    private void saveLeadsToOppo() {
+        Set<String> selectedEmails = leadAdapter.getSelectedEmails();
+        ArrayList<String> selectedEmailsList = new ArrayList<>(selectedEmails);
+
+        db.collection(Constants.KEY_COLLECTION_USERS)
+                .document(preferenceManager.getString(Constants.KEY_USER_ID))
+                .collection(Constants.KEY_COLLECTION_LEADS)
+                .whereIn("email", selectedEmailsList)
+                .get()
+                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                        for (DocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
+                            db.collection(Constants.KEY_COLLECTION_USERS)
+                                    .document(preferenceManager.getString(Constants.KEY_USER_ID))
+                                    .collection(Constants.KEY_COLLECTION_OPPORTUNITIES)
+                                    .document(opportunityId)
+                                    .collection(Constants.KEY_COLLECTION_LEADS)
+                                    .add(documentSnapshot.getData())
+                                    .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                                        @Override
+                                        public void onSuccess(DocumentReference documentReference) {
+                                            showToast("Lead added to opportunities successfully", 0);
+                                            finish();
+                                        }
+                                    })
+                                    .addOnFailureListener(new OnFailureListener() {
+                                        @Override
+                                        public void onFailure(@NonNull Exception e) {
+                                            showToast("Failed to add lead to opportunities successfully", 0);
+                                            finish();
+                                        }
+                                    });
+                        }
+                    }
+                });
     }
 
     private void sendEmailsBackToPreviousActivity() {
@@ -148,6 +207,7 @@ public class ChooseEmailsActivity extends AppCompatActivity {
         setResult(Activity.RESULT_OK, resultIntent);
         finish();
     }
+
     protected void showToast(String message, int length) {
         Utils.showToast(getApplicationContext(), message, length);
     }

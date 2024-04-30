@@ -73,7 +73,7 @@ public class NoteActivity extends DrawerBaseActivity {
         FirestoreRecyclerOptions<Note> options = new FirestoreRecyclerOptions.Builder<Note>()
                 .setQuery(query, Note.class).build();
 
-        noteAdapter = new NoteAdapter(options, this, preferenceManager);
+        noteAdapter = new NoteAdapter(options, this, preferenceManager, null);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
         recyclerView.setAdapter(noteAdapter);

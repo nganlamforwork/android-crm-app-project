@@ -3,6 +3,7 @@ package hcmus.android.crm.activities.Notes.adapters;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -40,12 +41,13 @@ public class NoteAdapter extends FirestoreRecyclerAdapter<Note, NoteAdapter.Note
     Context context;
 
     PreferenceManager preferenceManager;
+    String opportunityId;
 
-    public NoteAdapter(@NonNull FirestoreRecyclerOptions<Note> options, Context context, PreferenceManager preferenceManager) {
-
+    public NoteAdapter(@NonNull FirestoreRecyclerOptions<Note> options, Context context, PreferenceManager preferenceManager, String opportunityId) {
         super(options);
         this.context = context;
         this.preferenceManager = preferenceManager;
+        this.opportunityId = opportunityId;
     }
 
 
@@ -57,11 +59,6 @@ public class NoteAdapter extends FirestoreRecyclerAdapter<Note, NoteAdapter.Note
         int colorCode = getRandomColor();
         holder.note.setBackgroundColor(holder.itemView.getResources().getColor(colorCode, null));
 
-        holder.itemView.setOnClickListener(v -> {
-            Intent intent = new Intent(context, ChatActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            context.startActivity(intent);
-        });
         DocumentSnapshot snapshot = getSnapshots()
                 .getSnapshot(holder.getAbsoluteAdapterPosition());
         String noteId = snapshot.getId();
@@ -74,10 +71,18 @@ public class NoteAdapter extends FirestoreRecyclerAdapter<Note, NoteAdapter.Note
                 public boolean onMenuItemClick(@NonNull MenuItem item) {
                     Intent intent = new Intent(v.getContext(), CreateNoteActivity.class);
 
-                    intent.putExtra("noteId", noteId);
-                    intent.putExtra("title", model.getTitle());
-                    intent.putExtra("content", model.getContent());
-                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    if (opportunityId == null) {
+                        intent.putExtra("noteId", noteId);
+                        intent.putExtra("title", model.getTitle());
+                        intent.putExtra("content", model.getContent());
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    } else {
+                        intent.putExtra("noteId", noteId);
+                        intent.putExtra("title", model.getTitle());
+                        intent.putExtra("content", model.getContent());
+                        intent.putExtra("opportunityId", opportunityId);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    }
 
                     v.getContext().startActivity(intent);
                     return false;
@@ -102,14 +107,7 @@ public class NoteAdapter extends FirestoreRecyclerAdapter<Note, NoteAdapter.Note
         builder.setPositiveButton("Delete", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                FirebaseFirestore.getInstance().collection(Constants.KEY_COLLECTION_USERS)
-                        .document(FirebaseUtils.currentUserId())
-                        .collection(Constants.KEY_COLLECTION_LEADS)
-                        .document(preferenceManager.getString("selectedLead"))
-                        .collection(Constants.KEY_COLLECTION_NOTES)
-                        .document(noteId).delete();
-                notifyDataSetChanged();
-                Toast.makeText(context, "Note is deleted successfully", Toast.LENGTH_SHORT).show();
+                deleteNote(noteId);
             }
         });
         builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -121,10 +119,31 @@ public class NoteAdapter extends FirestoreRecyclerAdapter<Note, NoteAdapter.Note
         builder.create().show();
     }
 
+    private void deleteNote(String noteId) {
+        if(opportunityId == null) {
+            FirebaseFirestore.getInstance().collection(Constants.KEY_COLLECTION_USERS)
+                    .document(FirebaseUtils.currentUserId())
+                    .collection(Constants.KEY_COLLECTION_LEADS)
+                    .document(preferenceManager.getString("selectedLead"))
+                    .collection(Constants.KEY_COLLECTION_NOTES)
+                    .document(noteId).delete();
+        } else {
+            FirebaseFirestore.getInstance().collection(Constants.KEY_COLLECTION_USERS)
+                    .document(FirebaseUtils.currentUserId())
+                    .collection(Constants.KEY_COLLECTION_OPPORTUNITIES)
+                    .document(opportunityId)
+                    .collection(Constants.KEY_COLLECTION_NOTES)
+                    .document(noteId).delete();
+        }
+
+        notifyDataSetChanged();
+        Toast.makeText(context, "Note is deleted successfully", Toast.LENGTH_SHORT).show();
+    }
+
     @NonNull
     @Override
     public NoteAdapter.NoteViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.notes_layout, parent, false);
+        View view = LayoutInflater.from(context).inflate(R.layout.notes_layout, parent, false);
         return new NoteAdapter.NoteViewHolder(view);
     }
 
