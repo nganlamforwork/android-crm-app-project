@@ -184,11 +184,6 @@ public class MainActivity extends DrawerBaseActivity implements CalendarAdapter.
 
         if (jobScheduler != null) {
             int result = jobScheduler.schedule(info.build());
-            if (result == JobScheduler.RESULT_SUCCESS) {
-                showToast("Event is updated", 0);
-            } else {
-                showToast("An error occurred and failed to start event jobs scheduler", 0);
-            }
         }
     }
 

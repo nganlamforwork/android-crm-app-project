@@ -10,8 +10,10 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 
 import hcmus.android.crm.activities.DrawerBaseActivity;
+import hcmus.android.crm.activities.Opportunity.OpportunityDetailActivity;
 import hcmus.android.crm.databinding.ActivityCreateNoteBinding;
 import hcmus.android.crm.models.Note;
+import hcmus.android.crm.models.Opportunity;
 import hcmus.android.crm.utilities.Constants;
 
 public class CreateNoteActivity extends DrawerBaseActivity {
@@ -20,7 +22,10 @@ public class CreateNoteActivity extends DrawerBaseActivity {
     private FirebaseFirestore db;
     private boolean isEditMode = false;
 
-    private String noteId;
+    private String noteId, opportunityId;
+
+    private boolean fromOppo = false;
+    private Opportunity opportunity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +47,12 @@ public class CreateNoteActivity extends DrawerBaseActivity {
         }
 
         noteId = getIntent().getStringExtra("noteId");
+        opportunityId = getIntent().getStringExtra("opportunityId");
+        opportunity = getIntent().getParcelableExtra("opportunityDetails");
+
+        if (opportunityId != null) {
+            fromOppo = true;
+        }
         if (noteId != null) {
             isEditMode = true;
             setTitle("Edit event");
@@ -60,15 +71,82 @@ public class CreateNoteActivity extends DrawerBaseActivity {
     private void setListeners() {
 
         if (isEditMode) {
-            // Edit mode: Set button text to "Update Event"
-            binding.saveNote.setOnClickListener(v -> {
-                handleUpdateNote();
-            });
+            if (!fromOppo) {
+                binding.saveNote.setOnClickListener(v -> {
+                    handleUpdateNote();
+                });
+            } else {
+                binding.saveNote.setOnClickListener(v -> {
+                    handleUpdateNoteToOppo();
+                });
+            }
+
         } else {
-            // Add mode: Set button text to "Save Event"
-            binding.saveNote.setOnClickListener(v -> {
-                handleSaveNote();
-            });
+            if (!fromOppo) {
+                binding.saveNote.setOnClickListener(v -> {
+                    handleSaveNote();
+                });
+            } else {
+                binding.saveNote.setOnClickListener(v -> {
+                    handleSaveNoteToOppo();
+                });
+            }
+        }
+    }
+
+    private void handleSaveNoteToOppo() {
+        String title = binding.createNoteTitle.getText().toString();
+        String content = binding.createNoteContent.getText().toString();
+
+        if (title.isEmpty() || content.isEmpty()) {
+            showToast("Both field are required", 0);
+        } else {
+            Note note = new Note(title, content);
+            db.collection(Constants.KEY_COLLECTION_USERS)
+                    .document(preferenceManager.getString(Constants.KEY_USER_ID))
+                    .collection(Constants.KEY_COLLECTION_OPPORTUNITIES)
+                    .document(opportunityId)
+                    .collection(Constants.KEY_COLLECTION_NOTES)
+                    .add(note)
+                    .addOnSuccessListener(documentReference -> {
+                        showToast("New note created", 0);
+                        Intent intent = new Intent(CreateNoteActivity.this, OpportunityDetailActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        intent.putExtra("opportunityDetails", opportunity);
+                        intent.putExtra("opportunityId", opportunityId);
+                        startActivity(intent);
+                    })
+                    .addOnFailureListener(e -> {
+                        // Handle failure, e.g., show error message
+                        showToast("Failed to create note", 0);
+                    });
+        }
+    }
+
+    private void handleUpdateNoteToOppo() {
+        String title = binding.createNoteTitle.getText().toString();
+        String content = binding.createNoteContent.getText().toString();
+
+        if (title.isEmpty() || content.isEmpty()) {
+            showToast("Both field are required", 0);
+        } else {
+            Note updatedNote = new Note(title, content);
+            db.collection(Constants.KEY_COLLECTION_USERS)
+                    .document(preferenceManager.getString(Constants.KEY_USER_ID))
+                    .collection(Constants.KEY_COLLECTION_OPPORTUNITIES)
+                    .document(opportunityId)
+                    .collection(Constants.KEY_COLLECTION_NOTES)
+                    .document(noteId)
+                    .set(updatedNote)
+                    .addOnSuccessListener(documentReference -> {
+                        showToast("Note is updated", 0);
+                        finish();
+                    })
+                    .addOnFailureListener(e -> {
+                        // Handle failure, e.g., show error message
+                        showToast("Failed to update note", 0);
+                    });
         }
     }
 
@@ -90,7 +168,6 @@ public class CreateNoteActivity extends DrawerBaseActivity {
                     .addOnSuccessListener(documentReference -> {
                         showToast("Note is updated", 0);
                         Intent intent = new Intent(this, NoteActivity.class);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         startActivity(intent);
                     })
                     .addOnFailureListener(e -> {
@@ -117,7 +194,6 @@ public class CreateNoteActivity extends DrawerBaseActivity {
                     .addOnSuccessListener(documentReference -> {
                         showToast("New note created", 0);
                         Intent intent = new Intent(this, NoteActivity.class);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         startActivity(intent);
                     })
                     .addOnFailureListener(e -> {
